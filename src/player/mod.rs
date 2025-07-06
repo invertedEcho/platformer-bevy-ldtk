@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{prelude::*, utils::grid_coords_to_translation};
 
-const GRID_SIZE: i32 = 16;
+use crate::{GRID_SIZE, walls::resources::LevelWalls};
 
 #[derive(Default, Component)]
 pub struct Player;
@@ -93,6 +93,7 @@ fn animate_sprite(
 fn move_player_from_input(
     mut players: Query<&mut GridCoords, With<Player>>,
     input: Res<ButtonInput<KeyCode>>,
+    level_walls: Res<LevelWalls>,
 ) {
     let movement_direction = if input.just_pressed(KeyCode::KeyW) {
         GridCoords::new(0, 1)
@@ -108,7 +109,9 @@ fn move_player_from_input(
 
     for mut player_grid_coords in players.iter_mut() {
         let destination = *player_grid_coords + movement_direction;
-        *player_grid_coords = destination;
+        if !level_walls.in_wall(&destination) {
+            *player_grid_coords = destination;
+        }
     }
 }
 

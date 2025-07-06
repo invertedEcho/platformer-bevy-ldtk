@@ -3,9 +3,13 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use camera::CameraPlugin;
 use player::PlayerPlugin;
+use walls::WallsPlugin;
 
 mod camera;
 mod player;
+pub mod walls;
+
+pub const GRID_SIZE: i32 = 16;
 
 fn main() {
     App::new()
@@ -15,6 +19,7 @@ fn main() {
         .add_plugins(LdtkPlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(PlayerPlugin)
+        .add_plugins(WallsPlugin)
         .add_systems(Startup, setup)
         .insert_resource(LevelSelection::index(0))
         .run();
