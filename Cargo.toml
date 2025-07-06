@@ -1,5 +1,5 @@
 [package]
-name = "platformer-bevy"
+name = "platformer-bevy-ldtk"
 version = "0.1.0"
 edition = "2024"
 

@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
+use bevy_rapier2d::prelude::*;
 use camera::CameraPlugin;
 use player::PlayerPlugin;
 
@@ -9,6 +10,8 @@ mod player;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+        .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+        .add_plugins(RapierDebugRenderPlugin::default())
         .add_plugins(LdtkPlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(PlayerPlugin)
