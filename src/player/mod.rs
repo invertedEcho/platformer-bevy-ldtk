@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
-use bevy_rapier2d::prelude::*;
 
 #[derive(Default, Component)]
 pub struct Player;
@@ -25,8 +24,7 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.register_ldtk_entity::<PlayerBundle>("Player")
-            .add_systems(Update, process_player)
-            .add_systems(Update, (animate_sprite, jump_player));
+            .add_systems(Update, (process_player, animate_sprite));
     }
 }
 
@@ -41,7 +39,6 @@ fn process_player(
         println!("Texture handle: {:?}", texture);
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
         let texture_atlas_layout = texture_atlas_layouts.add(layout);
-        // Use only the subset of sprites in the sheet that make up the run animation
         let animation_indices = AnimationIndices { first: 0, last: 5 };
 
         commands.entity(entity).insert((
@@ -58,13 +55,6 @@ fn process_player(
             },
             animation_indices,
             AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
-            RigidBody::Dynamic,
-            Collider::cuboid(8.0, 8.0),
-            Velocity {
-                linvel: Vec2::new(0.0, 0.0),
-                angvel: 0.0,
-            },
-            LockedAxes::ROTATION_LOCKED,
         ));
     }
 }
@@ -85,16 +75,5 @@ fn animate_sprite(
                 };
             }
         }
-    }
-}
-
-fn jump_player(
-    mut player_velocity: Query<(&mut Velocity, &Transform), With<Player>>,
-    keyboard_input: Res<ButtonInput<KeyCode>>,
-) {
-    if keyboard_input.just_pressed(KeyCode::Space) {
-        let (mut velocity, transform) = player_velocity.single_mut().expect("Player exists");
-
-        velocity.linvel = Vec2::new(0.0, 300.0);
     }
 }
