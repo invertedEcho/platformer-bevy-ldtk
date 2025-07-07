@@ -8,7 +8,7 @@ use crate::TILE_SIZE;
 
 use super::components::Wall;
 
-// TODO: Need to use transform instead of grid_coords for placing the colliders.
+// TODO: Stuff breaks when gaps from walls exist
 pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Added<Wall>>) {
     let mut all_x_coords_of_y: HashMap<i32, Vec<i32>> = HashMap::new();
 
@@ -71,8 +71,8 @@ pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Ad
         let cuboid_half_x = all_x.len() as f32 * TILE_SIZE as f32 / 2.0;
         let cuboid_half_y = (TILE_SIZE / 2) as f32;
 
-        let world_x = middle * TILE_SIZE as f32;
-        let world_y = (y * TILE_SIZE) as f32;
+        let world_x = (middle * TILE_SIZE as f32) + (TILE_SIZE / 2) as f32;
+        let world_y = ((y * TILE_SIZE) as f32) + (TILE_SIZE / 2) as f32;
 
         println!("world_x is: {}", world_x);
         println!("Spawning collider at middle: {}", middle);
