@@ -9,20 +9,10 @@ use crate::TILE_SIZE;
 use super::components::Wall;
 
 // TODO: Need to use transform instead of grid_coords for placing the colliders.
-pub fn spawn_wall_colliders(
-    mut commands: Commands,
-    walls: Query<(&GridCoords, Entity, &Transform), Added<Wall>>,
-) {
-    for (grid_coords, entity, transform) in walls {
-        println!(
-            "Grid coords: {:?} entity: {:?} transform: {:?}",
-            grid_coords, entity, transform
-        );
-    }
-    return;
+pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Added<Wall>>) {
     let mut all_x_coords_of_y: HashMap<i32, Vec<i32>> = HashMap::new();
 
-    for (grid_coords, entity, transform) in walls {
+    for grid_coords in walls {
         let current_x = grid_coords.x;
         let current_y = grid_coords.y;
 
@@ -72,6 +62,7 @@ pub fn spawn_wall_colliders(
         }
 
         let middle = (start_from_collider_x + end_from_collider_x) as f32 / 2.0;
+        println!("Middle: {}", middle);
         println!(
             "Calculated middle: {} with start_from_collider_x: {} and end_from_collider_x: {}",
             middle, start_from_collider_x, end_from_collider_x
@@ -81,13 +72,14 @@ pub fn spawn_wall_colliders(
         let cuboid_half_y = (TILE_SIZE / 2) as f32;
 
         let world_x = middle * TILE_SIZE as f32;
+        let world_y = (y * TILE_SIZE) as f32;
 
         println!("world_x is: {}", world_x);
         println!("Spawning collider at middle: {}", middle);
         println!("Cuboid half_x: {} half_y: {}", cuboid_half_x, cuboid_half_y);
         commands.spawn((
             Transform {
-                translation: Vec3::new(world_x, y as f32, 0.0),
+                translation: Vec3::new(world_x, world_y as f32, 0.0),
                 ..Default::default()
             },
             Collider::cuboid(cuboid_half_x, cuboid_half_y),
