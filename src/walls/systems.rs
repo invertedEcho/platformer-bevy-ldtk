@@ -1,36 +1,21 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
+use bevy_rapier2d::prelude::*;
 
-use crate::GRID_SIZE;
+use crate::TILE_SIZE;
 
-use super::{components::Wall, resources::LevelWalls};
+use super::components::Wall;
 
-pub fn cache_wall_locations(
-    mut level_walls: ResMut<LevelWalls>,
-    mut level_events: EventReader<LevelEvent>,
-    walls: Query<&GridCoords, With<Wall>>,
-    ldtk_project_entities: Query<&LdtkProjectHandle>,
-    ldtk_project_assets: Res<Assets<LdtkProject>>,
-) -> Result {
-    for level_event in level_events.read() {
-        if let LevelEvent::Spawned(level_iid) = level_event {
-            let ldtk_project = ldtk_project_assets
-                .get(ldtk_project_entities.single()?)
-                .expect("LdtkProject should be loaded when level is spawned");
-            let level = ldtk_project
-                .get_raw_level_by_iid(level_iid.get())
-                .expect("spawned level should exist in project");
-
-            let wall_locations = walls.iter().copied().collect();
-
-            let new_level_walls = LevelWalls {
-                wall_locations,
-                level_width: level.px_wid / GRID_SIZE,
-                level_height: level.px_hei / GRID_SIZE,
-            };
-
-            *level_walls = new_level_walls;
-        }
+// TODO: This spawns a collider for each wall tile, which is bad for performance. We should spawn
+// colliders as large as possible, e.g. check where corner are from walls and span the collider cuboid
+pub fn spawn_wall_colliders(
+    mut commands: Commands,
+    walls: Query<(&GridCoords, Entity), Added<Wall>>,
+) {
+    let half_tile_size = (TILE_SIZE / 2) as f32;
+    for (grid_coords, entity) in walls {
+        commands
+            .entity(entity)
+            .insert(Collider::cuboid(half_tile_size, half_tile_size));
     }
-    Ok(())
 }

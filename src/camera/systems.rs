@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::player::Player;
+use crate::player::components::Player;
 
 const ASPECT_RATIO: f32 = 16. / 9.;
 
@@ -22,7 +22,6 @@ pub fn camera_fit_inside_current_level(
         ..
     }) = player_query.single()
     else {
-        println!("Player isnt spawned, returning");
         return Ok(());
     };
 
@@ -69,10 +68,6 @@ pub fn camera_fit_inside_current_level(
 
             camera_transform.translation.x += level_transform.translation.x;
             camera_transform.translation.y += level_transform.translation.y;
-            println!(
-                "Camera_transform.translation: {:?}",
-                camera_transform.translation,
-            );
         }
     }
     Ok(())

@@ -7,9 +7,9 @@ use walls::WallsPlugin;
 
 mod camera;
 mod player;
-pub mod walls;
+mod walls;
 
-pub const GRID_SIZE: i32 = 16;
+pub const TILE_SIZE: i32 = 16;
 
 fn main() {
     App::new()
