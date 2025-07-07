@@ -25,7 +25,11 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut rapier_config: Query<&mut RapierConfiguration>,
+) {
     commands.spawn(Camera2d);
 
     commands.spawn(LdtkWorldBundle {
@@ -34,4 +38,9 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         },
         ..default()
     });
+
+    rapier_config
+        .single_mut()
+        .expect("RapierConfiguration exists and can be mutated")
+        .gravity = Vec2::new(0.0, -8000.0);
 }

@@ -5,6 +5,8 @@ use crate::TILE_SIZE;
 
 use super::components::{AnimationIndices, AnimationTimer, Player};
 
+const PLAYER_SPEED: f32 = 100.0;
+
 pub fn process_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
@@ -35,6 +37,10 @@ pub fn process_player(
             RigidBody::Dynamic,
             Collider::cuboid(half_tile_size, half_tile_size),
             LockedAxes::ROTATION_LOCKED,
+            Velocity {
+                linvel: Vec2::new(0.0, 0.0),
+                angvel: 0.0,
+            },
         ));
     }
 }
@@ -55,5 +61,31 @@ pub fn animate_sprite(
                 };
             }
         }
+    }
+}
+
+pub fn player_movement(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    mut player: Query<&mut Velocity, With<Player>>,
+) {
+    let mut direction = Vec2::ZERO;
+
+    if keyboard_input.pressed(KeyCode::KeyD) {
+        direction.x += 1.0;
+    }
+    if keyboard_input.pressed(KeyCode::KeyA) {
+        direction.x -= 1.0;
+    }
+    if keyboard_input.pressed(KeyCode::KeyS) {
+        direction.y -= 1.0;
+    }
+    if keyboard_input.pressed(KeyCode::Space) {
+        direction.y += 1.0;
+    }
+
+    let new_linvel = direction * PLAYER_SPEED;
+
+    for mut velocity in player.iter_mut() {
+        velocity.linvel = new_linvel;
     }
 }
