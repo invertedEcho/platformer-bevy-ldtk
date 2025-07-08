@@ -8,11 +8,12 @@ use crate::TILE_SIZE;
 
 use super::components::Wall;
 
-// TODO: Stuff breaks when gaps from walls exist
-pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Added<Wall>>) {
+// We could even further optimize this, by combining rows together, but its fine for now
+fn preprocess_wall_grid_coords(wall_grid_coords: Vec<&GridCoords>) -> HashMap<i32, Vec<Vec<i32>>> {
+    // Create map where key is unique y coordinate and value are all x coordinates of that y
+    // coordinate
     let mut all_x_coords_of_y: HashMap<i32, Vec<i32>> = HashMap::new();
-
-    for grid_coords in walls {
+    for grid_coords in wall_grid_coords {
         let current_x = grid_coords.x;
         let current_y = grid_coords.y;
 
@@ -22,68 +23,61 @@ pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Ad
             .push(current_x);
     }
 
-    for (y, all_x) in all_x_coords_of_y {
-        println!("\n");
-        println!("Current y coordinate: {}", &y);
-        println!("x coordinates of current y coordinate: {:?}", &all_x);
+    // Now create another HashMap, where key is unique y coordinate and value are arrays of the x
+    // coordinates. new array if there should be a gap, e.g. [[1, 2, 3], [6, 7, 8]]
+    let mut splitted_x_coords_with_gaps_of_y: HashMap<i32, Vec<Vec<i32>>> = HashMap::new();
 
-        if all_x.is_empty() {
-            continue;
-        }
-
-        let start_from_collider_x = &all_x[0];
-        let mut end_from_collider_x = &all_x[0];
-
-        for (index, current_x) in all_x.iter().enumerate() {
-            let next_item = if index == all_x.len() - 1 {
-                println!(
-                    "No next_item, index: {} all_x.len(): {}",
-                    index,
-                    all_x.len()
-                );
+    for (y_coordinate, all_x_coordinates_of_y_coordinate) in all_x_coords_of_y {
+        let mut current_nested_level = 0;
+        for (index, current_x_coordinate) in all_x_coordinates_of_y_coordinate.iter().enumerate() {
+            let next_item = if index == all_x_coordinates_of_y_coordinate.len() - 1 {
                 None
             } else {
-                Some(all_x[index + 1])
+                Some(all_x_coordinates_of_y_coordinate[index + 1])
             };
 
-            end_from_collider_x = current_x;
+            let root_new_array = splitted_x_coords_with_gaps_of_y
+                .entry(y_coordinate)
+                .or_insert_with(|| vec![Vec::new()]);
+
+            root_new_array[current_nested_level].push(*current_x_coordinate);
+
             if let Some(next_item) = next_item {
-                if next_item.abs_diff(*current_x) > 1 {
-                    println!(
-                        "next_item difference to current_x is bigger than one, should mean GAP. current_x: {} next_item: {}",
-                        current_x, next_item
-                    );
-                    // means our collider should end here
-                    // TODO: Also need to continue spawning next
-                    // Probably smart to split them up previously, have nested arrays
-                    break;
+                if next_item.abs_diff(*current_x_coordinate) > 1 {
+                    current_nested_level += 1;
+                    root_new_array.push(Vec::new());
                 }
             }
         }
+    }
+    return splitted_x_coords_with_gaps_of_y;
+}
 
-        let middle = (start_from_collider_x + end_from_collider_x) as f32 / 2.0;
-        println!("Middle: {}", middle);
-        println!(
-            "Calculated middle: {} with start_from_collider_x: {} and end_from_collider_x: {}",
-            middle, start_from_collider_x, end_from_collider_x
-        );
+pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Added<Wall>>) {
+    let processed_wall_grid_coords = preprocess_wall_grid_coords(walls.iter().collect());
 
-        let cuboid_half_x = all_x.len() as f32 * TILE_SIZE as f32 / 2.0;
-        let cuboid_half_y = (TILE_SIZE / 2) as f32;
+    for (y_coordinate, x_coordinates_nested) in processed_wall_grid_coords {
+        for x_coordinates in x_coordinates_nested {
+            let start_from_collider_x = x_coordinates[0];
+            let end_from_collider_x = *x_coordinates
+                .iter()
+                .last()
+                .expect("Can get last x coordinate");
+            let middle = (start_from_collider_x + end_from_collider_x) as f32 / 2.0;
 
-        let world_x = (middle * TILE_SIZE as f32) + (TILE_SIZE / 2) as f32;
-        let world_y = ((y * TILE_SIZE) as f32) + (TILE_SIZE / 2) as f32;
+            let cuboid_half_x = x_coordinates.len() as f32 * TILE_SIZE as f32 / 2.0;
+            let cuboid_half_y = (TILE_SIZE / 2) as f32;
 
-        println!("world_x is: {}", world_x);
-        println!("Spawning collider at middle: {}", middle);
-        println!("Cuboid half_x: {} half_y: {}", cuboid_half_x, cuboid_half_y);
-        commands.spawn((
-            Transform {
-                translation: Vec3::new(world_x, world_y as f32, 0.0),
-                ..Default::default()
-            },
-            Collider::cuboid(cuboid_half_x, cuboid_half_y),
-        ));
-        println!("\n");
+            let world_x = (middle * TILE_SIZE as f32) + (TILE_SIZE / 2) as f32;
+            let world_y = ((y_coordinate * TILE_SIZE) as f32) + (TILE_SIZE / 2) as f32;
+
+            commands.spawn((
+                Transform {
+                    translation: Vec3::new(world_x, world_y as f32, 0.0),
+                    ..Default::default()
+                },
+                Collider::cuboid(cuboid_half_x, cuboid_half_y),
+            ));
+        }
     }
 }
