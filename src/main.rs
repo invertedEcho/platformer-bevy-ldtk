@@ -2,12 +2,14 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use camera::CameraPlugin;
+use jumper::JumperPlugin;
 use player::PlayerPlugin;
-use walls::WallsPlugin;
+use wall::WallPlugin;
 
 mod camera;
+mod jumper;
 mod player;
-mod walls;
+mod wall;
 
 pub const TILE_SIZE: i32 = 16;
 
@@ -15,11 +17,12 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-        .add_plugins(RapierDebugRenderPlugin::default())
+        // .add_plugins(RapierDebugRenderPlugin::default())
         .add_plugins(LdtkPlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(PlayerPlugin)
-        .add_plugins(WallsPlugin)
+        .add_plugins(WallPlugin)
+        .add_plugins(JumperPlugin)
         .add_systems(Startup, setup)
         .insert_resource(LevelSelection::index(0))
         .run();
@@ -42,5 +45,5 @@ fn setup(
     rapier_config
         .single_mut()
         .expect("RapierConfiguration exists and can be mutated")
-        .gravity = Vec2::new(0.0, -8000.0);
+        .gravity = Vec2::new(0.0, -1000.0);
 }

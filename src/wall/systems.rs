@@ -77,6 +77,10 @@ pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Ad
                     ..Default::default()
                 },
                 Collider::cuboid(cuboid_half_x, cuboid_half_y),
+                Wall,
+                ActiveEvents::COLLISION_EVENTS,
+                Friction::new(1.0),
+                RigidBody::Fixed,
             ));
         }
     }

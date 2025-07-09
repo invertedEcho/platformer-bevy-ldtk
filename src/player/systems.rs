@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::TILE_SIZE;
+use crate::{TILE_SIZE, jumper::components::Jumper};
 
 use super::components::{AnimationIndices, AnimationTimer, Player};
 
@@ -20,6 +20,8 @@ pub fn process_player(
         let texture_atlas_layout = texture_atlas_layouts.add(layout);
         let animation_indices = AnimationIndices { first: 0, last: 5 };
 
+        println!("existing transform: {:?}", transform);
+
         commands.entity(entity).insert((
             Sprite::from_atlas_image(
                 texture,
@@ -30,17 +32,24 @@ pub fn process_player(
             ),
             Transform {
                 translation: Vec3::new(transform.translation.x, transform.translation.y, 3.0),
+                scale: transform.scale,
                 ..default()
             },
             animation_indices,
             AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
             RigidBody::Dynamic,
+            Friction {
+                coefficient: 0.0,
+                combine_rule: CoefficientCombineRule::Min,
+            },
             Collider::cuboid(half_tile_size, half_tile_size),
             LockedAxes::ROTATION_LOCKED,
             Velocity {
                 linvel: Vec2::new(0.0, 0.0),
                 angvel: 0.0,
             },
+            ActiveEvents::CONTACT_FORCE_EVENTS,
+            Jumper { is_jumping: false },
         ));
     }
 }
@@ -65,27 +74,22 @@ pub fn animate_sprite(
 }
 
 pub fn player_movement(
-    keyboard_input: Res<ButtonInput<KeyCode>>,
-    mut player: Query<&mut Velocity, With<Player>>,
+    input: Res<ButtonInput<KeyCode>>,
+    mut player: Query<(&mut Velocity, &mut Jumper), With<Player>>,
 ) {
-    let mut direction = Vec2::ZERO;
+    for (mut velocity, mut jumper) in player.iter_mut() {
+        let right = if input.pressed(KeyCode::KeyD) { 1. } else { 0. };
+        let left = if input.pressed(KeyCode::KeyA) { 1. } else { 0. };
 
-    if keyboard_input.pressed(KeyCode::KeyD) {
-        direction.x += 1.0;
-    }
-    if keyboard_input.pressed(KeyCode::KeyA) {
-        direction.x -= 1.0;
-    }
-    if keyboard_input.pressed(KeyCode::KeyS) {
-        direction.y -= 1.0;
-    }
-    if keyboard_input.pressed(KeyCode::Space) {
-        direction.y += 1.0;
-    }
+        velocity.linvel.x = (right - left) * 200.;
 
-    let new_linvel = direction * PLAYER_SPEED;
-
-    for mut velocity in player.iter_mut() {
-        velocity.linvel = new_linvel;
+        if input.pressed(KeyCode::KeyS) && !jumper.is_jumping {
+            velocity.linvel.y = -1.0 * PLAYER_SPEED;
+        }
+        if input.just_pressed(KeyCode::Space) && !jumper.is_jumping {
+            velocity.linvel.y = 220.0;
+            jumper.is_jumping = true;
+        }
+        println!("velocity.linve: {}", velocity.linvel);
     }
 }
