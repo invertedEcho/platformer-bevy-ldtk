@@ -1,15 +1,10 @@
 use std::collections::HashMap;
 
-use bevy::prelude::*;
-use bevy_ecs_ldtk::prelude::*;
-use bevy_rapier2d::prelude::*;
+use bevy_ecs_ldtk::GridCoords;
 
-use crate::TILE_SIZE;
-
-use super::components::Wall;
-
+// TODO: Give proper name
 // We could even further optimize this, by combining rows together, but its fine for now
-fn preprocess_grid_coords(wall_grid_coords: Vec<&GridCoords>) -> HashMap<i32, Vec<Vec<i32>>> {
+pub fn preprocess_grid_coords(wall_grid_coords: Vec<&GridCoords>) -> HashMap<i32, Vec<Vec<i32>>> {
     // Create map where key is unique y coordinate and value are all x coordinates of that y
     // coordinate
     let mut all_x_coords_of_y: HashMap<i32, Vec<i32>> = HashMap::new();
@@ -51,36 +46,4 @@ fn preprocess_grid_coords(wall_grid_coords: Vec<&GridCoords>) -> HashMap<i32, Ve
         }
     }
     return splitted_x_coords_with_gaps_of_y;
-}
-
-pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Added<Wall>>) {
-    let processed_wall_grid_coords = preprocess_grid_coords(walls.iter().collect());
-
-    for (y_coordinate, x_coordinates_nested) in processed_wall_grid_coords {
-        for x_coordinates in x_coordinates_nested {
-            let start_from_collider_x = x_coordinates[0];
-            let end_from_collider_x = *x_coordinates
-                .iter()
-                .last()
-                .expect("Can get last x coordinate");
-            let middle = (start_from_collider_x + end_from_collider_x) as f32 / 2.0;
-
-            let cuboid_half_x = x_coordinates.len() as f32 * TILE_SIZE as f32 / 2.0;
-            let cuboid_half_y = (TILE_SIZE / 2) as f32;
-
-            let world_x = (middle * TILE_SIZE as f32) + (TILE_SIZE / 2) as f32;
-            let world_y = ((y_coordinate * TILE_SIZE) as f32) + (TILE_SIZE / 2) as f32;
-
-            commands.spawn((
-                Transform {
-                    translation: Vec3::new(world_x, world_y as f32, 0.0),
-                    ..Default::default()
-                },
-                Collider::cuboid(cuboid_half_x, cuboid_half_y),
-                Wall,
-                Friction::new(1.0),
-                RigidBody::Fixed,
-            ));
-        }
-    }
 }

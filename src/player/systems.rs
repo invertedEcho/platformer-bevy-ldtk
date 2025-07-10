@@ -20,8 +20,6 @@ pub fn process_player(
         let texture_atlas_layout = texture_atlas_layouts.add(layout);
         let animation_indices = AnimationIndices { first: 0, last: 5 };
 
-        println!("existing transform: {:?}", transform);
-
         commands.entity(entity).insert((
             Sprite::from_atlas_image(
                 texture,
@@ -90,6 +88,5 @@ pub fn player_movement(
             velocity.linvel.y = 220.0;
             jumper.is_jumping = true;
         }
-        println!("velocity.linve: {}", velocity.linvel);
     }
 }

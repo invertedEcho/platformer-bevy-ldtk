@@ -1,14 +1,16 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{player::components::Player, wall::components::Wall};
+use crate::player::components::Player;
+
+use crate::ground::components::Ground;
 
 use super::components::Jumper;
 
 pub fn ground_detection_system(
     mut collision_events: EventReader<CollisionEvent>,
     mut players: Query<(&mut Jumper, Entity), With<Player>>,
-    ground_query: Query<Entity, With<Wall>>,
+    ground_query: Query<Entity, With<Ground>>,
 ) {
     for collision_event in collision_events.read() {
         match collision_event {
