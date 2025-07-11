@@ -589,25 +589,6 @@
 			}
 		},
 		{
-			"__cWid": 6,
-			"__cHei": 1,
-			"identifier": "Player",
-			"uid": 2,
-			"relPath": "../herochar/herochar_run_anim_strip_6.png",
-			"embedAtlas": null,
-			"pxWid": 96,
-			"pxHei": 16,
-			"tileGridSize": 16,
-			"spacing": 0,
-			"padding": 0,
-			"tags": [],
-			"tagsSourceEnumUid": null,
-			"enumTags": [],
-			"customData": [],
-			"savedSelections": [],
-			"cachedPixelData": { "opaqueTiles": "000000", "averageColors": "646874577467646764686457" }
-		},
-		{
 			"__cWid": 3,
 			"__cHei": 1,
 			"identifier": "Platform",
