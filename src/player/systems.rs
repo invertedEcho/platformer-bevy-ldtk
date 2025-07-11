@@ -179,10 +179,6 @@ pub fn player_movement(
 ) {
     for (mut velocity, mut jumper) in player.iter_mut() {
         velocity.linvel.x = 0.0;
-        println!(
-            "current_player_movement_type: {:?}",
-            current_player_movement_type.get()
-        );
         let current_player_movement_type = current_player_movement_type.get().clone();
         if current_player_movement_type == PlayerMovementType::BackwardsRun
             || current_player_movement_type == PlayerMovementType::BackwardsIdle
@@ -202,6 +198,7 @@ pub fn player_movement(
         } else if input.pressed(KeyCode::Space) && !jumper.is_jumping {
             velocity.linvel.y = 220.0;
             jumper.is_jumping = true;
+            println!("space pressed, setting is_jumping to true");
         }
     }
 }

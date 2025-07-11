@@ -2,12 +2,14 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use camera::CameraPlugin;
+use game_flow::GameFlowPlugin;
 use ground::GroundPlugin;
 use jumper::JumperPlugin;
 use player::PlayerPlugin;
 use wall::WallPlugin;
 
 mod camera;
+mod game_flow;
 mod ground;
 mod jumper;
 mod player;
@@ -27,6 +29,7 @@ fn main() {
         .add_plugins(WallPlugin)
         .add_plugins(GroundPlugin)
         .add_plugins(JumperPlugin)
+        .add_plugins(GameFlowPlugin)
         .add_systems(Startup, setup)
         .insert_resource(LevelSelection::index(0))
         .run();
