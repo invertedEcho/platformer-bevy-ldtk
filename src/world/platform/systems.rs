@@ -1,0 +1,92 @@
+use bevy::prelude::*;
+use bevy_ecs_ldtk::prelude::*;
+use bevy_rapier2d::prelude::*;
+
+use crate::{TILE_SIZE, player::components::Player, utils::preprocess_grid_coords};
+
+use super::components::Platform;
+
+pub fn spawn_platform_colliders(
+    mut commands: Commands,
+    platform_query: Query<(Entity, &GridCoords), Added<Platform>>,
+) {
+    // We already have the exact same logic for ground too, there is literally only one small
+    // difference, we use "Platform" component instead of "Ground". Its fine for now but this can
+    // definitely be improved
+    let platform_grid_coords = platform_query
+        .iter()
+        .map(|(_, grid_coords)| grid_coords)
+        .collect();
+    let processed_platform_grid_coords = preprocess_grid_coords(platform_grid_coords);
+
+    for (y_coordinate, x_coordinates_nested) in processed_platform_grid_coords {
+        for x_coordinates in x_coordinates_nested {
+            let start_from_collider_x = x_coordinates[0];
+            let end_from_collider_x = *x_coordinates
+                .iter()
+                .last()
+                .expect("Can get last x coordinate from array");
+            let middle = (start_from_collider_x + end_from_collider_x) as f32 / 2.0;
+
+            let cuboid_half_x = x_coordinates.len() as f32 * TILE_SIZE as f32 / 2.0;
+            let cuboid_half_y = (TILE_SIZE / 2) as f32;
+
+            let world_x = (middle * TILE_SIZE as f32) + (TILE_SIZE / 2) as f32;
+            let world_y = ((y_coordinate * TILE_SIZE) as f32) + (TILE_SIZE / 2) as f32;
+
+            commands.spawn((
+                Transform {
+                    translation: Vec3::new(world_x, world_y as f32, 0.0),
+                    ..Default::default()
+                },
+                Collider::cuboid(cuboid_half_x, cuboid_half_y),
+                Platform,
+                Friction::new(1.0),
+                RigidBody::Fixed,
+                ActiveEvents::COLLISION_EVENTS,
+                Visibility::Hidden,
+            ));
+        }
+    }
+}
+
+pub fn platform_player_collision_detection(
+    mut commands: Commands,
+    platform_query: Query<Entity, With<Platform>>,
+    mut collision_event_reader: EventReader<CollisionEvent>,
+    mut player_query: Query<(&mut Player, Entity), With<Player>>,
+) {
+    for collision_event in collision_event_reader.read() {
+        match collision_event {
+            CollisionEvent::Started(entity1, entity2, _) => {
+                let maybe_entity_is_platform = platform_query
+                    .iter()
+                    .find(|platform| platform == entity1 || platform == entity2);
+                if let Some(_) = maybe_entity_is_platform {
+                    let (mut player, player_entity) = player_query.single_mut().unwrap();
+                    if *entity1 == player_entity || *entity2 == player_entity {
+                        println!("Player has started colliding with platform");
+                        player.is_on_platform = true;
+                    }
+                }
+            }
+            CollisionEvent::Stopped(entity1, entity2, _) => {
+                let maybe_entity_is_platform = platform_query
+                    .iter()
+                    .find(|platform| platform == entity1 || platform == entity2);
+                if let Some(_) = maybe_entity_is_platform {
+                    let (mut player, player_entity) = player_query.single_mut().unwrap();
+                    if *entity1 == player_entity {
+                        println!("Player has stopped colliding with platform");
+                        player.is_on_platform = false;
+                        // commands.entity(*entity2).remove::<ColliderDisabled>();
+                    } else if *entity2 == player_entity {
+                        println!("Player has stopped colliding with platform");
+                        player.is_on_platform = false;
+                        // commands.entity(*entity1).remove::<ColliderDisabled>();
+                    }
+                }
+            }
+        }
+    }
+}
