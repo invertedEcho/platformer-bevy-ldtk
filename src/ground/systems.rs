@@ -1,13 +1,24 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
+use bevy_ecs_tilemap::tiles::TileColor;
 use bevy_rapier2d::prelude::*;
 
 use crate::{TILE_SIZE, utils::preprocess_grid_coords};
 
 use super::components::Ground;
 
-pub fn spawn_ground_colliders(mut commands: Commands, grounds: Query<&GridCoords, Added<Ground>>) {
-    let processed_wall_grid_coords = preprocess_grid_coords(grounds.iter().collect());
+pub fn spawn_ground_colliders(
+    mut commands: Commands,
+    grounds: Query<(Entity, &GridCoords), Added<Ground>>,
+) {
+    // Remove the tilecolor thats added from ldtk, as grounds shouldnt be visible, they only exists
+    // as colliders, for physics
+    for (entity, _) in grounds {
+        commands.entity(entity).remove::<TileColor>();
+    }
+
+    let grounds = grounds.iter().map(|(_, grid_coords)| grid_coords).collect();
+    let processed_wall_grid_coords = preprocess_grid_coords(grounds);
 
     for (y_coordinate, x_coordinates_nested) in processed_wall_grid_coords {
         for x_coordinates in x_coordinates_nested {

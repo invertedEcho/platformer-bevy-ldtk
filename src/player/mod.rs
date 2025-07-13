@@ -1,11 +1,13 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
-use components::PlayerBundle;
+use components::{Player, PlayerBundle};
 use states::PlayerMovementType;
 use systems::{
-    animate_sprite, player_movement, set_backwards_idle_sprite, set_backwards_player_run_sprite,
+    player_movement, set_backwards_idle_sprite, set_backwards_player_run_sprite,
     set_forward_idle_player_sprite, set_forward_player_run_sprite, setup_player,
 };
+
+use crate::common::systems::animate_generic_sprite;
 
 pub mod components;
 mod states;
@@ -16,8 +18,15 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<PlayerMovementType>()
-            .register_ldtk_entity::<PlayerBundle>("Player")
-            .add_systems(Update, (setup_player, animate_sprite, player_movement))
+            .register_ldtk_entity_for_layer::<PlayerBundle>("Player", "Player")
+            .add_systems(
+                Update,
+                (
+                    setup_player,
+                    animate_generic_sprite::<Player>,
+                    player_movement,
+                ),
+            )
             .add_systems(
                 OnEnter(PlayerMovementType::ForwardRun),
                 set_forward_player_run_sprite,

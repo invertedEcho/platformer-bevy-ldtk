@@ -11,12 +11,3 @@ pub struct PlayerBundle {
     #[grid_coords]
     grid_coords: GridCoords,
 }
-
-#[derive(Component)]
-pub struct AnimationIndices {
-    pub first: usize,
-    pub last: usize,
-}
-
-#[derive(Component, Deref, DerefMut)]
-pub struct AnimationTimer(pub Timer);

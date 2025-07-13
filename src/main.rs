@@ -2,15 +2,20 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use camera::CameraPlugin;
+use coins::CoinPlugin;
 use game_flow::GameFlowPlugin;
 use ground::GroundPlugin;
+use hud::HudPlugin;
 use jumper::JumperPlugin;
 use player::PlayerPlugin;
 use wall::WallPlugin;
 
 mod camera;
+pub mod coins;
+pub mod common;
 mod game_flow;
 mod ground;
+mod hud;
 mod jumper;
 mod player;
 pub mod utils;
@@ -30,6 +35,8 @@ fn main() {
         .add_plugins(GroundPlugin)
         .add_plugins(JumperPlugin)
         .add_plugins(GameFlowPlugin)
+        .add_plugins(CoinPlugin)
+        .add_plugins(HudPlugin)
         .add_systems(Startup, setup)
         .insert_resource(LevelSelection::index(0))
         .run();

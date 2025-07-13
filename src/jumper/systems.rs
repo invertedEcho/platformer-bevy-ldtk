@@ -7,7 +7,7 @@ use crate::ground::components::Ground;
 
 use super::components::Jumper;
 
-pub fn ground_detection_system(
+pub fn ground_collision_detection(
     mut collision_events: EventReader<CollisionEvent>,
     mut players: Query<(&mut Jumper, Entity), With<Player>>,
     ground_query: Query<Entity, With<Ground>>,
@@ -19,10 +19,6 @@ pub fn ground_detection_system(
                     let ground_entity = ground_query.iter().find(|e| e == entity1 || e == entity2);
                     if let Some(_) = ground_entity {
                         if *entity1 == player_entity || *entity2 == player_entity {
-                            println!(
-                                "Either entity1 touched with player_entity or entity2 touched with player. is_jumping: {:?}",
-                                jumper.is_jumping
-                            );
                             jumper.is_jumping = false;
                         }
                     }

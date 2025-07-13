@@ -1,12 +1,13 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{TILE_SIZE, jumper::components::Jumper};
-
-use super::{
-    components::{AnimationIndices, AnimationTimer, Player},
-    states::PlayerMovementType,
+use crate::{
+    TILE_SIZE,
+    common::components::{AnimationIndices, AnimationTimer},
+    jumper::components::Jumper,
 };
+
+use super::{components::Player, states::PlayerMovementType};
 
 const PLAYER_SPEED: f32 = 200.0;
 
@@ -35,6 +36,7 @@ pub fn setup_player(
     new_players: Query<(Entity, &Transform), Added<Player>>,
 ) {
     let half_tile_size = (TILE_SIZE / 2) as f32;
+
     for (entity, transform) in new_players {
         let texture = asset_server.load(PLAYER_FORWARD_IDLE_SPRITE_TILESET);
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
@@ -69,25 +71,6 @@ pub fn setup_player(
             ActiveEvents::CONTACT_FORCE_EVENTS,
             Jumper { is_jumping: false },
         ));
-    }
-}
-
-pub fn animate_sprite(
-    time: Res<Time>,
-    mut query: Query<(&AnimationIndices, &mut AnimationTimer, &mut Sprite), With<Player>>,
-) {
-    for (indices, mut timer, mut sprite) in &mut query {
-        timer.tick(time.delta());
-
-        if timer.just_finished() {
-            if let Some(atlas) = &mut sprite.texture_atlas {
-                atlas.index = if atlas.index == indices.last {
-                    indices.first
-                } else {
-                    atlas.index + 1
-                };
-            }
-        }
     }
 }
 
@@ -198,7 +181,6 @@ pub fn player_movement(
         } else if input.pressed(KeyCode::Space) && !jumper.is_jumping {
             velocity.linvel.y = 220.0;
             jumper.is_jumping = true;
-            println!("space pressed, setting is_jumping to true");
         }
     }
 }
