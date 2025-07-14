@@ -92,7 +92,6 @@ pub fn activate_platform_colliders_if_player_jumping_from_mushroom(
     platform_query: Query<Entity, With<Platform>>,
 ) {
     for (velocity, player) in player_query {
-        println!("Player velocity: {:?}", velocity.linvel.y);
         if velocity.linvel.y < 0.0 && !player.is_on_platform && player.is_on_jump_from_mushroom {
             for platform in platform_query {
                 commands.entity(platform).remove::<ColliderDisabled>();

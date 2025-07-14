@@ -48,8 +48,6 @@ fn setup(
     asset_server: Res<AssetServer>,
     mut rapier_config: Query<&mut RapierConfiguration>,
 ) {
-    commands.spawn(Camera2d);
-
     commands.spawn(LdtkWorldBundle {
         ldtk_handle: LdtkProjectHandle {
             handle: asset_server.load("ldtk/ldtk.ldtk"),
