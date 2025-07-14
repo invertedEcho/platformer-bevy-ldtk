@@ -5,6 +5,7 @@ use crate::{
     HALF_TILE_SIZE,
     common::components::{AnimationIndices, AnimationTimer},
     player::components::Player,
+    world::platform::components::Platform,
 };
 
 use super::components::Mushroom;
@@ -41,7 +42,7 @@ pub fn spawn_mushroom_colliders(
 pub fn mushroom_collision_detection(
     mut collision_event_reader: EventReader<CollisionEvent>,
     mushrooms_query: Query<Entity, With<Mushroom>>,
-    mut player_query: Query<(Entity, &mut Velocity), With<Player>>,
+    mut player_query: Query<(Entity, &mut Velocity, &mut Player), With<Player>>,
 ) {
     for collision_event in collision_event_reader.read() {
         match collision_event {
@@ -50,11 +51,12 @@ pub fn mushroom_collision_detection(
                     .iter()
                     .any(|e| e == *entity1 || e == *entity2);
                 if collision_entities_is_mushroom {
-                    let (player_entity, mut player_velocity) = player_query
+                    let (player_entity, mut player_velocity, mut player) = player_query
                         .single_mut()
                         .expect("Player exists when colliding with mushroom");
                     if *entity1 == player_entity || *entity2 == player_entity {
                         player_velocity.linvel.y = 400.0;
+                        player.is_on_jump_from_mushroom = true;
                     }
                 }
             }

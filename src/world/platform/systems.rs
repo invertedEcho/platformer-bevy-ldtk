@@ -66,6 +66,7 @@ pub fn platform_player_collision_detection(
                     if *entity1 == player_entity || *entity2 == player_entity {
                         println!("Player has started colliding with platform");
                         player.is_on_platform = true;
+                        player.is_on_jump_from_mushroom = false;
                     }
                 }
             }

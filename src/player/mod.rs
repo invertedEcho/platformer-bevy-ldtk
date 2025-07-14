@@ -3,8 +3,9 @@ use bevy_ecs_ldtk::prelude::*;
 use components::{Player, PlayerBundle};
 use states::PlayerMovementType;
 use systems::{
-    player_movement, set_backwards_idle_sprite, set_backwards_player_run_sprite,
-    set_forward_idle_player_sprite, set_forward_player_run_sprite, setup_player,
+    log_player_velocity, player_movement, set_backwards_idle_sprite,
+    set_backwards_player_run_sprite, set_forward_idle_player_sprite, set_forward_player_run_sprite,
+    setup_player,
 };
 
 use crate::common::systems::animate_generic_sprite;
@@ -25,6 +26,7 @@ impl Plugin for PlayerPlugin {
                     setup_player,
                     animate_generic_sprite::<Player>,
                     player_movement,
+                    log_player_velocity,
                 ),
             )
             .add_systems(
