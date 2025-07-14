@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{TILE_SIZE, player::components::Player, utils::preprocess_grid_coords};
+use crate::{HALF_TILE_SIZE, TILE_SIZE, player::components::Player, utils::preprocess_grid_coords};
 
 use super::components::Platform;
 
@@ -29,17 +29,16 @@ pub fn spawn_platform_colliders(
             let middle = (start_from_collider_x + end_from_collider_x) as f32 / 2.0;
 
             let cuboid_half_x = x_coordinates.len() as f32 * TILE_SIZE as f32 / 2.0;
-            let cuboid_half_y = (TILE_SIZE / 2) as f32;
 
-            let world_x = (middle * TILE_SIZE as f32) + (TILE_SIZE / 2) as f32;
-            let world_y = ((y_coordinate * TILE_SIZE) as f32) + (TILE_SIZE / 2) as f32;
+            let world_x = (middle * TILE_SIZE as f32) + HALF_TILE_SIZE;
+            let world_y = (y_coordinate as f32 * TILE_SIZE) + HALF_TILE_SIZE;
 
             commands.spawn((
                 Transform {
                     translation: Vec3::new(world_x, world_y as f32, 0.0),
                     ..Default::default()
                 },
-                Collider::cuboid(cuboid_half_x, cuboid_half_y),
+                Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
                 Platform,
                 Friction::new(1.0),
                 RigidBody::Fixed,
@@ -51,18 +50,18 @@ pub fn spawn_platform_colliders(
 }
 
 pub fn platform_player_collision_detection(
-    mut commands: Commands,
     platform_query: Query<Entity, With<Platform>>,
     mut collision_event_reader: EventReader<CollisionEvent>,
     mut player_query: Query<(&mut Player, Entity), With<Player>>,
 ) {
+    // TODO: Cases are exactly same, only differ in is_on_platform bool..
     for collision_event in collision_event_reader.read() {
         match collision_event {
             CollisionEvent::Started(entity1, entity2, _) => {
-                let maybe_entity_is_platform = platform_query
+                let collision_entities_is_platform = platform_query
                     .iter()
-                    .find(|platform| platform == entity1 || platform == entity2);
-                if let Some(_) = maybe_entity_is_platform {
+                    .any(|platform| platform == *entity1 || platform == *entity2);
+                if collision_entities_is_platform {
                     let (mut player, player_entity) = player_query.single_mut().unwrap();
                     if *entity1 == player_entity || *entity2 == player_entity {
                         println!("Player has started colliding with platform");
@@ -71,19 +70,14 @@ pub fn platform_player_collision_detection(
                 }
             }
             CollisionEvent::Stopped(entity1, entity2, _) => {
-                let maybe_entity_is_platform = platform_query
+                let collision_entities_is_platform = platform_query
                     .iter()
-                    .find(|platform| platform == entity1 || platform == entity2);
-                if let Some(_) = maybe_entity_is_platform {
+                    .any(|platform| platform == *entity1 || platform == *entity2);
+                if collision_entities_is_platform {
                     let (mut player, player_entity) = player_query.single_mut().unwrap();
-                    if *entity1 == player_entity {
+                    if *entity1 == player_entity || *entity2 == player_entity {
                         println!("Player has stopped colliding with platform");
                         player.is_on_platform = false;
-                        // commands.entity(*entity2).remove::<ColliderDisabled>();
-                    } else if *entity2 == player_entity {
-                        println!("Player has stopped colliding with platform");
-                        player.is_on_platform = false;
-                        // commands.entity(*entity1).remove::<ColliderDisabled>();
                     }
                 }
             }

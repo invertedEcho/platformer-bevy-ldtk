@@ -17,8 +17,9 @@ pub fn player_on_ground_detection(
         match collision_event {
             CollisionEvent::Started(entity1, entity2, _) => {
                 for (mut jumper, player_entity) in players.iter_mut() {
-                    let ground_entity = ground_query.iter().find(|e| e == entity1 || e == entity2);
-                    if let Some(_) = ground_entity {
+                    let collision_entities_is_ground =
+                        ground_query.iter().any(|e| e == *entity1 || e == *entity2);
+                    if collision_entities_is_ground {
                         if *entity1 == player_entity || *entity2 == player_entity {
                             jumper.is_jumping = false;
                         }

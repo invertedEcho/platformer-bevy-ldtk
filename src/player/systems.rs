@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::{
-    TILE_SIZE,
+    HALF_TILE_SIZE,
     common::components::{AnimationIndices, AnimationTimer},
     jumper::components::Jumper,
     world::platform::components::Platform,
@@ -36,18 +36,15 @@ pub fn setup_player(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     new_players: Query<(Entity, &Transform), Added<Player>>,
 ) {
-    let half_tile_size = (TILE_SIZE / 2) as f32;
-
+    let texture = asset_server.load(PLAYER_FORWARD_IDLE_SPRITE_TILESET);
+    let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
+    let texture_atlas_layout = texture_atlas_layouts.add(layout);
     for (entity, transform) in new_players {
-        let texture = asset_server.load(PLAYER_FORWARD_IDLE_SPRITE_TILESET);
-        let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
-        let texture_atlas_layout = texture_atlas_layouts.add(layout);
-
         commands.entity(entity).insert((
             Sprite::from_atlas_image(
-                texture,
+                texture.clone(),
                 TextureAtlas {
-                    layout: texture_atlas_layout,
+                    layout: texture_atlas_layout.clone(),
                     index: PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES.first,
                 },
             ),
@@ -63,7 +60,7 @@ pub fn setup_player(
                 coefficient: 0.0,
                 combine_rule: CoefficientCombineRule::Min,
             },
-            Collider::cuboid(half_tile_size, half_tile_size),
+            Collider::cuboid(HALF_TILE_SIZE / 2.0, HALF_TILE_SIZE),
             LockedAxes::ROTATION_LOCKED,
             Velocity {
                 linvel: Vec2::new(0.0, 0.0),

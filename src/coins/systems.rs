@@ -55,8 +55,9 @@ pub fn coin_collision_detection(
                 let player_entity = players
                     .single()
                     .expect("Player exists when coin is touched");
-                let coin_entity = coin_query.iter().find(|e| e == entity1 || e == entity2);
-                if let Some(_) = coin_entity {
+                let collision_entities_is_coin =
+                    coin_query.iter().any(|e| e == *entity1 || e == *entity2);
+                if collision_entities_is_coin {
                     if *entity1 == player_entity {
                         commands.entity(*entity2).despawn();
                     } else if *entity2 == player_entity {
