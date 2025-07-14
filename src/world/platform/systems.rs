@@ -31,14 +31,14 @@ pub fn spawn_platform_colliders(
             let cuboid_half_x = x_coordinates.len() as f32 * TILE_SIZE as f32 / 2.0;
 
             let world_x = (middle * TILE_SIZE as f32) + HALF_TILE_SIZE;
-            let world_y = (y_coordinate as f32 * TILE_SIZE) + HALF_TILE_SIZE;
+            let world_y = (y_coordinate as f32 * TILE_SIZE) + HALF_TILE_SIZE + HALF_TILE_SIZE / 2.0;
 
             commands.spawn((
                 Transform {
                     translation: Vec3::new(world_x, world_y as f32, 0.0),
                     ..Default::default()
                 },
-                Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
+                Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE / 2.0),
                 Platform,
                 Friction::new(1.0),
                 RigidBody::Fixed,
