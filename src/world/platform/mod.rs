@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::app::LdtkIntCellAppExt;
 use components::PlatformBundle;
-use systems::{platform_player_collision_detection, spawn_platform_colliders};
+use systems::{
+    activate_platform_colliders_if_player_jumping_from_mushroom,
+    platform_player_collision_detection, spawn_platform_colliders,
+};
 
 pub mod components;
 mod systems;
@@ -18,6 +21,7 @@ impl Plugin for PlatformPlugin {
                 (
                     spawn_platform_colliders,
                     platform_player_collision_detection,
+                    activate_platform_colliders_if_player_jumping_from_mushroom,
                 ),
             );
     }

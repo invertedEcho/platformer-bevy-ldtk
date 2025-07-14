@@ -4,6 +4,7 @@ use bevy_ecs_ldtk::prelude::*;
 #[derive(Default, Component)]
 pub struct Player {
     pub is_on_platform: bool,
+    pub is_jumping: bool,
     // idk about this, but it works
     pub is_on_jump_from_mushroom: bool,
 }

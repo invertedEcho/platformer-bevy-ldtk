@@ -5,7 +5,6 @@ use camera::CameraPlugin;
 use coins::CoinPlugin;
 use game_flow::GameFlowPlugin;
 use hud::HudPlugin;
-use jumper::JumperPlugin;
 use player::PlayerPlugin;
 use world::ground::GroundPlugin;
 use world::mushroom::MushroomPlugin;
@@ -17,7 +16,6 @@ pub mod coins;
 pub mod common;
 mod game_flow;
 mod hud;
-mod jumper;
 mod player;
 pub mod utils;
 pub mod world;
@@ -36,7 +34,6 @@ fn main() {
         .add_plugins(WallPlugin)
         .add_plugins(PlatformPlugin)
         .add_plugins(GroundPlugin)
-        .add_plugins(JumperPlugin)
         .add_plugins(GameFlowPlugin)
         .add_plugins(CoinPlugin)
         .add_plugins(HudPlugin)

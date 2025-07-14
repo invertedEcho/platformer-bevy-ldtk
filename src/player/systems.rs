@@ -4,8 +4,7 @@ use bevy_rapier2d::prelude::*;
 use crate::{
     HALF_TILE_SIZE,
     common::components::{AnimationIndices, AnimationTimer},
-    jumper::components::Jumper,
-    world::platform::components::Platform,
+    world::{ground::components::Ground, platform::components::Platform},
 };
 
 use super::{components::Player, states::PlayerMovementType};
@@ -66,7 +65,6 @@ pub fn setup_player(
                 linvel: Vec2::new(0.0, 0.0),
                 angvel: 0.0,
             },
-            Jumper { is_jumping: false },
         ));
     }
 }
@@ -154,12 +152,12 @@ pub fn set_backwards_idle_sprite(
 pub fn player_movement(
     mut commands: Commands,
     input: Res<ButtonInput<KeyCode>>,
-    mut player_query: Query<(&mut Velocity, &mut Jumper, &Player), With<Player>>,
+    mut player_query: Query<(&mut Velocity, &mut Player), With<Player>>,
     current_player_movement_type: Res<State<PlayerMovementType>>,
     mut next_player_movement_type: ResMut<NextState<PlayerMovementType>>,
     platform_query: Query<Entity, With<Platform>>,
 ) {
-    for (mut velocity, mut jumper, player) in player_query.iter_mut() {
+    for (mut velocity, mut player) in player_query.iter_mut() {
         velocity.linvel.x = 0.0;
         let current_player_movement_type = current_player_movement_type.get().clone();
         if current_player_movement_type == PlayerMovementType::BackwardsRun
@@ -177,31 +175,39 @@ pub fn player_movement(
             velocity.linvel.x = -1.0 * PLAYER_SPEED;
             next_player_movement_type.set(PlayerMovementType::BackwardsRun);
         }
-        if input.pressed(KeyCode::KeyS) && !jumper.is_jumping && player.is_on_platform {
+        if input.pressed(KeyCode::KeyS) && !player.is_jumping && player.is_on_platform {
             // TODO: We should only insert ColliderDisabled on platforms where
             // user is staying on
             for platform_entity in platform_query {
                 commands.entity(platform_entity).insert(ColliderDisabled);
             }
         }
-        if input.just_pressed(KeyCode::Space) && !jumper.is_jumping {
+        if input.just_pressed(KeyCode::Space) && !player.is_jumping {
             velocity.linvel.y = 220.0;
-            jumper.is_jumping = true;
+            player.is_jumping = true;
         }
     }
 }
 
-pub fn log_player_velocity(
-    mut commands: Commands,
-    player_query: Query<(&Velocity, &Player), With<Player>>,
-    platform_query: Query<Entity, With<Platform>>,
+pub fn player_on_ground_detection(
+    mut collision_events: EventReader<CollisionEvent>,
+    mut players: Query<(&mut Player, Entity), With<Player>>,
+    ground_query: Query<Entity, Or<(With<Ground>, With<Platform>)>>,
 ) {
-    for (velocity, player) in player_query {
-        println!("Player velocity: {:?}", velocity.linvel.y);
-        if velocity.linvel.y < 0.0 && !player.is_on_platform && player.is_on_jump_from_mushroom {
-            for platform in platform_query {
-                commands.entity(platform).remove::<ColliderDisabled>();
+    for collision_event in collision_events.read() {
+        match collision_event {
+            CollisionEvent::Started(entity1, entity2, _) => {
+                for (mut player, player_entity) in players.iter_mut() {
+                    let collision_entities_is_ground =
+                        ground_query.iter().any(|e| e == *entity1 || e == *entity2);
+                    if collision_entities_is_ground {
+                        if *entity1 == player_entity || *entity2 == player_entity {
+                            player.is_jumping = false;
+                        }
+                    }
+                }
             }
+            _ => {}
         }
     }
 }

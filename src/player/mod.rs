@@ -3,7 +3,7 @@ use bevy_ecs_ldtk::prelude::*;
 use components::{Player, PlayerBundle};
 use states::PlayerMovementType;
 use systems::{
-    log_player_velocity, player_movement, set_backwards_idle_sprite,
+    player_movement, player_on_ground_detection, set_backwards_idle_sprite,
     set_backwards_player_run_sprite, set_forward_idle_player_sprite, set_forward_player_run_sprite,
     setup_player,
 };
@@ -26,7 +26,7 @@ impl Plugin for PlayerPlugin {
                     setup_player,
                     animate_generic_sprite::<Player>,
                     player_movement,
-                    log_player_velocity,
+                    player_on_ground_detection,
                 ),
             )
             .add_systems(

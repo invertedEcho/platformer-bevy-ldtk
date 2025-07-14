@@ -5,7 +5,6 @@ use crate::{
     HALF_TILE_SIZE,
     common::components::{AnimationIndices, AnimationTimer},
     player::components::Player,
-    world::platform::components::Platform,
 };
 
 use super::components::Mushroom;
