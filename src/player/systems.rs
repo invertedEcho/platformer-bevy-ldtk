@@ -175,16 +175,19 @@ pub fn player_movement(
         if input.pressed(KeyCode::KeyD) {
             velocity.linvel.x = 1.0 * PLAYER_SPEED;
             next_player_movement_type.set(PlayerMovementType::ForwardRun);
-        } else if input.pressed(KeyCode::KeyA) {
+        }
+        if input.pressed(KeyCode::KeyA) {
             velocity.linvel.x = -1.0 * PLAYER_SPEED;
             next_player_movement_type.set(PlayerMovementType::BackwardsRun);
-        } else if input.pressed(KeyCode::KeyS) && !jumper.is_jumping && player.is_on_platform {
+        }
+        if input.pressed(KeyCode::KeyS) && !jumper.is_jumping && player.is_on_platform {
             // TODO: This wont work, we need to only insert ColliderDisabled on platforms where
             // user is staying on
             for platform_entity in platform_query {
                 commands.entity(platform_entity).insert(ColliderDisabled);
             }
-        } else if input.pressed(KeyCode::Space) && !jumper.is_jumping {
+        }
+        if input.just_pressed(KeyCode::Space) && !jumper.is_jumping {
             velocity.linvel.y = 220.0;
             jumper.is_jumping = true;
         }
