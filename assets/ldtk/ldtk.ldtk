@@ -14,7 +14,7 @@
 	"nextUid": 205,
 	"identifierStyle": "Capitalize",
 	"toc": [],
-	"worldLayout": "Free",
+	"worldLayout": "LinearHorizontal",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
 	"defaultLevelWidth": 256,
@@ -272,7 +272,7 @@
 			"gridSize": 16,
 			"guideGridWid": 0,
 			"guideGridHei": 0,
-			"displayOpacity": 0.6,
+			"displayOpacity": 0.3,
 			"inactiveOpacity": 1,
 			"hideInList": false,
 			"hideFieldsWhenInactive": false,
@@ -934,8 +934,8 @@
 			"identifier": "Level_0",
 			"iid": "c2d47272-3740-11f0-a891-85a44477d8cd",
 			"uid": 0,
-			"worldX": 0,
-			"worldY": 0,
+			"worldX": -1,
+			"worldY": -1,
 			"worldDepth": 0,
 			"pxWid": 1024,
 			"pxHei": 576,
@@ -990,9 +990,7 @@
 							"fieldInstances": [{ "__identifier": "HelpSigns", "__type": "LocalEnum.HelpSigns", "__value": "Basic_Move", "__tile": null, "defUid": 204, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["Basic_Move"]
-							}] }],
-							"__worldX": 80,
-							"__worldY": 496
+							}] }]
 						},
 						{
 							"__identifier": "Help_Sign",
@@ -1009,9 +1007,7 @@
 							"fieldInstances": [{ "__identifier": "HelpSigns", "__type": "LocalEnum.HelpSigns", "__value": "Jump", "__tile": null, "defUid": 204, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["Jump"]
-							}] }],
-							"__worldX": 272,
-							"__worldY": 496
+							}] }]
 						}
 					]
 				},
@@ -1193,9 +1189,7 @@
 							"height": 16,
 							"defUid": 29,
 							"px": [48,528],
-							"fieldInstances": [],
-							"__worldX": 48,
-							"__worldY": 528
+							"fieldInstances": []
 						}
 					]
 				},
@@ -1205,7 +1199,7 @@
 					"__cWid": 64,
 					"__cHei": 36,
 					"__gridSize": 16,
-					"__opacity": 0.6,
+					"__opacity": 0.3,
 					"__pxTotalOffsetX": 0,
 					"__pxTotalOffsetY": 0,
 					"__tilesetDefUid": null,
