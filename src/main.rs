@@ -24,10 +24,9 @@ pub const TILE_SIZE: f32 = 16.0;
 pub const HALF_TILE_SIZE: f32 = TILE_SIZE / 2.0;
 
 fn main() {
-    App::new()
-        .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+    let mut app = App::new();
+    app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-        .add_plugins(RapierDebugRenderPlugin::default())
         .add_plugins(LdtkPlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(PlayerPlugin)
@@ -39,8 +38,11 @@ fn main() {
         .add_plugins(HudPlugin)
         .add_plugins(MushroomPlugin)
         .add_systems(Startup, setup)
-        .insert_resource(LevelSelection::index(0))
-        .run();
+        .insert_resource(LevelSelection::index(0));
+    if cfg!(debug_assertions) {
+        app.add_plugins(RapierDebugRenderPlugin::default());
+    }
+    app.run();
 }
 
 fn setup(

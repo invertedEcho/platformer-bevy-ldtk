@@ -7,7 +7,7 @@ pub fn spawn_camera(mut commands: Commands) {
     commands.spawn((
         Camera2d::default(),
         Projection::Orthographic(OrthographicProjection {
-            // scale: -0.4,
+            scale: -0.4,
             ..OrthographicProjection::default_2d()
         }),
     ));
@@ -31,8 +31,14 @@ pub fn camera_follow_player(
 
     let window_dimension = window_dimensions.single().unwrap();
 
-    let bottom_edge_of_screen = (window_dimension.height() / 2.0);
-    camera_transform.translation.y = bottom_edge_of_screen;
+    // keep camera bottom at window bottom
+    // TODO: use min so if player goes up, camera also goes up, but never below window
+    let half_window_height = window_dimension.height() / 2.0;
+    camera_transform.translation.y = half_window_height * 0.4;
+
+    // keep left side of camera minimum at window left
+    let half_window_width = window_dimension.width() / 2.0;
+    camera_transform.translation.x = half_window_width * 0.4;
 
     // *camera_transform = *player_transform;
     // camera_transform.translation.y = 0.0;
