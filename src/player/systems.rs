@@ -49,7 +49,6 @@ pub fn setup_player(
             ),
             Transform {
                 translation: Vec3::new(transform.translation.x, transform.translation.y, 3.0),
-                scale: transform.scale,
                 ..default()
             },
             PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES,
