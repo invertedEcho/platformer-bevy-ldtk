@@ -56,6 +56,7 @@ pub fn mushroom_collision_detection(
                     if *entity1 == player_entity || *entity2 == player_entity {
                         player_velocity.linvel.y = 400.0;
                         player.is_on_jump_from_mushroom = true;
+                        player.is_jumping = true;
                     }
                 }
             }

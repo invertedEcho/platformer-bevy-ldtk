@@ -5,7 +5,8 @@ use bevy_ecs_ldtk::prelude::*;
 pub struct Player {
     pub is_on_platform: bool,
     pub is_jumping: bool,
-    // idk about this, but it works
+    // idk about this, but it works ->
+    // TODO: investigate whether we can merge this into is_jumping
     pub is_on_jump_from_mushroom: bool,
 }
 

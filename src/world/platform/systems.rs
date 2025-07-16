@@ -62,10 +62,11 @@ pub fn platform_player_collision_detection(
                     .iter()
                     .any(|platform| platform == *entity1 || platform == *entity2);
                 if collision_entities_is_platform {
-                    let (mut player, player_entity) = player_query.single_mut().unwrap();
-                    if *entity1 == player_entity || *entity2 == player_entity {
-                        player.is_on_platform = true;
-                        player.is_on_jump_from_mushroom = false;
+                    for (mut player, player_entity) in player_query.iter_mut() {
+                        if *entity1 == player_entity || *entity2 == player_entity {
+                            player.is_on_platform = true;
+                            player.is_on_jump_from_mushroom = false;
+                        }
                     }
                 }
             }
@@ -74,9 +75,10 @@ pub fn platform_player_collision_detection(
                     .iter()
                     .any(|platform| platform == *entity1 || platform == *entity2);
                 if collision_entities_is_platform {
-                    let (mut player, player_entity) = player_query.single_mut().unwrap();
-                    if *entity1 == player_entity || *entity2 == player_entity {
-                        player.is_on_platform = false;
+                    for (mut player, player_entity) in player_query.iter_mut() {
+                        if *entity1 == player_entity || *entity2 == player_entity {
+                            player.is_on_platform = false;
+                        }
                     }
                 }
             }
