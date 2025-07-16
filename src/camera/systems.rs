@@ -57,7 +57,6 @@ pub fn camera_follow_player(
     // does, but reading them makes no sense, i just dont know how to express this)
     // - left edge of camera should not go below level width
     // - bottom edge of camera should not go below level height
-    // TODO: right edge of camera should not go above level width
 
     let half_window_width = window_dimensions.width() / 2.0;
     let new_camera_translation_x =

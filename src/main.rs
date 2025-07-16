@@ -7,6 +7,7 @@ use game_flow::GameFlowPlugin;
 use hud::HudPlugin;
 use player::PlayerPlugin;
 use world::ground::GroundPlugin;
+use world::help_sign::HelpSignPlugin;
 use world::mushroom::MushroomPlugin;
 use world::platform::PlatformPlugin;
 use world::wall::WallPlugin;
@@ -15,6 +16,7 @@ mod camera;
 pub mod coins;
 pub mod common;
 mod game_flow;
+pub mod game_font;
 mod hud;
 mod player;
 pub mod utils;
@@ -22,6 +24,8 @@ pub mod world;
 
 pub const TILE_SIZE: f32 = 16.0;
 pub const HALF_TILE_SIZE: f32 = TILE_SIZE / 2.0;
+
+// TODO: Investigate resource TextureAtlasLayout, feel like its duplicated everywhere
 
 fn main() {
     let mut app = App::new();
@@ -37,6 +41,7 @@ fn main() {
         .add_plugins(CoinPlugin)
         .add_plugins(HudPlugin)
         .add_plugins(MushroomPlugin)
+        .add_plugins(HelpSignPlugin)
         .add_systems(Startup, setup)
         .insert_resource(LevelSelection::index(0));
     if cfg!(debug_assertions) {

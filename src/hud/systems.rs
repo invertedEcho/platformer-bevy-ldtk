@@ -1,3 +1,4 @@
+use crate::game_font::FONT_ASSET_PATH;
 use bevy::prelude::*;
 
 use crate::coins::resources::CoinResource;
@@ -5,7 +6,6 @@ use crate::coins::resources::CoinResource;
 use super::components::{CoinCounterChild, CoinCounterHud};
 
 const COIN_HUD_ASSET_PATH: &str = "hud elements/coins_hud.png";
-const FONT_ASSET_PATH: &str = "hud elements/fonts.png";
 
 pub fn spawn_hud(
     mut commands: Commands,

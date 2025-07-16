@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 use systems::{spawn_hud, update_coin_counter};
 
-mod characters;
 mod components;
 mod systems;
 

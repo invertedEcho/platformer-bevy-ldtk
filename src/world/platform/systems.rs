@@ -64,7 +64,6 @@ pub fn platform_player_collision_detection(
                 if collision_entities_is_platform {
                     let (mut player, player_entity) = player_query.single_mut().unwrap();
                     if *entity1 == player_entity || *entity2 == player_entity {
-                        println!("Player has started colliding with platform");
                         player.is_on_platform = true;
                         player.is_on_jump_from_mushroom = false;
                     }
@@ -77,7 +76,6 @@ pub fn platform_player_collision_detection(
                 if collision_entities_is_platform {
                     let (mut player, player_entity) = player_query.single_mut().unwrap();
                     if *entity1 == player_entity || *entity2 == player_entity {
-                        println!("Player has stopped colliding with platform");
                         player.is_on_platform = false;
                     }
                 }
