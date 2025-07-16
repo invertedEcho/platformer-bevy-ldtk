@@ -33,12 +33,13 @@ pub fn setup_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-    new_players: Query<(Entity, &Transform), Added<Player>>,
+    new_players: Query<(Entity, &mut Transform), Added<Player>>,
 ) {
     let texture = asset_server.load(PLAYER_FORWARD_IDLE_SPRITE_TILESET);
     let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
-    for (entity, transform) in new_players {
+    for (entity, mut transform) in new_players {
+        transform.translation.z = 3.0;
         commands.entity(entity).insert((
             Sprite::from_atlas_image(
                 texture.clone(),
@@ -47,10 +48,6 @@ pub fn setup_player(
                     index: PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES.first,
                 },
             ),
-            Transform {
-                translation: Vec3::new(transform.translation.x, transform.translation.y, 3.0),
-                ..default()
-            },
             PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES,
             AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
             RigidBody::Dynamic,

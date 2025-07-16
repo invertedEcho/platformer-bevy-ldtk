@@ -3,6 +3,7 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use camera::CameraPlugin;
 use coins::CoinPlugin;
+use enemy::EnemyPlugin;
 use game_flow::GameFlowPlugin;
 use hud::HudPlugin;
 use player::PlayerPlugin;
@@ -15,6 +16,7 @@ use world::wall::WallPlugin;
 mod camera;
 pub mod coins;
 pub mod common;
+mod enemy;
 mod game_flow;
 pub mod game_font;
 mod hud;
@@ -42,6 +44,7 @@ fn main() {
         .add_plugins(HudPlugin)
         .add_plugins(MushroomPlugin)
         .add_plugins(HelpSignPlugin)
+        .add_plugins(EnemyPlugin)
         .add_systems(Startup, setup)
         .insert_resource(LevelSelection::index(0));
     if cfg!(debug_assertions) {
