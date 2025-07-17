@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     HALF_TILE_SIZE,
-    common::components::{AnimationIndices, AnimationTimer},
+    common::components::{AnimationTimer, TextureAtlasIndices},
     world::{ground::components::Ground, platform::components::Platform},
 };
 
@@ -12,22 +12,22 @@ use super::{components::Player, states::PlayerMovementType};
 const PLAYER_SPEED: f32 = 200.0;
 
 const PLAYER_FORWARD_RUN_SPRITE_TILESET: &str = "herochar/herochar_run_forward_anim_strip_6.png";
-const PLAYER_FORWARD_RUN_SPRITE_ANIMATION_INDICES: AnimationIndices =
-    AnimationIndices { first: 0, last: 5 };
+const PLAYER_FORWARD_RUN_SPRITE_ANIMATION_INDICES: TextureAtlasIndices =
+    TextureAtlasIndices { first: 0, last: 5 };
 
 const PLAYER_BACKWARDS_RUN_SPRITE_TILESET: &str =
     "herochar/herochar_run_backwards_anim_strip_6.png";
-const PLAYER_BACKWARDS_RUN_SPRITE_ANIMATION_INDICES: AnimationIndices =
-    AnimationIndices { first: 0, last: 5 };
+const PLAYER_BACKWARDS_RUN_SPRITE_ANIMATION_INDICES: TextureAtlasIndices =
+    TextureAtlasIndices { first: 0, last: 5 };
 
 const PLAYER_FORWARD_IDLE_SPRITE_TILESET: &str = "herochar/herochar_forward_idle_anim_strip_4.png";
-const PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES: AnimationIndices =
-    AnimationIndices { first: 0, last: 3 };
+const PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES: TextureAtlasIndices =
+    TextureAtlasIndices { first: 0, last: 3 };
 
 const PLAYER_BACKWARDS_IDLE_SPRITE_TILESET: &str =
     "herochar/herochar_backwards_idle_anim_strip_4.png";
-const PLAYER_BACKWARDS_IDLE_SPRITE_ANIMATION_INDICES: AnimationIndices =
-    AnimationIndices { first: 0, last: 3 };
+const PLAYER_BACKWARDS_IDLE_SPRITE_ANIMATION_INDICES: TextureAtlasIndices =
+    TextureAtlasIndices { first: 0, last: 3 };
 
 pub fn setup_player(
     mut commands: Commands,
@@ -66,7 +66,7 @@ pub fn setup_player(
 }
 
 pub fn set_forward_player_run_sprite(
-    player: Query<(&mut Sprite, &mut AnimationIndices), With<Player>>,
+    player: Query<(&mut Sprite, &mut TextureAtlasIndices), With<Player>>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     asset_server: Res<AssetServer>,
 ) {
@@ -86,7 +86,7 @@ pub fn set_forward_player_run_sprite(
 }
 
 pub fn set_forward_idle_player_sprite(
-    player: Query<(&mut Sprite, &mut AnimationIndices), With<Player>>,
+    player: Query<(&mut Sprite, &mut TextureAtlasIndices), With<Player>>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     asset_server: Res<AssetServer>,
 ) {
@@ -106,7 +106,7 @@ pub fn set_forward_idle_player_sprite(
 }
 
 pub fn set_backwards_player_run_sprite(
-    player: Query<(&mut Sprite, &mut AnimationIndices), With<Player>>,
+    player: Query<(&mut Sprite, &mut TextureAtlasIndices), With<Player>>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     asset_server: Res<AssetServer>,
 ) {
@@ -126,7 +126,7 @@ pub fn set_backwards_player_run_sprite(
 }
 
 pub fn set_backwards_idle_sprite(
-    player: Query<(&mut Sprite, &mut AnimationIndices), With<Player>>,
+    player: Query<(&mut Sprite, &mut TextureAtlasIndices), With<Player>>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     asset_server: Res<AssetServer>,
 ) {

@@ -974,7 +974,7 @@
 					"entityInstances": [
 						{
 							"__identifier": "Slime",
-							"__grid": [12,59],
+							"__grid": [12,60],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
@@ -983,7 +983,7 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 205,
-							"px": [192,944],
+							"px": [192,960],
 							"fieldInstances": []
 						}
 					]

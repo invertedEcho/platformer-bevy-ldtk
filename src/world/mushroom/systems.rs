@@ -3,14 +3,15 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     HALF_TILE_SIZE,
-    common::components::{AnimationIndices, AnimationTimer},
+    common::components::{AnimationTimer, TextureAtlasIndices},
     player::components::Player,
 };
 
 use super::components::Mushroom;
 
 const MUSHROOM_SPRITE_TILESET: &str = "enemies/mushroom/mushroom_crushed_anim_strip_6.png";
-const MUSHROOM_SPRITE_ANIMATION_INDICES: AnimationIndices = AnimationIndices { first: 0, last: 5 };
+const MUSHROOM_SPRITE_ANIMATION_INDICES: TextureAtlasIndices =
+    TextureAtlasIndices { first: 0, last: 5 };
 
 pub fn spawn_mushroom_colliders(
     asset_server: Res<AssetServer>,

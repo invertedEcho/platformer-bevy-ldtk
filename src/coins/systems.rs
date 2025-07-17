@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::{
-    common::components::{AnimationIndices, AnimationTimer},
+    common::components::{AnimationTimer, TextureAtlasIndices},
     player::components::Player,
 };
 
@@ -10,7 +10,7 @@ use super::{components::Coin, resources::CoinResource};
 
 const COIN_TILE_SIZE: i32 = 8;
 const COIN_SPRITE_TILESET: &str = "miscellaneous sprites/coin_anim_strip_6.png";
-const COIN_ANIMATION_INDICES: AnimationIndices = AnimationIndices { first: 0, last: 5 };
+const COIN_ANIMATION_INDICES: TextureAtlasIndices = TextureAtlasIndices { first: 0, last: 5 };
 
 pub fn process_coins(
     mut commands: Commands,

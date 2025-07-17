@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
-use super::components::{AnimationIndices, AnimationTimer};
+use super::components::{AnimationTimer, TextureAtlasIndices};
 
 pub fn animate_generic_sprite<T: Component>(
     time: Res<Time>,
-    mut query: Query<(&AnimationIndices, &mut AnimationTimer, &mut Sprite), With<T>>,
+    mut query: Query<(&TextureAtlasIndices, &mut AnimationTimer, &mut Sprite), With<T>>,
 ) {
     for (indices, mut timer, mut sprite) in &mut query {
         timer.tick(time.delta());
