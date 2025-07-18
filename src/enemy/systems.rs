@@ -48,8 +48,6 @@ pub fn spawn_slimes(
     let half_slime_size_tile = (SLIME_TILE_SIZE_X / 2) as f32;
 
     for (entity, transform) in slime_query {
-        println!("slime_transform (with collider): {:?}", transform);
-
         commands.entity(entity).insert((
             Collider::cuboid(half_slime_size_tile, half_slime_size_tile),
             ActiveEvents::COLLISION_EVENTS,

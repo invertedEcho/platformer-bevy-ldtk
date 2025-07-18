@@ -11,7 +11,7 @@ use super::components::HelpSign;
 const HELP_SIGN_ENUM_IDENTIFIER: &str = "HelpSigns";
 
 const CELL: Vec2 = Vec2::new(FONT_GLYPH_SIZE as f32, FONT_GLYPH_SIZE as f32);
-const LINE_WIDTH: f32 = 30.0 * CELL.x;
+const LINE_WIDTH: f32 = 15.0 * CELL.x;
 
 pub fn spawn_help_text_for_help_signs(
     mut commands: Commands,
@@ -30,12 +30,18 @@ pub fn spawn_help_text_for_help_signs(
         let mut x_cursor = 0.0;
         let mut y_cursor = 0.0;
 
-        let help_str = get_help_string_from_help_sign_value(
-            ldtk_entity
-                .get_enum_field(HELP_SIGN_ENUM_IDENTIFIER)
-                .expect("enum field"),
-        )
-        .expect("string");
+        let Ok(help_sign_enum_field) = ldtk_entity.get_enum_field(HELP_SIGN_ENUM_IDENTIFIER) else {
+            eprintln!("Couldnt find enum field from entity");
+            continue;
+        };
+
+        let Ok(help_str) = get_help_text_from_help_sign_field(help_sign_enum_field) else {
+            eprintln!(
+                "Couldnt find help text for help sign field: {}",
+                help_sign_enum_field
+            );
+            continue;
+        };
 
         commands
             .entity(entity)
@@ -47,9 +53,9 @@ pub fn spawn_help_text_for_help_signs(
                         let next_char_font_index = get_font_char_index(&next_char).unwrap();
 
                         // If writing a character would exceed LINE_WIDTH, decrease y so its wrapped
-                        // But only wrap if next char is not a space
+                        // But only wrap if next char is a space
                         if x_cursor + CELL.x > LINE_WIDTH
-                            && next_char_font_index != FONT_SPACEBAR_INDEX
+                            && next_char_font_index == FONT_SPACEBAR_INDEX
                         {
                             x_cursor = 0.0;
                             y_cursor -= CELL.y + 2.0;
@@ -57,15 +63,6 @@ pub fn spawn_help_text_for_help_signs(
                     }
 
                     if *font_index == FONT_SPACEBAR_INDEX {
-                        // if current char is spacebar, and x_cursor is 0, it means we just line wrapped, and we dont need to insert
-                        // a space
-                        if x_cursor == 0.0 {
-                            continue;
-                        }
-                        parent.spawn((
-                            Transform::from_translation(Vec3::new(x_cursor, y_cursor, 0.0)),
-                            GlobalTransform::default(),
-                        ));
                         x_cursor += CELL.x / 2.0 + 1.0;
                         continue;
                     }
@@ -79,7 +76,6 @@ pub fn spawn_help_text_for_help_signs(
                             },
                         ),
                         Transform::from_translation(Vec3::new(x_cursor, y_cursor, 0.0)),
-                        GlobalTransform::default(),
                     ));
                     x_cursor += CELL.x + 1.0;
                 }
@@ -87,7 +83,7 @@ pub fn spawn_help_text_for_help_signs(
     }
 }
 
-fn get_help_string_from_help_sign_value(value: &String) -> Result<String, &str> {
+fn get_help_text_from_help_sign_field(value: &String) -> Result<String, &str> {
     let basic_move_string = String::from("Basic_Move");
     let jump_string = String::from("Jump");
     if *value == basic_move_string {
