@@ -1,18 +1,19 @@
+use crate::player::movement::systems::player_movement;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use components::{Player, PlayerBundle};
-use states::PlayerMovementType;
-use systems::{
-    player_movement, player_on_ground_detection, set_backwards_idle_sprite,
-    set_backwards_player_run_sprite, set_forward_idle_player_sprite, set_forward_player_run_sprite,
-    setup_player,
-};
+use movement::states::PlayerMovementType;
+use physics::systems::player_on_ground_detection;
+use systems::setup_player;
+use visual::systems::{set_backwards_idle_sprite, set_backwards_player_run_sprite, set_forward_idle_player_sprite, set_forward_player_run_sprite};
 
 use crate::common::systems::animate_generic_sprite;
 
 pub mod components;
-mod states;
+mod movement;
+mod physics;
 mod systems;
+mod visual;
 
 pub struct PlayerPlugin;
 
