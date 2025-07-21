@@ -1,36 +1,76 @@
-use crate::game_font::FONT_ASSET_PATH;
+use crate::{game_font::FONT_ASSET_PATH, player::heart::resources::PlayerHeartResource};
 use bevy::prelude::*;
 
 use crate::coins::resources::CoinResource;
 
-use super::components::{CoinCounterChild, CoinCounterHud};
+use super::components::{CoinCounterChild, CoinCounterHud, PlayerHeartChild, PlayerHeartHud};
 
 const COIN_HUD_ASSET_PATH: &str = "hud elements/coins_hud.png";
+
+const NORMAL_HUD_PARENT_HEIGHT: Val = Val::Px(30.0);
+const NORMAL_HUD_GAP: Val = Val::Px(3.0);
+const NORMAL_PADDING: Val = Val::Px(8.0);
 
 pub fn spawn_hud(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    player_heart_resource: Res<PlayerHeartResource>,
 ) {
     let layout = TextureAtlasLayout::from_grid(UVec2::splat(7), 10, 4, None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
     commands
         .spawn((
             Node {
+                padding: UiRect {
+                    top: NORMAL_PADDING,
+                    left: NORMAL_PADDING,
+                    right: NORMAL_PADDING,
+                    bottom: NORMAL_PADDING,
+                },
                 height: Val::Percent(100.0),
                 width: Val::Percent(100.0),
-                flex_direction: FlexDirection::Row,
-                border: UiRect::all(Val::Px(8.0)),
+                flex_direction: FlexDirection::Column,
+                row_gap: NORMAL_HUD_GAP,
                 ..default()
             },
             Transform::from_xyz(0.0, 0.0, 4.0),
         ))
         .with_children(|parent| {
+            // Hearts
             parent
                 .spawn((
                     Node {
-                        height: Val::Px(20.0),
-                        width: Val::Px(1000.0),
+                        height: NORMAL_HUD_PARENT_HEIGHT,
+                        flex_direction: FlexDirection::Row,
+                        column_gap: NORMAL_HUD_GAP,
+                        ..default()
+                    },
+                    PlayerHeartHud,
+                ))
+                .with_children(|parent| {
+                    parent.spawn(ImageNode {
+                        image: asset_server.load("hud elements/lifes_icon.png"),
+                        ..default()
+                    });
+                    for _ in 0..player_heart_resource.count {
+                        parent.spawn((
+                            ImageNode {
+                                image: asset_server.load("hud elements/hearts_hud.png"),
+                                ..default()
+                            },
+                            PlayerHeartChild,
+                        ));
+                    }
+                });
+
+            // Coins
+            parent
+                .spawn((
+                    Node {
+                        height: NORMAL_HUD_PARENT_HEIGHT,
+                        flex_direction: FlexDirection::Row,
+                        column_gap: NORMAL_HUD_GAP,
                         ..default()
                     },
                     CoinCounterHud,
@@ -94,5 +134,34 @@ pub fn update_coin_counter(
                     CoinCounterChild,
                 ));
             });
+    }
+}
+
+pub fn update_player_heart_count(
+    mut commands: Commands,
+    player_heart_resource: Res<PlayerHeartResource>,
+    player_heart_hud_query: Query<Entity, With<PlayerHeartHud>>,
+    player_heart_children_query: Query<Entity, With<PlayerHeartChild>>,
+    asset_server: Res<AssetServer>,
+) {
+    let Ok(player_heart_hud) = player_heart_hud_query.single() else {
+        eprintln!("Exactly one player heart hud should exist");
+        return;
+    };
+
+    for player_heart_child in player_heart_children_query {
+        commands.entity(player_heart_child).despawn();
+    }
+
+    for _ in 0..player_heart_resource.count {
+        commands.entity(player_heart_hud).with_children(|parent| {
+            parent.spawn((
+                ImageNode {
+                    image: asset_server.load("hud elements/hearts_hud.png"),
+                    ..default()
+                },
+                PlayerHeartChild,
+            ));
+        });
     }
 }

@@ -1,6 +1,7 @@
 use crate::{
     common::components::{AnimationTimer, TextureAtlasIndices},
     enemy::components::SlimeSprite,
+    player::heart::resources::PlayerHeartResource,
 };
 
 use super::components::Slime;
@@ -23,7 +24,7 @@ const SLIME_COLLIDER_OFFSET_Y_TO_ADD: [f32; 15] = [
 ];
 
 // 4 as tile size is 16, but animated tileset size is 16x24, and first tile starts at bottom of
-//   tileset, e.g. (24-16)/2
+// tileset, e.g. (24-16) / 2
 const INITIAL_SLIME_SPRITE_Y_OFFSET: f32 = 4.0;
 
 pub fn spawn_slimes(
@@ -103,9 +104,41 @@ pub fn animate_and_move_slime(
     }
 }
 
-// pub fn detect_slime_collision_with_player(
-//     event_reader: EventReader<CollisionEvent>,
-//     slime_query: Query<Entity, With<Slime>>,
-//     player_query: Query<Entity, With<Slime>>,
-// ) {
-// }
+pub fn detect_slime_collision_with_player(
+    mut event_reader: EventReader<CollisionEvent>,
+    slime_query: Query<Entity, With<Slime>>,
+    player_query: Query<Entity, With<Slime>>,
+    mut player_heart_resource: ResMut<PlayerHeartResource>,
+) {
+    for event in event_reader.read() {
+        let CollisionEvent::Started(entity_1, entity_2, _flags) = event else {
+            continue;
+        };
+
+        let is_slime = slime_query
+            .iter()
+            .any(|slime| slime == *entity_1 || slime == *entity_2);
+        if !is_slime {
+            continue;
+        }
+
+        let is_player = player_query
+            .iter()
+            .any(|player| player == *entity_1 || player == *entity_2);
+
+        if !is_player {
+            continue;
+        }
+
+        if player_heart_resource.count == 0 {
+            eprintln!(
+                "detect_slime_collision_with_player triggered even though player_heart_resource.count is already 0. Ignoring..."
+            );
+            continue;
+        }
+
+        println!("Player collided with a slime!");
+        player_heart_resource.count -= 1;
+        println!("Player heart count: {}", player_heart_resource.count);
+    }
+}
