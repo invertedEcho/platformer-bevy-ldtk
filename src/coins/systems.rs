@@ -51,17 +51,18 @@ pub fn coin_collision_detection(
 ) {
     for collision_event in collision_events.read() {
         match collision_event {
-            CollisionEvent::Started(entity1, entity2, _collision_event_flags) => {
+            CollisionEvent::Started(first_entity, second_entity, _collision_event_flags) => {
                 let player_entity = players
                     .single()
                     .expect("Player exists when coin is touched");
-                let collision_entities_is_coin =
-                    coin_query.iter().any(|e| e == *entity1 || e == *entity2);
+                let collision_entities_is_coin = coin_query
+                    .iter()
+                    .any(|e| e == *first_entity || e == *second_entity);
                 if collision_entities_is_coin {
-                    if *entity1 == player_entity {
-                        commands.entity(*entity2).despawn();
-                    } else if *entity2 == player_entity {
-                        commands.entity(*entity1).despawn();
+                    if *first_entity == player_entity {
+                        commands.entity(*second_entity).despawn();
+                    } else if *second_entity == player_entity {
+                        commands.entity(*first_entity).despawn();
                     }
                     coin_resource.count += 1;
                 }

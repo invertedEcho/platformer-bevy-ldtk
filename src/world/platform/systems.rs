@@ -54,29 +54,28 @@ pub fn platform_player_collision_detection(
     mut collision_event_reader: EventReader<CollisionEvent>,
     mut player_query: Query<(&mut Player, Entity), With<Player>>,
 ) {
-    // TODO: Cases are exactly same, only differ in is_on_platform bool..
     for collision_event in collision_event_reader.read() {
         match collision_event {
-            CollisionEvent::Started(entity1, entity2, _) => {
+            CollisionEvent::Started(first_entity, second_entity, _) => {
                 let collision_entities_is_platform = platform_query
                     .iter()
-                    .any(|platform| platform == *entity1 || platform == *entity2);
+                    .any(|platform| platform == *first_entity || platform == *second_entity);
                 if collision_entities_is_platform {
                     for (mut player, player_entity) in player_query.iter_mut() {
-                        if *entity1 == player_entity || *entity2 == player_entity {
+                        if *first_entity == player_entity || *second_entity == player_entity {
                             player.is_on_platform = true;
                             player.is_on_jump_from_mushroom = false;
                         }
                     }
                 }
             }
-            CollisionEvent::Stopped(entity1, entity2, _) => {
+            CollisionEvent::Stopped(first_entity, second_entity, _) => {
                 let collision_entities_is_platform = platform_query
                     .iter()
-                    .any(|platform| platform == *entity1 || platform == *entity2);
+                    .any(|platform| platform == *first_entity || platform == *second_entity);
                 if collision_entities_is_platform {
                     for (mut player, player_entity) in player_query.iter_mut() {
-                        if *entity1 == player_entity || *entity2 == player_entity {
+                        if *first_entity == player_entity || *second_entity == player_entity {
                             player.is_on_platform = false;
                         }
                     }

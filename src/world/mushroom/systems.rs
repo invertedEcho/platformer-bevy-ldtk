@@ -46,15 +46,15 @@ pub fn mushroom_collision_detection(
 ) {
     for collision_event in collision_event_reader.read() {
         match collision_event {
-            CollisionEvent::Started(entity1, entity2, _) => {
+            CollisionEvent::Started(first_entity, second_entity, _) => {
                 let collision_entities_is_mushroom = mushrooms_query
                     .iter()
-                    .any(|e| e == *entity1 || e == *entity2);
+                    .any(|e| e == *first_entity || e == *second_entity);
                 if collision_entities_is_mushroom {
                     let (player_entity, mut player_velocity, mut player) = player_query
                         .single_mut()
                         .expect("Player exists when colliding with mushroom");
-                    if *entity1 == player_entity || *entity2 == player_entity {
+                    if *first_entity == player_entity || *second_entity == player_entity {
                         player_velocity.linvel.y = 400.0;
                         player.is_on_jump_from_mushroom = true;
                         player.is_jumping = true;

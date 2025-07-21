@@ -111,20 +111,21 @@ pub fn detect_slime_collision_with_player(
     mut player_heart_resource: ResMut<PlayerHeartResource>,
 ) {
     for event in event_reader.read() {
-        let CollisionEvent::Started(entity_1, entity_2, _flags) = event else {
+        let CollisionEvent::Started(first_entity, second_entity, _collision_event_flags) = event
+        else {
             continue;
         };
 
         let is_slime = slime_query
             .iter()
-            .any(|slime| slime == *entity_1 || slime == *entity_2);
+            .any(|slime| slime == *first_entity || slime == *second_entity);
         if !is_slime {
             continue;
         }
 
         let is_player = player_query
             .iter()
-            .any(|player| player == *entity_1 || player == *entity_2);
+            .any(|player| player == *first_entity || player == *second_entity);
 
         if !is_player {
             continue;
