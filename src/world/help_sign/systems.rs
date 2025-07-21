@@ -49,35 +49,63 @@ pub fn spawn_help_text_for_help_signs(
             .with_children(|parent| {
                 for (index, font_index) in get_font_indices_from_text(&help_str).iter().enumerate()
                 {
-                    if let Some(next_char) = help_str.chars().nth(index + 1) {
-                        let next_char_font_index = get_font_char_index(&next_char).unwrap();
-
-                        // If writing a character would exceed LINE_WIDTH, decrease y so its wrapped
-                        // But only wrap if next char is a space
-                        if x_cursor + CELL.x > LINE_WIDTH
-                            && next_char_font_index == FONT_SPACEBAR_INDEX
-                        {
-                            x_cursor = 0.0;
-                            y_cursor -= CELL.y + 2.0;
-                        }
-                    }
-
-                    if *font_index == FONT_SPACEBAR_INDEX {
-                        x_cursor += CELL.x / 2.0 + 1.0;
+                    let Some(next_char) = help_str.chars().nth(index + 1) else {
+                        println!("No more next chars, end of text. just spawning normal character and then end");
+                        parent.spawn((
+                            Sprite::from_atlas_image(
+                                font_texture.clone(),
+                                TextureAtlas {
+                                    layout: atlas_handle.clone(),
+                                    index: *font_index,
+                                },
+                            ),
+                            Transform::from_translation(Vec3::new(x_cursor, y_cursor, 0.0)),
+                        ));
                         continue;
+                    };
+
+                    let next_char_font_index = get_font_char_index(&next_char).unwrap();
+                    println!("Next char: {}", next_char);
+                    println!("next char font index: {}", next_char_font_index);
+
+                    // if current font index is space, add empty gap, but only do so if we didnt
+                    // just line wrap.
+                    if *font_index == FONT_SPACEBAR_INDEX {
+                        let x_cursor_at_line_start = x_cursor == 0.0;
+                        if x_cursor_at_line_start {
+                            continue;
+                        }
+                        x_cursor += CELL.x / 2.0 + 1.0;
+                        println!("current font index is space, adding empty gap and skipping to next iteration of for loop");
+                        println!("\n");
+                        continue;
+                    } else {
+                        println!("Spawning character: {}", help_str.chars().nth(index).unwrap());
+
+                        parent.spawn((
+                            Sprite::from_atlas_image(
+                                font_texture.clone(),
+                                TextureAtlas {
+                                    layout: atlas_handle.clone(),
+                                    index: *font_index,
+                                },
+                            ),
+                            Transform::from_translation(Vec3::new(x_cursor, y_cursor, 0.0)),
+                        ));
+                        x_cursor += CELL.x + 1.0;
                     }
 
-                    parent.spawn((
-                        Sprite::from_atlas_image(
-                            font_texture.clone(),
-                            TextureAtlas {
-                                layout: atlas_handle.clone(),
-                                index: *font_index,
-                            },
-                        ),
-                        Transform::from_translation(Vec3::new(x_cursor, y_cursor, 0.0)),
-                    ));
-                    x_cursor += CELL.x + 1.0;
+                    // If we just wrote a character, and it exceeded LINE_WIDTH, decrease y so its wrapped
+                    // But only wrap if next char is a space
+                    if x_cursor > LINE_WIDTH && next_char_font_index == FONT_SPACEBAR_INDEX
+                    {
+                        println!("next_char_font is space, and adding char would exceed LINE_WIDTH. Line wrapping, and continuing.");
+                        x_cursor = 0.0;
+                        y_cursor -= CELL.y + 2.0;
+                    }
+
+
+                    println!("\n");
                 }
             });
     }
