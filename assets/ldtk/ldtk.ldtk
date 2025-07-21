@@ -925,7 +925,11 @@
 			"savedSelections": [],
 			"cachedPixelData": { "opaqueTiles": "000", "averageColors": "675467546754" }
 		}
-	], "enums": [{ "identifier": "HelpSigns", "uid": 200, "values": [ { "id": "Basic_Move", "tileRect": null, "color": 12470831 }, { "id": "Jump", "tileRect": null, "color": 14120515 } ], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [], "levelFields": [] },
+	], "enums": [{ "identifier": "HelpSigns", "uid": 200, "values": [
+		{ "id": "Basic_Move", "tileRect": null, "color": 12470831 },
+		{ "id": "Jump", "tileRect": null, "color": 14120515 },
+		{ "id": "Platform", "tileRect": null, "color": 15389866 }
+	], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [], "levelFields": [] },
 	"levels": [
 		{
 			"identifier": "Level_0",
@@ -1044,6 +1048,23 @@
 							"fieldInstances": [{ "__identifier": "HelpSigns", "__type": "LocalEnum.HelpSigns", "__value": "Jump", "__tile": null, "defUid": 204, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["Jump"]
+							}] }]
+						},
+						{
+							"__identifier": "Help_Sign",
+							"__grid": [50,53],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#E4A672",
+							"iid": "64c53fc0-5e50-11f0-a6f2-499e51ec89e2",
+							"width": 16,
+							"height": 16,
+							"defUid": 197,
+							"px": [800,848],
+							"fieldInstances": [{ "__identifier": "HelpSigns", "__type": "LocalEnum.HelpSigns", "__value": "Platform", "__tile": null, "defUid": 204, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Platform"]
 							}] }]
 						}
 					]
