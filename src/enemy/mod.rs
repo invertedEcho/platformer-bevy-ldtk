@@ -8,6 +8,8 @@ use crate::common::systems::animate_generic_sprite;
 mod components;
 mod systems;
 
+pub const ENEMY_SPEED: f32 = 100.0;
+
 pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {

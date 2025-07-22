@@ -3,7 +3,7 @@ use crate::{
     player::heart::resources::PlayerHeartResource,
 };
 
-use super::components::Slime;
+use super::{ENEMY_SPEED, components::Slime};
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{prelude::*, utils::grid_coords_to_translation};
 use bevy_rapier2d::prelude::*;
@@ -25,7 +25,7 @@ const SLIME_TEXTURE_ATLAS_INDICES: TextureAtlasIndices = TextureAtlasIndices { f
 
 // 4 as tile size is 16, but animated tileset size is 16x24, and first tile starts at bottom of
 // tileset, e.g. (24-16) / 2
-const SLIME_TILESET_Y_OFFSET: u32 = 4;
+// const SLIME_TILESET_Y_OFFSET: u32 = 4;
 
 pub fn spawn_slimes(
     mut commands: Commands,
@@ -42,7 +42,7 @@ pub fn spawn_slimes(
         15,
         1,
         None,
-        None
+        None,
     );
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
 
@@ -58,18 +58,20 @@ pub fn spawn_slimes(
                 angvel: 0.0,
             },
             LockedAxes::ROTATION_LOCKED,
-            RigidBody::Dynamic,
+            RigidBody::KinematicVelocityBased,
             Friction {
                 coefficient: 0.0,
                 combine_rule: CoefficientCombineRule::Min,
             },
-            Sprite::from_atlas_image(
-                texture.clone(),
-                TextureAtlas {
+            Sprite {
+                image: texture.clone(),
+                texture_atlas: Some(TextureAtlas {
                     layout: texture_atlas_layout.clone(),
                     index: SLIME_TEXTURE_ATLAS_INDICES.first,
-                },
-            ),
+                }),
+                flip_x: true,
+                ..default()
+            },
             SLIME_TEXTURE_ATLAS_INDICES,
             AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
         ));
@@ -77,29 +79,27 @@ pub fn spawn_slimes(
 }
 
 pub fn detect_slime_collision_with_player(
-    mut event_reader: EventReader<CollisionEvent>,
+    mut collision_event_reader: EventReader<CollisionEvent>,
     slime_query: Query<Entity, With<Slime>>,
     player_query: Query<Entity, With<Slime>>,
     mut player_heart_resource: ResMut<PlayerHeartResource>,
 ) {
-    for event in event_reader.read() {
-        let CollisionEvent::Started(first_entity, second_entity, _collision_event_flags) = event
-        else {
+    for collision_event in collision_event_reader.read() {
+        let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
             continue;
         };
 
-        let is_slime = slime_query
+        let is_collision_entities_slime = slime_query
             .iter()
-            .any(|slime| slime == *first_entity || slime == *second_entity);
-        if !is_slime {
+            .any(|slime| slime == first_entity || slime == second_entity);
+        if !is_collision_entities_slime {
             continue;
         }
 
-        let is_player = player_query
+        let is_collision_entities_player = player_query
             .iter()
-            .any(|player| player == *first_entity || player == *second_entity);
-
-        if !is_player {
+            .any(|player| player == first_entity || player == second_entity);
+        if !is_collision_entities_player {
             continue;
         }
 
@@ -133,7 +133,7 @@ pub fn patrol_slimes(
                 IVec2::splat(20),
             );
             if transform.translation.x < translated_to_world_coordinate.x {
-                velocity.linvel.x = 10.0;
+                velocity.linvel.x = ENEMY_SPEED;
             } else {
                 velocity.linvel.x = 0.0;
             }

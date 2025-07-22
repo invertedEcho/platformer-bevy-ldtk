@@ -7,25 +7,31 @@ use crate::{
 };
 
 pub fn player_on_ground_detection(
-    mut collision_events: EventReader<CollisionEvent>,
-    mut players: Query<(&mut Player, Entity), With<Player>>,
+    mut collision_event_reader: EventReader<CollisionEvent>,
+    mut player_query: Query<(&mut Player, Entity), With<Player>>,
     ground_query: Query<Entity, Or<(With<Ground>, With<Platform>)>>,
 ) {
-    for collision_event in collision_events.read() {
-        match collision_event {
-            CollisionEvent::Started(first_entity, second_entity, _) => {
-                for (mut player, player_entity) in players.iter_mut() {
-                    let collision_entities_is_ground = ground_query
-                        .iter()
-                        .any(|e| e == *first_entity || e == *second_entity);
-                    if collision_entities_is_ground {
-                        if *first_entity == player_entity || *second_entity == player_entity {
-                            player.is_jumping = false;
-                        }
-                    }
-                }
-            }
-            _ => {}
+    for collision_event in collision_event_reader.read() {
+        let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
+            continue;
+        };
+        let is_collision_entities_player = player_query.iter().any(|(_, player_entity)| {
+            player_entity == first_entity || player_entity == second_entity
+        });
+        if !is_collision_entities_player {
+            continue;
         }
+
+        let collision_entities_is_ground = ground_query
+            .iter()
+            .any(|ground| ground == first_entity || ground == second_entity);
+        if !collision_entities_is_ground {
+            continue;
+        }
+
+        let Ok((mut player, _)) = player_query.single_mut() else {
+            continue;
+        };
+        player.is_jumping = false;
     }
 }
