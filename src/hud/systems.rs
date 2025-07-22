@@ -81,7 +81,7 @@ pub fn spawn_hud(
                     });
                     parent.spawn((
                         CoinCounter,
-                        Text2d::new("0"),
+                        Text::new("0"),
                         TextFont::from_font(font).with_font_size(FONT_SIZE),
                     ));
                 });
