@@ -58,7 +58,7 @@
 			"canSelectWhenInactive": true,
 			"renderInWorldView": true,
 			"pxOffsetX": 0,
-			"pxOffsetY": -4,
+			"pxOffsetY": 0,
 			"parallaxFactorX": 0,
 			"parallaxFactorY": 0,
 			"parallaxScaling": true,
@@ -883,15 +883,15 @@
 			"pivotY": 0,
 			"fieldDefs": [
 				{
-					"identifier": "Patrol",
+					"identifier": "patrol",
 					"doc": null,
 					"__type": "Array<Point>",
 					"uid": 207,
 					"type": "F_Point",
 					"isArray": true,
 					"canBeNull": true,
-					"arrayMinLength": 1,
-					"arrayMaxLength": null,
+					"arrayMinLength": 2,
+					"arrayMaxLength": 2,
 					"editorDisplayMode": "PointPath",
 					"editorDisplayScale": 1,
 					"editorDisplayPos": "Above",
@@ -998,7 +998,7 @@
 					"__gridSize": 20,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": -4,
+					"__pxTotalOffsetY": 0,
 					"__tilesetDefUid": null,
 					"__tilesetRelPath": null,
 					"iid": "d52007c0-5e50-11f0-9f8e-45757b253b62",
@@ -1016,20 +1016,23 @@
 					"entityInstances": [
 						{
 							"__identifier": "Slime",
-							"__grid": [7,48],
+							"__grid": [52,45],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
 							"__smartColor": "#EAD4AA",
-							"iid": "1f786b80-5e50-11f0-9113-4993798df876",
+							"iid": "cef3ce20-5e50-11f0-9113-b7db7e1c8a14",
 							"width": 16,
 							"height": 20,
 							"defUid": 205,
-							"px": [140,960],
-							"fieldInstances": [{ "__identifier": "Patrol", "__type": "Array<Point>", "__value": [{ "cx": 13, "cy": 48 }], "__tile": null, "defUid": 207, "realEditorValues": [{
+							"px": [1040,908],
+							"fieldInstances": [{ "__identifier": "patrol", "__type": "Array<Point>", "__value": [ { "cx": 59, "cy": 45 }, { "cx": 52, "cy": 45 } ], "__tile": null, "defUid": 207, "realEditorValues": [ {
 								"id": "V_String",
-								"params": ["13,48"]
-							}] }]
+								"params": ["59,45"]
+							}, {
+								"id": "V_String",
+								"params": ["52,45"]
+							} ] }]
 						}
 					]
 				},

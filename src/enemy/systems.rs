@@ -1,9 +1,14 @@
+use std::ops::Neg;
+
 use crate::{
     common::components::{AnimationTimer, TextureAtlasIndices},
     player::heart::resources::PlayerHeartResource,
 };
 
-use super::{ENEMY_SPEED, components::Slime};
+use super::{
+    ENEMY_SPEED,
+    components::{Patrol, Slime},
+};
 use bevy::prelude::*;
 use bevy_ecs_ldtk::{prelude::*, utils::grid_coords_to_translation};
 use bevy_rapier2d::prelude::*;
@@ -117,25 +122,55 @@ pub fn detect_slime_collision_with_player(
 }
 
 pub fn patrol_slimes(
-    slimes_query: Query<(&EntityInstance, &Transform, &mut Velocity), With<Slime>>,
+    slimes_query: Query<
+        (
+            &EntityInstance,
+            &Transform,
+            &mut Velocity,
+            &mut Patrol,
+            &mut Sprite,
+        ),
+        With<Slime>,
+    >,
 ) {
-    for (entity_instance, transform, mut velocity) in slimes_query {
+    for (entity_instance, transform, mut velocity, mut patrol, mut sprite) in slimes_query {
         let patrol_points: Vec<&IVec2> = entity_instance
-            .iter_points_field("Patrol")
-            .unwrap()
+            .iter_points_field("patrol")
+            .expect("patrol field should be correctly typed")
             .collect();
-        for patrol_point in patrol_points {
-            let translated_to_world_coordinate = grid_coords_to_translation(
-                GridCoords {
-                    x: patrol_point.x,
-                    y: patrol_point.y,
-                },
-                IVec2::splat(20),
-            );
+
+        if patrol_points.len() > 2 {
+            eprintln!("More than two patrol points is not yet implemented.");
+            continue;
+        }
+
+        let current_patrol_point = patrol_points[patrol.index];
+
+        let translated_to_world_coordinate = grid_coords_to_translation(
+            GridCoords {
+                x: current_patrol_point.x,
+                y: current_patrol_point.y,
+            },
+            IVec2::splat(20),
+        );
+
+        if patrol.forward {
+            sprite.flip_x = true;
             if transform.translation.x < translated_to_world_coordinate.x {
                 velocity.linvel.x = ENEMY_SPEED;
             } else {
                 velocity.linvel.x = 0.0;
+                patrol.index = 1;
+                patrol.forward = false;
+            }
+        } else {
+            sprite.flip_x = false;
+            if transform.translation.x > translated_to_world_coordinate.x {
+                velocity.linvel.x = ENEMY_SPEED.neg();
+            } else {
+                velocity.linvel.x = 0.0;
+                patrol.index = 0;
+                patrol.forward = true;
             }
         }
     }

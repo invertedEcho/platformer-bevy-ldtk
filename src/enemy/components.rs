@@ -6,7 +6,23 @@ pub struct Slime;
 
 #[derive(LdtkEntity, Default, Bundle)]
 pub struct SlimeBundle {
-    enemy: Slime,
+    slime: Slime,
     #[from_entity_instance]
     entity_instance: EntityInstance,
+    patrol: Patrol,
+}
+
+#[derive(Component)]
+pub struct Patrol {
+    pub forward: bool,
+    pub index: usize,
+}
+
+impl Default for Patrol {
+    fn default() -> Self {
+        Patrol {
+            forward: true,
+            index: 0,
+        }
+    }
 }
