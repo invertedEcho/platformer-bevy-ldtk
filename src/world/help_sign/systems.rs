@@ -1,35 +1,23 @@
-use bevy::prelude::*;
+use bevy::{
+    prelude::*,
+    text::{FontSmoothing, TextBounds},
+};
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::game_font::{
-    FONT_ASSET_PATH, FONT_GLYPH_SIZE, FONT_SPACEBAR_INDEX, get_font_char_index,
-    get_font_indices_from_text,
-};
+use crate::font::{FONT_PATH, FONT_SIZE};
 
 use super::components::HelpSign;
 
 const HELP_SIGN_ENUM_IDENTIFIER: &str = "HelpSigns";
 
-const CELL: Vec2 = Vec2::new(FONT_GLYPH_SIZE as f32, FONT_GLYPH_SIZE as f32);
-const LINE_WIDTH: f32 = 15.0 * CELL.x;
-
 pub fn spawn_help_text_for_help_signs(
     mut commands: Commands,
-    help_signs_query: Query<(Entity, &EntityInstance), Added<HelpSign>>,
+    help_signs_query: Query<(Entity, &EntityInstance, &mut Transform), Added<HelpSign>>,
     asset_server: Res<AssetServer>,
-    mut atlases: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    let font_texture = asset_server.load(FONT_ASSET_PATH);
-    let atlas_handle = {
-        let layout =
-            TextureAtlasLayout::from_grid(UVec2::splat(FONT_GLYPH_SIZE), 10, 5, None, None);
-        atlases.add(layout)
-    };
+    let font = asset_server.load(FONT_PATH);
 
-    for (entity, ldtk_entity) in help_signs_query {
-        let mut x_cursor = 0.0;
-        let mut y_cursor = 0.0;
-
+    for (entity, ldtk_entity, mut transform) in help_signs_query {
         let Ok(help_sign_enum_field) = ldtk_entity.get_enum_field(HELP_SIGN_ENUM_IDENTIFIER) else {
             eprintln!("Couldnt find enum field from entity");
             continue;
@@ -43,76 +31,42 @@ pub fn spawn_help_text_for_help_signs(
             continue;
         };
 
-        commands
-            .entity(entity)
-            .insert(Visibility::Visible)
-            .with_children(|parent| {
-                for (index, font_index) in get_font_indices_from_text(&help_str).iter().enumerate()
-                {
-                    let Some(next_char) = help_str.chars().nth(index + 1) else {
-                        parent.spawn((
-                            Sprite::from_atlas_image(
-                                font_texture.clone(),
-                                TextureAtlas {
-                                    layout: atlas_handle.clone(),
-                                    index: *font_index,
-                                },
-                            ),
-                            Transform::from_translation(Vec3::new(x_cursor, y_cursor, 0.0)),
-                        ));
-                        continue;
-                    };
-
-                    let next_char_font_index = get_font_char_index(&next_char);
-
-                    // if current font index is space, add empty gap, but only do so if we didnt
-                    // just line wrap.
-                    if *font_index == FONT_SPACEBAR_INDEX {
-                        let x_cursor_at_line_start = x_cursor == 0.0;
-                        if x_cursor_at_line_start {
-                            continue;
-                        }
-                        x_cursor += CELL.x / 2.0 + 1.0;
-                        continue;
-                    } else {
-                        parent.spawn((
-                            Sprite::from_atlas_image(
-                                font_texture.clone(),
-                                TextureAtlas {
-                                    layout: atlas_handle.clone(),
-                                    index: *font_index,
-                                },
-                            ),
-                            Transform::from_translation(Vec3::new(x_cursor, y_cursor, 0.0)),
-                        ));
-                        x_cursor += CELL.x + 1.0;
-                    }
-
-                    // If we just wrote a character, and it exceeded LINE_WIDTH, decrease y so its wrapped
-                    // But only wrap if next char is a space
-                    if x_cursor > LINE_WIDTH && next_char_font_index == FONT_SPACEBAR_INDEX {
-                        x_cursor = 0.0;
-                        y_cursor -= CELL.y + 2.0;
-                    }
-                }
-            });
+        commands.entity(entity).insert((
+            TextBounds {
+                width: Some(250.0),
+                ..default()
+            },
+            Text2d::new(help_str),
+            TextFont {
+                font: font.clone(),
+                font_size: FONT_SIZE,
+                font_smoothing: FontSmoothing::AntiAliased,
+                ..default()
+            },
+            TextLayout {
+                linebreak: LineBreak::WordBoundary,
+                justify: JustifyText::Center,
+            },
+        ));
+        // See: https://github.com/bevyengine/bevy/discussions/11443
+        transform.scale = Vec3::splat(0.5);
     }
 }
 
-fn get_help_text_from_help_sign_field(value: &String) -> Result<String, &str> {
+fn get_help_text_from_help_sign_field(value: &String) -> Result<&str, &str> {
     let basic_move_string = String::from("Basic_Move");
     let jump_string = String::from("Jump");
     let platform_string = String::from("Platform");
     let slime_string = String::from("Slimes");
 
     if *value == basic_move_string {
-        return Ok("Use D to move forward and A to move backwards".to_string());
+        return Ok("Use D to move forward and A to move backwards");
     } else if *value == jump_string {
-        return Ok("Use the Spacebar to jump".to_string());
+        return Ok("Use the Spacebar to jump");
     } else if *value == platform_string {
-        return Ok("Use S to fall through a platform".to_string());
+        return Ok("Use S to fall through a platform");
     } else if *value == slime_string {
-        return Ok("Watch out for Slimes, they will hurt you!".to_string());
+        return Ok("Watch out for Slimes, they will hurt you!");
     } else {
         return Err("Invalid help sign value");
     }

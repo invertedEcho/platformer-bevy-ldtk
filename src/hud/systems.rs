@@ -1,24 +1,26 @@
-use crate::{game_font::FONT_ASSET_PATH, player::heart::resources::PlayerHeartResource};
+use crate::{
+    font::{FONT_PATH, FONT_SIZE},
+    player::heart::resources::PlayerHeartResource,
+};
 use bevy::prelude::*;
 
 use crate::coins::resources::CoinResource;
 
-use super::components::{CoinCounterChild, CoinCounterHud, PlayerHeartChild, PlayerHeartHud};
+use super::components::{CoinCounter, PlayerHeartChild, PlayerHeartHud};
 
 const COIN_HUD_ASSET_PATH: &str = "hud elements/coins_hud.png";
 
 const NORMAL_HUD_PARENT_HEIGHT: Val = Val::Px(30.0);
-const NORMAL_HUD_GAP: Val = Val::Px(3.0);
+const NORMAL_HUD_GAP: Val = Val::Px(8.0);
 const NORMAL_PADDING: Val = Val::Px(8.0);
 
 pub fn spawn_hud(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     player_heart_resource: Res<PlayerHeartResource>,
 ) {
-    let layout = TextureAtlasLayout::from_grid(UVec2::splat(7), 10, 4, None, None);
-    let texture_atlas_layout = texture_atlas_layouts.add(layout);
+    let font = asset_server.load(FONT_PATH);
+
     commands
         .spawn((
             Node {
@@ -66,75 +68,38 @@ pub fn spawn_hud(
 
             // Coins
             parent
-                .spawn((
-                    Node {
-                        height: NORMAL_HUD_PARENT_HEIGHT,
-                        flex_direction: FlexDirection::Row,
-                        column_gap: NORMAL_HUD_GAP,
-                        ..default()
-                    },
-                    CoinCounterHud,
-                ))
+                .spawn((Node {
+                    height: NORMAL_HUD_PARENT_HEIGHT,
+                    flex_direction: FlexDirection::Row,
+                    column_gap: NORMAL_HUD_GAP,
+                    ..default()
+                },))
                 .with_children(|parent| {
                     parent.spawn(ImageNode {
                         image: asset_server.load(COIN_HUD_ASSET_PATH),
                         ..default()
                     });
                     parent.spawn((
-                        CoinCounterChild,
-                        ImageNode::from_atlas_image(
-                            asset_server.load(FONT_ASSET_PATH),
-                            TextureAtlas {
-                                layout: texture_atlas_layout,
-                                index: 0,
-                            },
-                        ),
+                        CoinCounter,
+                        Text2d::new("0"),
+                        TextFont::from_font(font).with_font_size(FONT_SIZE),
                     ));
                 });
         });
 }
 
 pub fn update_coin_counter(
-    mut commands: Commands,
     coin_resource: Res<CoinResource>,
-    coin_counter_hud_query: Query<Entity, With<CoinCounterHud>>,
-    coin_counter_children_query: Query<Entity, With<CoinCounterChild>>,
-    asset_server: Res<AssetServer>,
-    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    mut coin_counter_query: Query<&mut Text, With<CoinCounter>>,
 ) {
     if !coin_resource.is_changed() {
         return;
     }
-    let coin_counter_hud_entity = coin_counter_hud_query
-        .single()
-        .expect("coin counter hud exists");
-
-    let layout = TextureAtlasLayout::from_grid(UVec2::splat(7), 10, 5, None, None);
-    let texture_atlas_layout = texture_atlas_layouts.add(layout);
-
-    for child in coin_counter_children_query {
-        commands.entity(child).despawn();
-    }
-
-    for coin in coin_resource.count.to_string().chars() {
-        let digit = coin.to_digit(10).unwrap();
-
-        commands
-            .entity(coin_counter_hud_entity)
-            .with_children(|parent| {
-                parent.spawn((
-                    ImageNode::from_atlas_image(
-                        asset_server.load(FONT_ASSET_PATH),
-                        TextureAtlas {
-                            layout: texture_atlas_layout.clone(),
-                            // digit is actually the index in the texture atlas too
-                            index: digit as usize,
-                        },
-                    ),
-                    CoinCounterChild,
-                ));
-            });
-    }
+    let Ok(mut coin_counter) = coin_counter_query.single_mut() else {
+        eprintln!("Failed to find coin counter");
+        return;
+    };
+    **coin_counter = coin_resource.count.to_string();
 }
 
 pub fn update_player_heart_count(

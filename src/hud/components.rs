@@ -1,10 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct CoinCounterHud;
-
-#[derive(Component)]
-pub struct CoinCounterChild;
+pub struct CoinCounter;
 
 #[derive(Component)]
 pub struct PlayerHeartHud;
