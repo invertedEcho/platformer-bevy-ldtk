@@ -11,7 +11,7 @@
 	"iid": "c2d47270-3740-11f0-a891-316f5b172d07",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 207,
+	"nextUid": 208,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "LinearHorizontal",
@@ -48,7 +48,7 @@
 			"uid": 206,
 			"doc": null,
 			"uiColor": null,
-			"gridSize": 16,
+			"gridSize": 20,
 			"guideGridWid": 0,
 			"guideGridHei": 0,
 			"displayOpacity": 1,
@@ -58,7 +58,7 @@
 			"canSelectWhenInactive": true,
 			"renderInWorldView": true,
 			"pxOffsetX": 0,
-			"pxOffsetY": 0,
+			"pxOffsetY": -4,
 			"parallaxFactorX": 0,
 			"parallaxFactorY": 0,
 			"parallaxScaling": true,
@@ -856,7 +856,7 @@
 			"allowOutOfBounds": false,
 			"doc": null,
 			"width": 16,
-			"height": 16,
+			"height": 20,
 			"resizableX": false,
 			"resizableY": false,
 			"minWidth": null,
@@ -881,7 +881,45 @@
 			"limitBehavior": "MoveLastOne",
 			"pivotX": 0,
 			"pivotY": 0,
-			"fieldDefs": []
+			"fieldDefs": [
+				{
+					"identifier": "Patrol",
+					"doc": null,
+					"__type": "Array<Point>",
+					"uid": 207,
+					"type": "F_Point",
+					"isArray": true,
+					"canBeNull": true,
+					"arrayMinLength": 1,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "PointPath",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -955,12 +993,12 @@
 				{
 					"__identifier": "Enemies",
 					"__type": "Entities",
-					"__cWid": 112,
-					"__cHei": 63,
-					"__gridSize": 16,
+					"__cWid": 90,
+					"__cHei": 51,
+					"__gridSize": 20,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
-					"__pxTotalOffsetY": 0,
+					"__pxTotalOffsetY": -4,
 					"__tilesetDefUid": null,
 					"__tilesetRelPath": null,
 					"iid": "d52007c0-5e50-11f0-9f8e-45757b253b62",
@@ -978,17 +1016,20 @@
 					"entityInstances": [
 						{
 							"__identifier": "Slime",
-							"__grid": [70,57],
+							"__grid": [7,48],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
 							"__smartColor": "#EAD4AA",
-							"iid": "a923e910-5e50-11f0-9f8e-357f3fdaf3d2",
+							"iid": "1f786b80-5e50-11f0-9113-4993798df876",
 							"width": 16,
-							"height": 16,
+							"height": 20,
 							"defUid": 205,
-							"px": [1120,912],
-							"fieldInstances": []
+							"px": [140,960],
+							"fieldInstances": [{ "__identifier": "Patrol", "__type": "Array<Point>", "__value": [{ "cx": 13, "cy": 48 }], "__tile": null, "defUid": 207, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["13,48"]
+							}] }]
 						}
 					]
 				},

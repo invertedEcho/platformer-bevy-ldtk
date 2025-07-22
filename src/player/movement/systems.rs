@@ -1,12 +1,9 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{
-    player::components::Player,
-    world::platform::components::Platform,
-};
+use crate::{player::components::Player, world::platform::components::Platform};
 
-use super::{states::PlayerMovementType, PLAYER_SPEED};
+use super::{PLAYER_SPEED, states::PlayerMovementType};
 
 pub fn player_movement(
     mut commands: Commands,
