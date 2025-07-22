@@ -103,12 +103,16 @@ fn get_help_text_from_help_sign_field(value: &String) -> Result<String, &str> {
     let basic_move_string = String::from("Basic_Move");
     let jump_string = String::from("Jump");
     let platform_string = String::from("Platform");
+    let slime_string = String::from("Slimes");
+
     if *value == basic_move_string {
         return Ok("Use D to move forward and A to move backwards".to_string());
     } else if *value == jump_string {
         return Ok("Use the Spacebar to jump".to_string());
     } else if *value == platform_string {
         return Ok("Use S to fall through a platform".to_string());
+    } else if *value == slime_string {
+        return Ok("Watch out for Slimes, they will hurt you!".to_string());
     } else {
         return Err("Invalid help sign value");
     }
