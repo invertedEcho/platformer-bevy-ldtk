@@ -63,7 +63,7 @@ pub fn spawn_help_text_for_help_signs(
                         continue;
                     };
 
-                    let next_char_font_index = get_font_char_index(&next_char).unwrap();
+                    let next_char_font_index = get_font_char_index(&next_char);
 
                     // if current font index is space, add empty gap, but only do so if we didnt
                     // just line wrap.

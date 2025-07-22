@@ -9,22 +9,26 @@ pub const FONT_SLASH_INDEX: usize = 38;
 
 pub const FONT_SPACEBAR_INDEX: usize = 99;
 
-pub fn get_font_char_index(char: &char) -> Result<usize, &str> {
+pub fn get_font_char_index(char: &char) -> usize {
     if *char == ' ' {
-        return Ok(FONT_SPACEBAR_INDEX);
+        return FONT_SPACEBAR_INDEX;
+    }
+    if char.is_ascii_punctuation() {
+        eprintln!("Punctuation marks are not yet supported.");
+        return FONT_SPACEBAR_INDEX;
     }
     if char.is_ascii_alphabetic() {
+        println!("char: {}", char);
         let offset = (char.to_ascii_uppercase() as u8 - b'A') as usize;
-        Ok(FONT_OFFSET + offset)
+        return FONT_OFFSET + offset;
     } else {
-        Err("Failed to find font index for char")
+        eprintln!("Missing font index for: {}", char);
+        return FONT_SPACEBAR_INDEX;
     }
 }
 
 pub fn get_font_indices_from_text(text: &String) -> Vec<usize> {
     text.chars()
-        .map(|char| {
-            return get_font_char_index(&char).expect("Can get font char index");
-        })
+        .map(|char| get_font_char_index(&char))
         .collect()
 }

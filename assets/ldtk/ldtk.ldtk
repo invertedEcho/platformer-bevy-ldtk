@@ -966,7 +966,8 @@
 	], "enums": [{ "identifier": "HelpSigns", "uid": 200, "values": [
 		{ "id": "Basic_Move", "tileRect": null, "color": 12470831 },
 		{ "id": "Jump", "tileRect": null, "color": 14120515 },
-		{ "id": "Platform", "tileRect": null, "color": 15389866 }
+		{ "id": "Platform", "tileRect": null, "color": 15389866 },
+		{ "id": "Slimes", "tileRect": null, "color": 14984818 }
 	], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [], "levelFields": [] },
 	"levels": [
 		{
@@ -1109,6 +1110,23 @@
 							"fieldInstances": [{ "__identifier": "HelpSigns", "__type": "LocalEnum.HelpSigns", "__value": "Platform", "__tile": null, "defUid": 204, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["Platform"]
+							}] }]
+						},
+						{
+							"__identifier": "Help_Sign",
+							"__grid": [63,53],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#E4A672",
+							"iid": "3535a190-5e50-11f0-9113-d7b3feec13f4",
+							"width": 16,
+							"height": 16,
+							"defUid": 197,
+							"px": [1008,848],
+							"fieldInstances": [{ "__identifier": "HelpSigns", "__type": "LocalEnum.HelpSigns", "__value": "Slimes", "__tile": null, "defUid": 204, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Slimes"]
 							}] }]
 						}
 					]

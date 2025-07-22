@@ -28,6 +28,7 @@ pub const TILE_SIZE: f32 = 16.0;
 pub const HALF_TILE_SIZE: f32 = TILE_SIZE / 2.0;
 
 // TODO: Investigate resource TextureAtlasLayout, feel like its duplicated everywhere
+// TODO: Switch to a different font, I really don't like the current one
 
 fn main() {
     let mut app = App::new();
