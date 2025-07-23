@@ -1,6 +1,7 @@
 use std::ops::Neg;
 
 use crate::{
+    TILE_SIZE,
     common::components::{AnimationTimer, TextureAtlasIndices},
     player::heart::resources::PlayerHeartResource,
 };
@@ -151,7 +152,7 @@ pub fn patrol_slimes(
                 x: current_patrol_point.x,
                 y: current_patrol_point.y,
             },
-            IVec2::splat(20),
+            IVec2::splat(TILE_SIZE as i32),
         );
 
         if patrol.forward {

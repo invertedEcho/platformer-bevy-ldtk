@@ -15,7 +15,7 @@ pub struct CoinPlugin;
 impl Plugin for CoinPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<CoinResource>()
-            .register_ldtk_entity_for_layer::<CoinBundle>("Coins", "Coins")
+            .register_ldtk_entity::<CoinBundle>("Coins")
             .add_systems(
                 Update,
                 (
