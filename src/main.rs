@@ -58,6 +58,7 @@ fn setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut rapier_config: Query<&mut RapierConfiguration>,
+    mut ui_scale: ResMut<UiScale>,
 ) {
     commands.spawn(LdtkWorldBundle {
         ldtk_handle: LdtkProjectHandle {
@@ -70,4 +71,5 @@ fn setup(
         .single_mut()
         .expect("RapierConfiguration exists and can be mutated")
         .gravity = Vec2::new(0.0, -1000.0);
+    ui_scale.0 = 2.0;
 }

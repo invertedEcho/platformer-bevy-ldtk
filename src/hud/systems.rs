@@ -1,7 +1,4 @@
-use crate::{
-    font::{FONT_PATH, FONT_SIZE},
-    player::heart::resources::PlayerHeartResource,
-};
+use crate::{font::FONT_PATH, player::heart::resources::PlayerHeartResource};
 use bevy::prelude::*;
 
 use crate::coins::resources::CoinResource;
@@ -10,25 +7,24 @@ use super::components::{CoinCounter, PlayerHeartChild, PlayerHeartHud};
 
 const COIN_HUD_ASSET_PATH: &str = "hud elements/coins_hud.png";
 
-const NORMAL_HUD_PARENT_HEIGHT: Val = Val::Px(30.0);
-const NORMAL_HUD_GAP: Val = Val::Px(8.0);
-const NORMAL_PADDING: Val = Val::Px(8.0);
+const NORMAL_HUD_GAP: Val = Val::Px(2.0);
+const ROOT_UI_PADDING: Val = Val::Px(4.0);
 
 pub fn spawn_hud(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     player_heart_resource: Res<PlayerHeartResource>,
 ) {
-    let font = asset_server.load(FONT_PATH);
+    let font: Handle<Font> = asset_server.load(FONT_PATH);
 
     commands
         .spawn((
             Node {
                 padding: UiRect {
-                    top: NORMAL_PADDING,
-                    left: NORMAL_PADDING,
-                    right: NORMAL_PADDING,
-                    bottom: NORMAL_PADDING,
+                    top: ROOT_UI_PADDING,
+                    left: ROOT_UI_PADDING,
+                    right: ROOT_UI_PADDING,
+                    bottom: ROOT_UI_PADDING,
                 },
                 height: Val::Percent(100.0),
                 width: Val::Percent(100.0),
@@ -43,8 +39,8 @@ pub fn spawn_hud(
             parent
                 .spawn((
                     Node {
-                        height: NORMAL_HUD_PARENT_HEIGHT,
                         flex_direction: FlexDirection::Row,
+                        align_items: AlignItems::Center,
                         column_gap: NORMAL_HUD_GAP,
                         ..default()
                     },
@@ -69,8 +65,9 @@ pub fn spawn_hud(
             // Coins
             parent
                 .spawn((Node {
-                    height: NORMAL_HUD_PARENT_HEIGHT,
                     flex_direction: FlexDirection::Row,
+                    align_items: AlignItems::Center,
+                    justify_items: JustifyItems::Center,
                     column_gap: NORMAL_HUD_GAP,
                     ..default()
                 },))
@@ -82,7 +79,7 @@ pub fn spawn_hud(
                     parent.spawn((
                         CoinCounter,
                         Text::new("0"),
-                        TextFont::from_font(font).with_font_size(FONT_SIZE),
+                        TextFont::from_font(font).with_font_size(12.0),
                     ));
                 });
         });
@@ -102,6 +99,9 @@ pub fn update_coin_counter(
     **coin_counter = coin_resource.count.to_string();
 }
 
+// TODO: Dont despawn them all but check if we hearts increased/decreased. decreased -> despawn
+// count by diff,
+// increased, spawn new by diff
 pub fn update_player_heart_count(
     mut commands: Commands,
     player_heart_resource: Res<PlayerHeartResource>,
