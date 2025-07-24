@@ -12,6 +12,7 @@ use world::ground::GroundPlugin;
 use world::help_sign::HelpSignPlugin;
 use world::mushroom::MushroomPlugin;
 use world::platform::PlatformPlugin;
+use world::save_point::SavePointPlugin;
 use world::wall::WallPlugin;
 
 mod camera;
@@ -28,12 +29,12 @@ pub mod world;
 pub const TILE_SIZE: f32 = 16.0;
 pub const HALF_TILE_SIZE: f32 = TILE_SIZE / 2.0;
 
-// TODO: Investigate resource TextureAtlasLayout, feel like its duplicated everywhere
-
 fn main() {
     let mut app = App::new();
     app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+        .add_plugins(bevy::diagnostic::EntityCountDiagnosticsPlugin)
+        .add_plugins(LogDiagnosticsPlugin::default())
         .add_plugins(LdtkPlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(PlayerPlugin)
@@ -46,9 +47,8 @@ fn main() {
         .add_plugins(MushroomPlugin)
         .add_plugins(HelpSignPlugin)
         .add_plugins(EnemyPlugin)
-        .add_plugins(bevy::diagnostic::EntityCountDiagnosticsPlugin)
+        .add_plugins(SavePointPlugin)
         .add_systems(Startup, setup)
-        .add_plugins(LogDiagnosticsPlugin::default())
         .insert_resource(LevelSelection::index(0));
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());

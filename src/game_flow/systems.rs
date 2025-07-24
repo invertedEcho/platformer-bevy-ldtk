@@ -20,3 +20,13 @@ pub fn respawn_world(
         coin_resource.count = 0;
     }
 }
+
+// TODO: should only be possible on debug build
+pub fn skip_to_next_level(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    mut level_selection: ResMut<LevelSelection>,
+) {
+    if keyboard_input.just_released(KeyCode::ArrowRight) {
+        *level_selection = LevelSelection::Identifier("Level_1".to_string());
+    }
+}

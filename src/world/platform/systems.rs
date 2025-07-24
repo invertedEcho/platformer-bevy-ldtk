@@ -88,6 +88,7 @@ pub fn platform_player_collision_detection(
     }
 }
 
+// bit dirty but works
 pub fn activate_platform_colliders_if_player_jumping_from_mushroom(
     mut commands: Commands,
     player_query: Query<(&Velocity, &Player), With<Player>>,
