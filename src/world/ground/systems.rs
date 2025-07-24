@@ -10,6 +10,7 @@ use super::components::Ground;
 pub fn spawn_ground_colliders(
     mut commands: Commands,
     ground_query: Query<(Entity, &GridCoords), Added<Ground>>,
+    level_query: Query<(Entity, &LevelIid)>,
 ) {
     if !cfg!(debug_assertions) {
         // Remove the tilecolor thats added from ldtk, as grounds shouldnt be visible, they only exists
@@ -39,17 +40,20 @@ pub fn spawn_ground_colliders(
             let world_x = (middle * TILE_SIZE) + HALF_TILE_SIZE;
             let world_y = (y_coordinate as f32 * TILE_SIZE) + HALF_TILE_SIZE;
 
-            commands.spawn((
-                Transform {
-                    translation: Vec3::new(world_x, world_y as f32, 0.0),
-                    ..Default::default()
-                },
-                Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
-                Ground,
-                Friction::new(1.0),
-                RigidBody::Fixed,
-                ActiveEvents::COLLISION_EVENTS,
-            ));
+            let (level_entity, _) = level_query.single().expect("can get current level");
+            commands.entity(level_entity).with_children(|level| {
+                level.spawn((
+                    Transform {
+                        translation: Vec3::new(world_x, world_y as f32, 0.0),
+                        ..Default::default()
+                    },
+                    Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
+                    Ground,
+                    Friction::new(1.0),
+                    RigidBody::Fixed,
+                    ActiveEvents::COLLISION_EVENTS,
+                ));
+            });
         }
     }
 }

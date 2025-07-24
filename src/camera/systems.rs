@@ -38,20 +38,18 @@ pub fn camera_follow_player(
         .get(ldtk_projects.single().unwrap())
         .unwrap();
 
-    let current_level_width = level_query
-        .iter()
-        .find_map(|level_iid| {
-            let level = ldtk_project
-                .get_raw_level_by_iid(&level_iid.to_string())
-                .unwrap();
-            level_selection
-                .is_match(&LevelIndices::default(), level)
-                .then_some(level.px_wid)
-        })
-        .unwrap_or_else(|| {
-            eprintln!("Could not find current level from ldtk");
-            std::process::exit(1);
-        });
+    let Some(current_level_width) = level_query.iter().find_map(|level_iid| {
+        let level = ldtk_project
+            .get_raw_level_by_iid(&level_iid.to_string())
+            .unwrap();
+        level_selection
+            .is_match(&LevelIndices::default(), level)
+            .then_some(level.px_wid)
+    }) else {
+        // TODO: This function shouldnt run if we are currently switching levels
+        eprintln!("Failed to find level, camera_follow_player may be broken.");
+        return;
+    };
 
     // follow player, but (these comments are bad, i only understand them because i know what it
     // does, but reading them makes no sense, i just dont know how to express this)

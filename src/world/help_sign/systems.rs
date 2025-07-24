@@ -58,6 +58,7 @@ fn get_help_text_from_help_sign_field(value: &String) -> Result<&str, &str> {
     let jump_string = String::from("Jump");
     let platform_string = String::from("Platform");
     let slime_string = String::from("Slimes");
+    let next_level_orb = String::from("NextLevelOrb");
 
     if *value == basic_move_string {
         return Ok("Use D to move forward and A to move backwards");
@@ -67,6 +68,8 @@ fn get_help_text_from_help_sign_field(value: &String) -> Result<&str, &str> {
         return Ok("Use S to fall through a platform");
     } else if *value == slime_string {
         return Ok("Watch out for Slimes, they will hurt you!");
+    } else if *value == next_level_orb {
+        return Ok("This orb will get you to the next level");
     } else {
         return Err("Invalid help sign value");
     }

@@ -9,6 +9,7 @@ use super::components::Platform;
 pub fn spawn_platform_colliders(
     mut commands: Commands,
     platform_query: Query<(Entity, &GridCoords), Added<Platform>>,
+    level_query: Query<(Entity, &LevelIid)>,
 ) {
     // We already have the exact same logic for ground too, there is literally only one small
     // difference, we use "Platform" component instead of "Ground". Its fine for now but this can
@@ -33,18 +34,20 @@ pub fn spawn_platform_colliders(
             let world_x = (middle * TILE_SIZE as f32) + HALF_TILE_SIZE;
             let world_y = (y_coordinate as f32 * TILE_SIZE) + HALF_TILE_SIZE + HALF_TILE_SIZE / 2.0;
 
-            commands.spawn((
-                Transform {
-                    translation: Vec3::new(world_x, world_y as f32, 0.0),
-                    ..Default::default()
-                },
-                Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE / 2.0),
-                Platform,
-                Friction::new(1.0),
-                RigidBody::Fixed,
-                ActiveEvents::COLLISION_EVENTS,
-                Visibility::Hidden,
-            ));
+            let (level_entity, _) = level_query.single().expect("can get current level");
+            commands.entity(level_entity).with_children(|level| {
+                level.spawn((
+                    Transform {
+                        translation: Vec3::new(world_x, world_y as f32, 0.0),
+                        ..Default::default()
+                    },
+                    Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE / 2.0),
+                    Platform,
+                    Friction::new(1.0),
+                    RigidBody::Fixed,
+                    ActiveEvents::COLLISION_EVENTS,
+                ));
+            });
         }
     }
 }

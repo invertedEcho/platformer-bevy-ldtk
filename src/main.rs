@@ -1,3 +1,4 @@
+use bevy::diagnostic::LogDiagnosticsPlugin;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
@@ -45,7 +46,9 @@ fn main() {
         .add_plugins(MushroomPlugin)
         .add_plugins(HelpSignPlugin)
         .add_plugins(EnemyPlugin)
+        .add_plugins(bevy::diagnostic::EntityCountDiagnosticsPlugin)
         .add_systems(Startup, setup)
+        .add_plugins(LogDiagnosticsPlugin::default())
         .insert_resource(LevelSelection::index(0));
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());

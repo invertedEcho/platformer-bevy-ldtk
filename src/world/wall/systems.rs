@@ -53,7 +53,11 @@ fn preprocess_grid_coords(wall_grid_coords: Vec<&GridCoords>) -> HashMap<i32, Ve
     return splitted_x_coords_with_gaps_of_y;
 }
 
-pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Added<Wall>>) {
+pub fn spawn_wall_colliders(
+    mut commands: Commands,
+    walls: Query<&GridCoords, Added<Wall>>,
+    level_query: Query<(Entity, &LevelIid)>,
+) {
     let processed_wall_grid_coords = preprocess_grid_coords(walls.iter().collect());
 
     for (y_coordinate, x_coordinates_nested) in processed_wall_grid_coords {
@@ -70,16 +74,19 @@ pub fn spawn_wall_colliders(mut commands: Commands, walls: Query<&GridCoords, Ad
             let world_x = (middle * TILE_SIZE) + HALF_TILE_SIZE;
             let world_y = (y_coordinate as f32 * TILE_SIZE) + HALF_TILE_SIZE;
 
-            commands.spawn((
-                Transform {
-                    translation: Vec3::new(world_x, world_y as f32, 0.0),
-                    ..Default::default()
-                },
-                Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
-                Wall,
-                Friction::new(1.0),
-                RigidBody::Fixed,
-            ));
+            let (level_entity, _) = level_query.single().expect("can get current level");
+            commands.entity(level_entity).with_children(|level| {
+                level.spawn((
+                    Transform {
+                        translation: Vec3::new(world_x, world_y as f32, 0.0),
+                        ..Default::default()
+                    },
+                    Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
+                    Wall,
+                    Friction::new(1.0),
+                    RigidBody::Fixed,
+                ));
+            });
         }
     }
 }

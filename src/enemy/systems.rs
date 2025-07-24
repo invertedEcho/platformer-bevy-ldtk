@@ -116,9 +116,7 @@ pub fn detect_slime_collision_with_player(
             continue;
         }
 
-        println!("Player collided with a slime!");
         player_heart_resource.count -= 1;
-        println!("Player heart count: {}", player_heart_resource.count);
     }
 }
 
