@@ -1,4 +1,3 @@
-use crate::player::heart::resources::PlayerHeartResource;
 use crate::player::movement::systems::player_movement;
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
@@ -14,7 +13,6 @@ use visual::systems::{
 use crate::common::systems::animate_generic_sprite;
 
 pub mod components;
-pub mod heart;
 pub mod movement;
 mod physics;
 mod systems;
@@ -25,7 +23,6 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<PlayerMovementType>()
-            .init_resource::<PlayerHeartResource>()
             .register_ldtk_entity::<PlayerBundle>("Player")
             .add_systems(
                 Update,

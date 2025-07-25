@@ -3,10 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     common::components::AnimationTimer,
-    player::{
-        components::Player,
-        heart::resources::{INITIAL_PLAYER_HEART_COUNT, PlayerHeartResource},
-    },
+    player::components::Player,
     world::save_point::{
         SAVE_POINT_SAVING_ANIM_STRIP_PATH, SAVE_POINT_SAVING_TEXTURE_ATLAS_INDICES,
         components::SavingSavePointTimer,

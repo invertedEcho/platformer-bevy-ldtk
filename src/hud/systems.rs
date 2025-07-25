@@ -1,20 +1,16 @@
-use crate::{font::FONT_PATH, player::heart::resources::PlayerHeartResource};
+use crate::font::FONT_PATH;
 use bevy::prelude::*;
 
 use crate::coins::resources::CoinResource;
 
-use super::components::{CoinCounter, PlayerHeartChild, PlayerHeartHud};
+use super::components::CoinCounter;
 
 const COIN_HUD_ASSET_PATH: &str = "hud elements/coins_hud.png";
 
 const NORMAL_HUD_GAP: Val = Val::Px(2.0);
 const ROOT_UI_PADDING: Val = Val::Px(4.0);
 
-pub fn spawn_hud(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    player_heart_resource: Res<PlayerHeartResource>,
-) {
+pub fn spawn_hud(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font: Handle<Font> = asset_server.load(FONT_PATH);
 
     commands
@@ -35,31 +31,19 @@ pub fn spawn_hud(
             Transform::from_xyz(0.0, 0.0, 4.0),
         ))
         .with_children(|parent| {
-            // Hearts
+            // Player Icon
             parent
-                .spawn((
-                    Node {
-                        flex_direction: FlexDirection::Row,
-                        align_items: AlignItems::Center,
-                        column_gap: NORMAL_HUD_GAP,
-                        ..default()
-                    },
-                    PlayerHeartHud,
-                ))
+                .spawn((Node {
+                    flex_direction: FlexDirection::Row,
+                    align_items: AlignItems::Center,
+                    column_gap: NORMAL_HUD_GAP,
+                    ..default()
+                },))
                 .with_children(|parent| {
                     parent.spawn(ImageNode {
                         image: asset_server.load("hud elements/lifes_icon.png"),
                         ..default()
                     });
-                    for _ in 0..player_heart_resource.count {
-                        parent.spawn((
-                            ImageNode {
-                                image: asset_server.load("hud elements/hearts_hud.png"),
-                                ..default()
-                            },
-                            PlayerHeartChild,
-                        ));
-                    }
                 });
 
             // Coins
@@ -97,36 +81,4 @@ pub fn update_coin_counter(
         return;
     };
     **coin_counter = coin_resource.count.to_string();
-}
-
-// TODO: Dont despawn them all but check if we hearts increased/decreased. decreased -> despawn
-// count by diff,
-// increased, spawn new by diff
-pub fn update_player_heart_count(
-    mut commands: Commands,
-    player_heart_resource: Res<PlayerHeartResource>,
-    player_heart_hud_query: Query<Entity, With<PlayerHeartHud>>,
-    player_heart_children_query: Query<Entity, With<PlayerHeartChild>>,
-    asset_server: Res<AssetServer>,
-) {
-    let Ok(player_heart_hud) = player_heart_hud_query.single() else {
-        eprintln!("Exactly one player heart hud should exist");
-        return;
-    };
-
-    for player_heart_child in player_heart_children_query {
-        commands.entity(player_heart_child).despawn();
-    }
-
-    for _ in 0..player_heart_resource.count {
-        commands.entity(player_heart_hud).with_children(|parent| {
-            parent.spawn((
-                ImageNode {
-                    image: asset_server.load("hud elements/hearts_hud.png"),
-                    ..default()
-                },
-                PlayerHeartChild,
-            ));
-        });
-    }
 }
