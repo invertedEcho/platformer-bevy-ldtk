@@ -118,7 +118,9 @@ pub fn change_keyboard_tiles(
     level_selection: Res<LevelSelection>,
     keyboard_tile_query: Query<(Entity, &EntityInstance), With<KeyboardTile>>,
 ) {
-    if *level_selection != LevelSelection::Identifier("Tutorial".to_string()) {
+    if *level_selection
+        != LevelSelection::Iid("c2d47272-3740-11f0-a891-85a44477d8cd".to_string().into())
+    {
         return;
     };
 
