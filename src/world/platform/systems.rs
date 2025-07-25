@@ -44,7 +44,6 @@ pub fn spawn_platform_colliders(
                     Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE / 2.0),
                     Platform,
                     Friction::new(1.0),
-                    RigidBody::Fixed,
                     ActiveEvents::COLLISION_EVENTS,
                 ));
             });

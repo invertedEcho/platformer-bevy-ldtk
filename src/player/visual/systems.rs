@@ -2,8 +2,8 @@ use bevy::prelude::*;
 
 use crate::player::components::Player;
 use crate::player::visual::{
-    PLAYER_BACKWARDS_IDLE_SPRITE_ANIMATION_INDICES, PLAYER_BACKWARDS_IDLE_SPRITE_TILESET,
-    PLAYER_BACKWARDS_RUN_SPRITE_ANIMATION_INDICES, PLAYER_BACKWARDS_RUN_SPRITE_TILESET,
+    PLAYER_BACKWARDS_IDLE_TILESET_PATH, PLAYER_BACKWARDS_RUN_SPRITE_ANIMATION_INDICES,
+    PLAYER_BACKWARDS_RUN_SPRITE_TILESET, PLAYER_BACKWARDS_SPRITE_ANIMATION_INDICES,
     PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES, PLAYER_FORWARD_RUN_SPRITE_ANIMATION_INDICES,
 };
 
@@ -79,7 +79,7 @@ pub fn set_backwards_idle_sprite(
     asset_server: Res<AssetServer>,
 ) {
     for (mut sprite, mut animation_indices) in player {
-        let texture = asset_server.load(PLAYER_BACKWARDS_IDLE_SPRITE_TILESET);
+        let texture = asset_server.load(PLAYER_BACKWARDS_IDLE_TILESET_PATH);
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
         let texture_atlas_layout = texture_atlas_layouts.add(layout);
         *sprite = Sprite::from_atlas_image(
@@ -89,6 +89,6 @@ pub fn set_backwards_idle_sprite(
                 index: 0,
             },
         );
-        *animation_indices = PLAYER_BACKWARDS_IDLE_SPRITE_ANIMATION_INDICES;
+        *animation_indices = PLAYER_BACKWARDS_SPRITE_ANIMATION_INDICES;
     }
 }

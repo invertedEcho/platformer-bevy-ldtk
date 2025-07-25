@@ -8,7 +8,7 @@ use next_level_orb::{
     components::NextLevelOrb,
     systems::{detect_player_next_level_orb_collision, process_next_level_orbs},
 };
-use systems::{respawn_world, skip_to_next_level};
+use systems::skip_to_next_level;
 
 mod next_level_orb;
 mod systems;
@@ -21,7 +21,6 @@ impl Plugin for GameFlowPlugin {
             .add_systems(
                 Update,
                 (
-                    respawn_world,
                     process_next_level_orbs,
                     animate_generic_sprite::<NextLevelOrb>,
                     detect_player_next_level_orb_collision,

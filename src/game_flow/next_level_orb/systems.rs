@@ -40,6 +40,7 @@ pub fn process_next_level_orbs(
 }
 
 pub fn detect_player_next_level_orb_collision(
+    mut commands: Commands,
     mut collision_event_reader: EventReader<CollisionEvent>,
     player_query: Query<Entity, With<Player>>,
     next_level_orb_query: Query<Entity, With<NextLevelOrb>>,
@@ -65,7 +66,12 @@ pub fn detect_player_next_level_orb_collision(
             continue;
         }
 
-        // TODO: load next level
+        for player in player_query {
+            println!("found player, despawning to ensure smooth sailing...");
+            commands.entity(player).despawn();
+        }
+        println!("loading next level.");
+        // TODO: Replace with next level index. probably better. also check if last level
         *level_selection =
             LevelSelection::Iid(LevelIid::new("dd949e20-5e50-11f0-a1b6-870a0a448448"));
     }

@@ -9,5 +9,5 @@ pub struct SavePointBundle {
     save_point: SavePoint,
 }
 
-#[derive(Component)]
+#[derive(Component, Deref, DerefMut)]
 pub struct SavingSavePointTimer(pub Timer);

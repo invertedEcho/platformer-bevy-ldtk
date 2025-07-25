@@ -13,6 +13,7 @@ use world::help_sign::HelpSignPlugin;
 use world::mushroom::MushroomPlugin;
 use world::platform::PlatformPlugin;
 use world::save_point::SavePointPlugin;
+use world::spike::SpikePlugin;
 use world::wall::WallPlugin;
 
 mod camera;
@@ -22,7 +23,7 @@ mod enemy;
 pub mod font;
 mod game_flow;
 mod hud;
-mod player;
+pub mod player;
 pub mod utils;
 pub mod world;
 
@@ -33,7 +34,7 @@ fn main() {
     let mut app = App::new();
     app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-        .add_plugins(bevy::diagnostic::EntityCountDiagnosticsPlugin)
+        // .add_plugins(bevy::diagnostic::EntityCountDiagnosticsPlugin)
         .add_plugins(LogDiagnosticsPlugin::default())
         .add_plugins(LdtkPlugin)
         .add_plugins(CameraPlugin)
@@ -48,8 +49,11 @@ fn main() {
         .add_plugins(HelpSignPlugin)
         .add_plugins(EnemyPlugin)
         .add_plugins(SavePointPlugin)
+        .add_plugins(SpikePlugin)
         .add_systems(Startup, setup)
-        .insert_resource(LevelSelection::Identifier("Tutorial".to_string()));
+        .insert_resource(LevelSelection::Iid(LevelIid::new(
+            "c2d47272-3740-11f0-a891-85a44477d8cd",
+        )));
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());
     }

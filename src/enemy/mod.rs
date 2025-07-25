@@ -1,9 +1,11 @@
 use bevy::prelude::*;
-use bevy_ecs_ldtk::app::LdtkEntityAppExt;
+use bevy_ecs_ldtk::prelude::*;
 use components::{Slime, SlimeBundle};
-use systems::{detect_slime_collision_with_player, patrol_slimes, spawn_slimes};
+use systems::{
+    detect_slime_collision_with_player, patrol_slimes, spawn_slimes, stop_slime_patroling,
+};
 
-use crate::common::systems::animate_generic_sprite;
+use crate::{common::systems::animate_generic_sprite, player::states::PlayerState};
 
 mod components;
 mod systems;
@@ -21,8 +23,9 @@ impl Plugin for EnemyPlugin {
                     spawn_slimes,
                     animate_generic_sprite::<Slime>,
                     detect_slime_collision_with_player,
-                    patrol_slimes,
+                    patrol_slimes.run_if(in_state(PlayerState::Alive)),
                 ),
-            );
+            )
+            .add_systems(OnEnter(PlayerState::Respawning), stop_slime_patroling);
     }
 }

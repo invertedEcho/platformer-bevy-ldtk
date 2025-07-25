@@ -3,7 +3,7 @@ use std::ops::Neg;
 use crate::{
     TILE_SIZE,
     common::components::{AnimationTimer, TextureAtlasIndices},
-    player::components::Player,
+    player::{components::Player, events::PlayerDeadEvent},
 };
 
 use super::{
@@ -85,11 +85,10 @@ pub fn spawn_slimes(
 }
 
 pub fn detect_slime_collision_with_player(
-    mut commands: Commands,
     mut collision_event_reader: EventReader<CollisionEvent>,
     slime_query: Query<Entity, With<Slime>>,
-    mut player_query: Query<(Entity, &Player, &mut Transform), With<Player>>,
-    ldtk_projects: Query<Entity, With<LdtkProjectHandle>>,
+    player_query: Query<Entity, With<Player>>,
+    mut player_dead_event_writer: EventWriter<PlayerDeadEvent>,
 ) {
     for collision_event in collision_event_reader.read() {
         let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
@@ -103,26 +102,14 @@ pub fn detect_slime_collision_with_player(
             continue;
         }
 
-        let is_collision_entities_player = player_query.iter().any(|(player_entity, _, _)| {
-            player_entity == first_entity || player_entity == second_entity
-        });
+        let is_collision_entities_player = player_query
+            .iter()
+            .any(|player| player == first_entity || player == second_entity);
         if !is_collision_entities_player {
             continue;
         }
 
-        let (_, player, mut player_transform) = player_query.single_mut().unwrap();
-
-        if let Some(player_current_save_point) = player.current_save_point {
-            player_transform.translation = player_current_save_point;
-        } else {
-            commands
-                .entity(
-                    ldtk_projects
-                        .single()
-                        .expect("Exactly one ldtk project exists"),
-                )
-                .insert(Respawn);
-        }
+        player_dead_event_writer.write(PlayerDeadEvent);
     }
 }
 
@@ -178,5 +165,11 @@ pub fn patrol_slimes(
                 patrol.forward = true;
             }
         }
+    }
+}
+
+pub fn stop_slime_patroling(slimes_query: Query<&mut Velocity, With<Slime>>) {
+    for mut slime_velocity in slimes_query {
+        slime_velocity.linvel.x = 0.0;
     }
 }

@@ -50,24 +50,25 @@ pub fn coin_collision_detection(
     mut coin_resource: ResMut<CoinResource>,
 ) {
     for collision_event in collision_events.read() {
-        match collision_event {
-            CollisionEvent::Started(first_entity, second_entity, _collision_event_flags) => {
-                let player_entity = players
-                    .single()
-                    .expect("Player exists when coin is touched");
-                let collision_entities_is_coin = coin_query
-                    .iter()
-                    .any(|e| e == *first_entity || e == *second_entity);
-                if collision_entities_is_coin {
-                    if *first_entity == player_entity {
-                        commands.entity(*second_entity).despawn();
-                    } else if *second_entity == player_entity {
-                        commands.entity(*first_entity).despawn();
-                    }
-                    coin_resource.count += 1;
-                }
-            }
-            _ => {}
+        let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
+            continue;
+        };
+        let Some(coin_entity) = coin_query
+            .iter()
+            .find(|coin| *coin == first_entity || *coin == second_entity)
+        else {
+            continue;
+        };
+
+        let is_collision_entities_player = players
+            .iter()
+            .any(|player| player == first_entity || player == second_entity);
+        if !is_collision_entities_player {
+            continue;
         }
+
+        println!("Detected coin collision, despawning coin and increasing coin count");
+        commands.entity(coin_entity).despawn();
+        coin_resource.count += 1;
     }
 }

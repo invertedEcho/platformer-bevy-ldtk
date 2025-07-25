@@ -18,3 +18,6 @@ pub struct PlayerBundle {
     #[grid_coords]
     grid_coords: GridCoords,
 }
+
+#[derive(Component, Deref, DerefMut)]
+pub struct PlayerDeadAnimationTimer(pub Timer);

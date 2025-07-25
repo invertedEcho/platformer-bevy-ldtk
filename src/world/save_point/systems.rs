@@ -55,7 +55,7 @@ pub fn detect_player_collider_with_save_point(
 
         let Some(colliding_save_point) = save_point_query
             .iter()
-            .find(|(player, _)| *player == first_entity || *player == second_entity)
+            .find(|(save_point, _)| *save_point == first_entity || *save_point == second_entity)
         else {
             continue;
         };
@@ -75,15 +75,19 @@ pub fn detect_player_collider_with_save_point(
         let atlas = TextureAtlas { layout, index: 0 };
         let new_sprite = Sprite::from_atlas_image(texture, atlas);
 
-        let (colliding_save_point, transform) = colliding_save_point;
-        commands.entity(colliding_save_point).insert((
+        let (save_point_entity, save_point_transform) = colliding_save_point;
+        commands.entity(save_point_entity).insert((
             new_sprite,
             SAVE_POINT_SAVING_TEXTURE_ATLAS_INDICES,
             SavingSavePointTimer(Timer::from_seconds(1.5, TimerMode::Once)),
         ));
 
         let (_, mut player) = player_query.single_mut().unwrap();
-        player.current_save_point = Some(transform.translation);
+        println!(
+            "player collided with save point. setting player.current_save_point to save_point_transform: {}",
+            save_point_transform.translation
+        );
+        player.current_save_point = Some(save_point_transform.translation);
     }
 }
 
@@ -96,9 +100,9 @@ pub fn tick_saving_save_point_timer(
     timer_query: Query<(Entity, &mut SavingSavePointTimer)>,
 ) {
     for (entity, mut saving_save_point_timer) in timer_query {
-        saving_save_point_timer.0.tick(time.delta());
+        saving_save_point_timer.tick(time.delta());
 
-        if saving_save_point_timer.0.finished() {
+        if saving_save_point_timer.finished() {
             let texture = asset_server.load(SAVE_POINT_ANIM_STRIP_PATH);
             let layout = TextureAtlasLayout::from_grid(UVec2 { x: 12, y: 20 }, 9, 1, None, None);
             let texture_atlas_layout = texture_atlas_layouts.add(layout);
