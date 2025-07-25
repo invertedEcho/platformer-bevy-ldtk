@@ -47,10 +47,6 @@ pub fn setup_player(
             PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES,
             AnimationTimer::default(),
             RigidBody::Dynamic,
-            Friction {
-                coefficient: 0.0,
-                combine_rule: CoefficientCombineRule::Min,
-            },
             Collider::cuboid(HALF_TILE_SIZE / 2.0, HALF_TILE_SIZE),
             LockedAxes::ROTATION_LOCKED,
             Velocity {
@@ -98,6 +94,8 @@ pub fn handle_player_dead_event(
                     NORMAL_ANIMATION_TIMER_DURATION * PLAYER_DEATH_ANIM_TILESET_COLUMN_COUNT as f32,
                     TimerMode::Once,
                 )),
+                // fixed rigidbody so player collider doesnt move because of touching with slime
+                RigidBody::Fixed,
             ));
         }
     }

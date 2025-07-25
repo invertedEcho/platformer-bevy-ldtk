@@ -68,10 +68,6 @@ pub fn spawn_slimes(
             },
             LockedAxes::ROTATION_LOCKED,
             RigidBody::KinematicVelocityBased,
-            Friction {
-                coefficient: 0.0,
-                combine_rule: CoefficientCombineRule::Min,
-            },
             Sprite {
                 image: texture.clone(),
                 texture_atlas: Some(TextureAtlas {

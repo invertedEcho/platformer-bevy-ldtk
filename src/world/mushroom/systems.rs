@@ -3,10 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     HALF_TILE_SIZE,
-    common::{
-        NORMAL_ANIMATION_TIMER_DURATION,
-        components::{AnimationTimer, TextureAtlasIndices},
-    },
+    common::components::{AnimationTimer, TextureAtlasIndices},
     player::{components::Player, movement::PLAYER_JUMP_HIGH},
 };
 
