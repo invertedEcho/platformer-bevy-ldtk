@@ -88,15 +88,8 @@ pub fn change_keyboard_tiles(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     keyboard_input: Res<ButtonInput<KeyCode>>,
-    level_selection: Res<LevelSelection>,
     keyboard_tile_query: Query<(Entity, &EntityInstance), With<KeyboardTile>>,
 ) {
-    if *level_selection
-        != LevelSelection::Iid("c2d47272-3740-11f0-a891-85a44477d8cd".to_string().into())
-    {
-        return;
-    };
-
     let just_pressed_keys: Vec<&KeyCode> = keyboard_input.get_just_pressed().collect();
 
     for just_pressed_key in just_pressed_keys {

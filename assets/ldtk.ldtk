@@ -11,7 +11,7 @@
 	"iid": "c2d47270-3740-11f0-a891-316f5b172d07",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 225,
+	"nextUid": 228,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "LinearHorizontal",
@@ -814,7 +814,45 @@
 			"limitBehavior": "PreventAdding",
 			"pivotX": 0,
 			"pivotY": 0,
-			"fieldDefs": []
+			"fieldDefs": [
+				{
+					"identifier": "Target_Level_IID",
+					"doc": null,
+					"__type": "String",
+					"uid": 227,
+					"type": "F_String",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		},
 		{
 			"identifier": "Spike",
@@ -1124,7 +1162,7 @@
 	], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [], "levelFields": [] },
 	"levels": [
 		{
-			"identifier": "Tutorial",
+			"identifier": "Level_0",
 			"iid": "c2d47272-3740-11f0-a891-85a44477d8cd",
 			"uid": 0,
 			"worldX": -1,
@@ -1134,7 +1172,7 @@
 			"pxHei": 672,
 			"__bgColor": "#696A79",
 			"bgColor": null,
-			"useAutoIdentifier": false,
+			"useAutoIdentifier": true,
 			"bgRelPath": "tiles and background_foreground/background.png",
 			"bgPos": "Cover",
 			"bgPivotX": 0.5,
@@ -1253,20 +1291,6 @@
 							"height": 8,
 							"defUid": 189,
 							"px": [856,632],
-							"fieldInstances": []
-						},
-						{
-							"__identifier": "Next_Level",
-							"__grid": [83,33],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": null,
-							"__smartColor": "#733E39",
-							"iid": "c690d7b0-5e50-11f0-9bfd-19c80470928d",
-							"width": 16,
-							"height": 16,
-							"defUid": 209,
-							"px": [1328,528],
 							"fieldInstances": []
 						},
 						{
@@ -1488,6 +1512,23 @@
 									"params": ["Space"]
 								}] }
 							]
+						},
+						{
+							"__identifier": "Next_Level",
+							"__grid": [83,34],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#733E39",
+							"iid": "ab7d7830-5e50-11f0-81ba-b5a60177d01a",
+							"width": 16,
+							"height": 16,
+							"defUid": 209,
+							"px": [1328,544],
+							"fieldInstances": [{ "__identifier": "Target_Level_IID", "__type": "String", "__value": "dd949e20-5e50-11f0-a1b6-870a0a448448", "__tile": null, "defUid": 227, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["dd949e20-5e50-11f0-a1b6-870a0a448448"]
+							}] }]
 						}
 					]
 				},
@@ -2388,7 +2429,7 @@
 			"pxHei": 672,
 			"__bgColor": "#696A79",
 			"bgColor": null,
-			"useAutoIdentifier": false,
+			"useAutoIdentifier": true,
 			"bgRelPath": "tiles and background_foreground/background.png",
 			"bgPos": "Cover",
 			"bgPivotX": 0.5,

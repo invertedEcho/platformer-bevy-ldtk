@@ -6,11 +6,13 @@ use crate::{
 
 use super::components::NextLevelOrb;
 use bevy::prelude::*;
-use bevy_ecs_ldtk::{LevelIid, LevelSelection};
+use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 const ORB_ANIM_STRIP_PATH: &str = "miscellaneous sprites/orb_anim_strip_6.png";
 const ORB_TEXTURE_ATLAS_INDICES: TextureAtlasIndices = TextureAtlasIndices { first: 0, last: 5 };
+
+const NEXT_LEVEL_ORB_FIELD_IDENTIFIER: &str = "Target_Level_IID";
 
 pub fn process_next_level_orbs(
     asset_server: Res<AssetServer>,
@@ -43,20 +45,20 @@ pub fn detect_player_next_level_orb_collision(
     mut commands: Commands,
     mut collision_event_reader: EventReader<CollisionEvent>,
     player_query: Query<Entity, With<Player>>,
-    next_level_orb_query: Query<Entity, With<NextLevelOrb>>,
+    next_level_orb_query: Query<(Entity, &EntityInstance), With<NextLevelOrb>>,
     mut level_selection: ResMut<LevelSelection>,
 ) {
     for collision_event in collision_event_reader.read() {
         let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
             continue;
         };
-        let is_entities_next_level_orb = next_level_orb_query.iter().any(|next_level_orb| {
-            first_entity == next_level_orb || second_entity == next_level_orb
-        });
-
-        if !is_entities_next_level_orb {
+        let Some(colliding_next_level_orb) =
+            next_level_orb_query.iter().find(|(next_level_orb, _)| {
+                first_entity == *next_level_orb || second_entity == *next_level_orb
+            })
+        else {
             continue;
-        }
+        };
 
         let is_entities_player = player_query
             .iter()
@@ -70,9 +72,13 @@ pub fn detect_player_next_level_orb_collision(
             println!("found player, despawning to ensure smooth sailing...");
             commands.entity(player).despawn();
         }
-        println!("loading next level.");
-        // TODO: Replace with next level index. probably better. also check if last level
-        *level_selection =
-            LevelSelection::Iid(LevelIid::new("dd949e20-5e50-11f0-a1b6-870a0a448448"));
+
+        let (_, entity_instance) = colliding_next_level_orb;
+
+        let target_level_iid = entity_instance
+            .get_string_field(NEXT_LEVEL_ORB_FIELD_IDENTIFIER)
+            .expect("Ldtk entity field correctly typed and set");
+
+        *level_selection = LevelSelection::iid(target_level_iid);
     }
 }

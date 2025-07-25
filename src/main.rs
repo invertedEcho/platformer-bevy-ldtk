@@ -30,6 +30,8 @@ pub mod world;
 pub const TILE_SIZE: f32 = 16.0;
 pub const HALF_TILE_SIZE: f32 = TILE_SIZE / 2.0;
 
+const INITIAL_LEVEL_IID: &str = "c2d47272-3740-11f0-a891-85a44477d8cd";
+
 fn main() {
     let mut app = App::new();
     app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
@@ -51,9 +53,7 @@ fn main() {
         .add_plugins(SavePointPlugin)
         .add_plugins(SpikePlugin)
         .add_systems(Startup, setup)
-        .insert_resource(LevelSelection::Iid(LevelIid::new(
-            "c2d47272-3740-11f0-a891-85a44477d8cd",
-        )));
+        .insert_resource(LevelSelection::iid(INITIAL_LEVEL_IID));
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());
     }

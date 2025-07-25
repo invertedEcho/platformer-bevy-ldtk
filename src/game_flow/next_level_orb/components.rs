@@ -7,4 +7,6 @@ pub struct NextLevelOrb;
 #[derive(Bundle, Default, LdtkEntity)]
 pub struct NextLevelOrbBundle {
     next_level: NextLevelOrb,
+    #[from_entity_instance]
+    entity_instance: EntityInstance,
 }
