@@ -2,10 +2,7 @@ use std::ops::Neg;
 
 use crate::{
     TILE_SIZE,
-    common::{
-        NORMAL_ANIMATION_TIMER_DURATION,
-        components::{AnimationTimer, TextureAtlasIndices},
-    },
+    common::components::{AnimationTimer, TextureAtlasIndices},
     player::{components::Player, events::PlayerDeadEvent},
 };
 

@@ -18,7 +18,7 @@ use super::{
     components::Player,
     events::PlayerDeadEvent,
     states::PlayerState,
-    visual::{PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES, PLAYER_FORWARD_IDLE_SPRITE_TILESET},
+    visual::{PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES, PLAYER_IDLE_ANIM_TILESET_PATH},
 };
 
 pub fn setup_player(
@@ -31,7 +31,7 @@ pub fn setup_player(
         println!(
             "Setting up player. This means a new entity was spawned that contains the Player component."
         );
-        let texture = asset_server.load(PLAYER_FORWARD_IDLE_SPRITE_TILESET);
+        let texture = asset_server.load(PLAYER_IDLE_ANIM_TILESET_PATH);
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
         let texture_atlas_layout = texture_atlas_layouts.add(layout);
         transform.translation.z = 3.0;
@@ -41,10 +41,10 @@ pub fn setup_player(
                 texture,
                 TextureAtlas {
                     layout: texture_atlas_layout,
-                    index: PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES.first,
+                    index: PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES.first,
                 },
             ),
-            PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES,
+            PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES,
             AnimationTimer::default(),
             RigidBody::Dynamic,
             Friction {
@@ -126,12 +126,6 @@ pub fn handle_player_state_enter_alive(
 
         if let Some(current_save_point) = player.current_save_point {
             println!("Found current save point. Despawning player and spawning new one.");
-            // TODO: Unfortunately, changing translation of player to save_point doesnt work.
-            // Im assuming the physics engine sets back the position,
-            // because the wiki says its discouraged to manually set the position of a
-            // dynamic rigidbody.
-
-            // So we must despawn the player and spawn new player...
             // Note that we only need to spawn player with correct transform, as our
             // `process_player` system takes care of everything else.
             commands.entity(entity).despawn();

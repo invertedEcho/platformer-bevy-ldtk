@@ -3,7 +3,6 @@ use bevy::prelude::*;
 use super::NORMAL_ANIMATION_TIMER_DURATION;
 
 #[derive(Component)]
-/// To be used with tilesets of animated sprites
 pub struct TextureAtlasIndices {
     pub first: usize,
     pub last: usize,
