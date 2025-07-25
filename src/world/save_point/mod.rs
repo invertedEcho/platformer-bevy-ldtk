@@ -10,6 +10,8 @@ use crate::common::{components::TextureAtlasIndices, systems::animate_generic_sp
 mod components;
 mod systems;
 
+const SAVE_POINT_ENTITY_IDENTIFIER: &str = "Save_Point";
+
 const SAVE_POINT_ANIM_STRIP_PATH: &str = "miscellaneous sprites/save_point_anim_strip_9.png";
 const SAVE_POINT_TEXTURE_ATLAS_INDICES: TextureAtlasIndices =
     TextureAtlasIndices { first: 0, last: 8 };
@@ -23,7 +25,7 @@ pub struct SavePointPlugin;
 
 impl Plugin for SavePointPlugin {
     fn build(&self, app: &mut App) {
-        app.register_ldtk_entity::<SavePointBundle>("SavePoint")
+        app.register_ldtk_entity::<SavePointBundle>(SAVE_POINT_ENTITY_IDENTIFIER)
             .add_systems(
                 Update,
                 (

@@ -3,7 +3,10 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     common::components::AnimationTimer,
-    player::components::Player,
+    player::{
+        components::Player,
+        heart::resources::{INITIAL_PLAYER_HEART_COUNT, PlayerHeartResource},
+    },
     world::save_point::{
         SAVE_POINT_SAVING_ANIM_STRIP_PATH, SAVE_POINT_SAVING_TEXTURE_ATLAS_INDICES,
         components::SavingSavePointTimer,
@@ -44,9 +47,9 @@ pub fn detect_player_collider_with_save_point(
     asset_server: Res<AssetServer>,
     mut commands: Commands,
     mut collision_event_reader: EventReader<CollisionEvent>,
-    player_query: Query<Entity, With<Player>>,
+    mut player_query: Query<(Entity, &mut Player), With<Player>>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-    save_point_query: Query<Entity, With<SavePoint>>,
+    save_point_query: Query<(Entity, &Transform), With<SavePoint>>,
 ) {
     for collision_event in collision_event_reader.read() {
         let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
@@ -55,14 +58,14 @@ pub fn detect_player_collider_with_save_point(
 
         let Some(colliding_save_point) = save_point_query
             .iter()
-            .find(|entity| *entity == first_entity || *entity == second_entity)
+            .find(|(player, _)| *player == first_entity || *player == second_entity)
         else {
             continue;
         };
 
         let is_collider_entities_player = player_query
             .iter()
-            .any(|player| player == first_entity || player == second_entity);
+            .any(|(player, _)| player == first_entity || player == second_entity);
         if !is_collider_entities_player {
             continue;
         }
@@ -75,11 +78,15 @@ pub fn detect_player_collider_with_save_point(
         let atlas = TextureAtlas { layout, index: 0 };
         let new_sprite = Sprite::from_atlas_image(texture, atlas);
 
+        let (colliding_save_point, transform) = colliding_save_point;
         commands.entity(colliding_save_point).insert((
             new_sprite,
             SAVE_POINT_SAVING_TEXTURE_ATLAS_INDICES,
             SavingSavePointTimer(Timer::from_seconds(1.5, TimerMode::Once)),
         ));
+
+        let (_, mut player) = player_query.single_mut().unwrap();
+        player.current_save_point = Some(transform.translation);
     }
 }
 

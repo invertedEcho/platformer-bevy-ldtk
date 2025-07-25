@@ -4,7 +4,9 @@ use crate::{
     TILE_SIZE,
     common::components::{AnimationTimer, TextureAtlasIndices},
     player::{
-        components::Player, heart::resources::PlayerHeartResource, movement::PLAYER_JUMP_HIGH,
+        components::Player,
+        heart::resources::{INITIAL_PLAYER_HEART_COUNT, PlayerHeartResource},
+        movement::PLAYER_JUMP_HIGH,
     },
 };
 
@@ -87,10 +89,12 @@ pub fn spawn_slimes(
 }
 
 pub fn detect_slime_collision_with_player(
+    mut commands: Commands,
     mut collision_event_reader: EventReader<CollisionEvent>,
     slime_query: Query<Entity, With<Slime>>,
-    mut player_query: Query<(Entity, &mut Velocity), With<Player>>,
+    mut player_query: Query<(Entity, &mut Velocity, &Player, &mut Transform), With<Player>>,
     mut player_heart_resource: ResMut<PlayerHeartResource>,
+    ldtk_projects: Query<Entity, With<LdtkProjectHandle>>,
 ) {
     for collision_event in collision_event_reader.read() {
         let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
@@ -104,7 +108,7 @@ pub fn detect_slime_collision_with_player(
             continue;
         }
 
-        let is_collision_entities_player = player_query.iter().any(|(player_entity, _)| {
+        let is_collision_entities_player = player_query.iter().any(|(player_entity, _, _, _)| {
             player_entity == first_entity || player_entity == second_entity
         });
         if !is_collision_entities_player {
@@ -118,10 +122,28 @@ pub fn detect_slime_collision_with_player(
             continue;
         }
 
-        let (_, mut player_velocity) = player_query.single_mut().unwrap();
-        player_velocity.linvel.y = PLAYER_JUMP_HIGH;
+        let (_, mut player_velocity, player, mut player_transform) =
+            player_query.single_mut().unwrap();
 
         player_heart_resource.count -= 1;
+
+        if player_heart_resource.count == 0 {
+            if let Some(player_current_save_point) = player.current_save_point {
+                player_transform.translation = player_current_save_point;
+                player_heart_resource.count = 3;
+            } else {
+                commands
+                    .entity(
+                        ldtk_projects
+                            .single()
+                            .expect("Exactly one ldtk project exists"),
+                    )
+                    .insert(Respawn);
+                player_heart_resource.count = INITIAL_PLAYER_HEART_COUNT;
+            }
+        } else {
+            player_velocity.linvel.y = PLAYER_JUMP_HIGH;
+        }
     }
 }
 

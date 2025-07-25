@@ -8,6 +8,7 @@ pub struct Player {
     // idk about this, but it works ->
     // TODO: investigate whether we can merge this into is_jumping
     pub is_on_jump_from_mushroom: bool,
+    pub current_save_point: Option<Vec3>,
 }
 
 #[derive(Default, LdtkEntity, Bundle)]
