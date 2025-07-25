@@ -3,14 +3,9 @@ use bevy_ecs_ldtk::prelude::*;
 
 use crate::font::{FONT_PATH, FONT_SIZE, KEYBOARD_TILESET_PATH};
 
-use super::components::{HelpSign, KeyboardTile};
+use super::components::{KeyboardTile, TutorialText};
 
-const HELP_SIGN_ENUM_IDENTIFIER: &str = "HelpSign";
-
-const HELP_SIGN_MOVE_FORWARD_IDENTIFIER: &str = "MoveForward";
-const HELP_SIGN_MOVE_BACKWARDS_IDENTIFIER: &str = "MoveBackwards";
-const HELP_SIGN_JUMP_IDENTIFIER: &str = "Jump";
-const HELP_SIGN_PLATFORM_IDENTIFIER: &str = "Platform";
+const TUTORIAL_TEXT_FIELD_IDENTIFIER: &str = "Tutorial_Text";
 
 const KEYBOARD_TILE_KEY_CODE_FIELD_IDENTIFIER: &str = "KeyCode";
 const KEYBOARD_TILE_TILE_FIELD_IDENTIFIER: &str = "KeyboardTile";
@@ -18,29 +13,21 @@ const KEYBOARD_TILE_SIZE: i32 = 16;
 
 const PRESSED_KEYBOARD_TILE_FIELD_IDENTIFIER: &str = "PressedKeyboardTile";
 
-pub fn spawn_help_text_for_help_signs(
+pub fn spawn_text_for_tutorial_text(
     mut commands: Commands,
-    help_signs_query: Query<(Entity, &EntityInstance, &mut Transform), Added<HelpSign>>,
+    tutorial_text_query: Query<(Entity, &EntityInstance, &mut Transform), Added<TutorialText>>,
     asset_server: Res<AssetServer>,
 ) {
     let font: Handle<Font> = asset_server.load(FONT_PATH);
 
-    for (entity, ldtk_entity, mut transform) in help_signs_query {
-        let Ok(help_sign_enum_field) = ldtk_entity.get_enum_field(HELP_SIGN_ENUM_IDENTIFIER) else {
-            eprintln!("Couldnt find enum field from entity");
-            continue;
-        };
-
-        let Ok(help_str) = get_help_text_from_help_sign_field(help_sign_enum_field) else {
-            eprintln!(
-                "Couldnt find help text for help sign field: {}",
-                help_sign_enum_field
-            );
+    for (entity, ldtk_entity, mut transform) in tutorial_text_query {
+        let Ok(tutorial_text) = ldtk_entity.get_string_field(TUTORIAL_TEXT_FIELD_IDENTIFIER) else {
+            eprintln!("Couldnt find tutorial text for ldtk entity");
             continue;
         };
 
         commands.entity(entity).insert((
-            Text2d::new(help_str),
+            Text2d::new(tutorial_text),
             TextFont {
                 font: font.clone(),
                 font_size: FONT_SIZE,
@@ -55,20 +42,6 @@ pub fn spawn_help_text_for_help_signs(
 
         // See: https://github.com/bevyengine/bevy/discussions/11443
         transform.scale = Vec3::splat(0.5);
-    }
-}
-
-fn get_help_text_from_help_sign_field(value: &String) -> Result<&str, &str> {
-    if *value == HELP_SIGN_MOVE_FORWARD_IDENTIFIER {
-        return Ok("move forward");
-    } else if *value == HELP_SIGN_PLATFORM_IDENTIFIER {
-        return Ok("drop down");
-    } else if *value == HELP_SIGN_MOVE_BACKWARDS_IDENTIFIER {
-        return Ok("move backwards");
-    } else if *value == HELP_SIGN_JUMP_IDENTIFIER {
-        return Ok("jump");
-    } else {
-        return Err("Invalid help sign value");
     }
 }
 

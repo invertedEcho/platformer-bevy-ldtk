@@ -1,23 +1,23 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::app::LdtkEntityAppExt;
-use components::{HelpSignBundle, KeyboardTileBundle};
-use systems::{change_keyboard_tiles, spawn_help_text_for_help_signs, spawn_keyboard_tiles};
+use components::{KeyboardTileBundle, TutorialTextBundle};
+use systems::{change_keyboard_tiles, spawn_keyboard_tiles, spawn_text_for_tutorial_text};
 
 mod components;
 mod systems;
 
-// TODO: I dont like the name "HelpSign"
+pub const TUTORIAL_TEXT_IDENTIFIER: &str = "Tutorial_Text";
 
-pub struct HelpSignPlugin;
+pub struct TutorialPlugin;
 
-impl Plugin for HelpSignPlugin {
+impl Plugin for TutorialPlugin {
     fn build(&self, app: &mut App) {
-        app.register_ldtk_entity::<HelpSignBundle>("Help_Sign")
+        app.register_ldtk_entity::<TutorialTextBundle>(TUTORIAL_TEXT_IDENTIFIER)
             .register_ldtk_entity::<KeyboardTileBundle>("Keyboard_Tile")
             .add_systems(
                 Update,
                 (
-                    spawn_help_text_for_help_signs,
+                    spawn_text_for_tutorial_text,
                     spawn_keyboard_tiles,
                     change_keyboard_tiles,
                 ),

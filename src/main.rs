@@ -9,11 +9,11 @@ use game_flow::GameFlowPlugin;
 use hud::HudPlugin;
 use player::PlayerPlugin;
 use world::ground::GroundPlugin;
-use world::help_sign::HelpSignPlugin;
 use world::mushroom::MushroomPlugin;
 use world::platform::PlatformPlugin;
 use world::save_point::SavePointPlugin;
 use world::spike::SpikePlugin;
+use world::tutorial::TutorialPlugin;
 use world::wall::WallPlugin;
 
 mod camera;
@@ -46,7 +46,7 @@ fn main() {
         .add_plugins(CoinPlugin)
         .add_plugins(HudPlugin)
         .add_plugins(MushroomPlugin)
-        .add_plugins(HelpSignPlugin)
+        .add_plugins(TutorialPlugin)
         .add_plugins(EnemyPlugin)
         .add_plugins(SavePointPlugin)
         .add_plugins(SpikePlugin)

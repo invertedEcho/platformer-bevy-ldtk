@@ -11,7 +11,7 @@
 	"iid": "c2d47270-3740-11f0-a891-316f5b172d07",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 224,
+	"nextUid": 225,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "LinearHorizontal",
@@ -636,7 +636,7 @@
 			"fieldDefs": []
 		},
 		{
-			"identifier": "Help_Sign",
+			"identifier": "Tutorial_Text",
 			"uid": 197,
 			"tags": [],
 			"exportToToc": false,
@@ -670,11 +670,11 @@
 			"pivotY": 0,
 			"fieldDefs": [
 				{
-					"identifier": "HelpSign",
+					"identifier": "Tutorial_Text",
 					"doc": null,
-					"__type": "LocalEnum.HelpSign",
-					"uid": 204,
-					"type": "F_Enum(200)",
+					"__type": "String",
+					"uid": 224,
+					"type": "F_String",
 					"isArray": false,
 					"canBeNull": false,
 					"arrayMinLength": null,
@@ -1183,7 +1183,7 @@
 							"fieldInstances": []
 						},
 						{
-							"__identifier": "Help_Sign",
+							"__identifier": "Tutorial_Text",
 							"__grid": [53,32],
 							"__pivot": [0,0],
 							"__tags": [],
@@ -1194,9 +1194,9 @@
 							"height": 16,
 							"defUid": 197,
 							"px": [848,512],
-							"fieldInstances": [{ "__identifier": "HelpSign", "__type": "LocalEnum.HelpSign", "__value": "Platform", "__tile": null, "defUid": 204, "realEditorValues": [{
+							"fieldInstances": [{ "__identifier": "Tutorial_Text", "__type": "String", "__value": "Drop Down", "__tile": null, "defUid": 224, "realEditorValues": [{
 								"id": "V_String",
-								"params": ["Platform"]
+								"params": ["Drop Down"]
 							}] }]
 						},
 						{
@@ -1331,7 +1331,7 @@
 							]
 						},
 						{
-							"__identifier": "Help_Sign",
+							"__identifier": "Tutorial_Text",
 							"__grid": [9,33],
 							"__pivot": [0,0],
 							"__tags": [],
@@ -1342,9 +1342,9 @@
 							"height": 16,
 							"defUid": 197,
 							"px": [144,528],
-							"fieldInstances": [{ "__identifier": "HelpSign", "__type": "LocalEnum.HelpSign", "__value": "MoveForward", "__tile": null, "defUid": 204, "realEditorValues": [{
+							"fieldInstances": [{ "__identifier": "Tutorial_Text", "__type": "String", "__value": "Move Forward", "__tile": null, "defUid": 224, "realEditorValues": [{
 								"id": "V_String",
-								"params": ["MoveForward"]
+								"params": ["Move Forward"]
 							}] }]
 						},
 						{
@@ -1375,7 +1375,7 @@
 							]
 						},
 						{
-							"__identifier": "Help_Sign",
+							"__identifier": "Tutorial_Text",
 							"__grid": [9,35],
 							"__pivot": [0,0],
 							"__tags": [],
@@ -1386,9 +1386,9 @@
 							"height": 16,
 							"defUid": 197,
 							"px": [153,560],
-							"fieldInstances": [{ "__identifier": "HelpSign", "__type": "LocalEnum.HelpSign", "__value": "MoveBackwards", "__tile": null, "defUid": 204, "realEditorValues": [{
+							"fieldInstances": [{ "__identifier": "Tutorial_Text", "__type": "String", "__value": "Move Backwards", "__tile": null, "defUid": 224, "realEditorValues": [{
 								"id": "V_String",
-								"params": ["MoveBackwards"]
+								"params": ["Move Backwards"]
 							}] }]
 						},
 						{
@@ -1419,7 +1419,7 @@
 							]
 						},
 						{
-							"__identifier": "Help_Sign",
+							"__identifier": "Tutorial_Text",
 							"__grid": [7,37],
 							"__pivot": [0,0],
 							"__tags": [],
@@ -1430,7 +1430,7 @@
 							"height": 16,
 							"defUid": 197,
 							"px": [112,592],
-							"fieldInstances": [{ "__identifier": "HelpSign", "__type": "LocalEnum.HelpSign", "__value": "Jump", "__tile": null, "defUid": 204, "realEditorValues": [{
+							"fieldInstances": [{ "__identifier": "Tutorial_Text", "__type": "String", "__value": "Jump", "__tile": null, "defUid": 224, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["Jump"]
 							}] }]
