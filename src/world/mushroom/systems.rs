@@ -4,7 +4,7 @@ use bevy_rapier2d::prelude::*;
 use crate::{
     HALF_TILE_SIZE,
     common::components::{AnimationTimer, TextureAtlasIndices},
-    player::components::Player,
+    player::{components::Player, movement::PLAYER_JUMP_HIGH},
 };
 
 use super::components::Mushroom;
@@ -55,7 +55,7 @@ pub fn mushroom_collision_detection(
                         .single_mut()
                         .expect("Player exists when colliding with mushroom");
                     if *first_entity == player_entity || *second_entity == player_entity {
-                        player_velocity.linvel.y = 400.0;
+                        player_velocity.linvel.y = PLAYER_JUMP_HIGH;
                         player.is_on_jump_from_mushroom = true;
                         player.is_jumping = true;
                     }

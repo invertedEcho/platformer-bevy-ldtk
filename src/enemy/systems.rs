@@ -3,7 +3,9 @@ use std::ops::Neg;
 use crate::{
     TILE_SIZE,
     common::components::{AnimationTimer, TextureAtlasIndices},
-    player::heart::resources::PlayerHeartResource,
+    player::{
+        components::Player, heart::resources::PlayerHeartResource, movement::PLAYER_JUMP_HIGH,
+    },
 };
 
 use super::{
@@ -87,7 +89,7 @@ pub fn spawn_slimes(
 pub fn detect_slime_collision_with_player(
     mut collision_event_reader: EventReader<CollisionEvent>,
     slime_query: Query<Entity, With<Slime>>,
-    player_query: Query<Entity, With<Slime>>,
+    mut player_query: Query<(Entity, &mut Velocity), With<Player>>,
     mut player_heart_resource: ResMut<PlayerHeartResource>,
 ) {
     for collision_event in collision_event_reader.read() {
@@ -102,9 +104,9 @@ pub fn detect_slime_collision_with_player(
             continue;
         }
 
-        let is_collision_entities_player = player_query
-            .iter()
-            .any(|player| player == first_entity || player == second_entity);
+        let is_collision_entities_player = player_query.iter().any(|(player_entity, _)| {
+            player_entity == first_entity || player_entity == second_entity
+        });
         if !is_collision_entities_player {
             continue;
         }
@@ -115,6 +117,9 @@ pub fn detect_slime_collision_with_player(
             );
             continue;
         }
+
+        let (_, mut player_velocity) = player_query.single_mut().unwrap();
+        player_velocity.linvel.y = PLAYER_JUMP_HIGH;
 
         player_heart_resource.count -= 1;
     }

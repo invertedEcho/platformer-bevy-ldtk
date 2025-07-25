@@ -15,7 +15,7 @@ use crate::common::systems::animate_generic_sprite;
 
 pub mod components;
 pub mod heart;
-mod movement;
+pub mod movement;
 mod physics;
 mod systems;
 mod visual;

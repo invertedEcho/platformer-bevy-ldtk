@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{player::components::Player, world::platform::components::Platform};
 
-use super::{PLAYER_SPEED, states::PlayerMovementType};
+use super::{PLAYER_JUMP_NORMAL, PLAYER_SPEED, states::PlayerMovementType};
 
 pub fn player_movement(
     mut commands: Commands,
@@ -40,7 +40,7 @@ pub fn player_movement(
             }
         }
         if input.just_pressed(KeyCode::Space) && !player.is_jumping {
-            velocity.linvel.y = 220.0;
+            velocity.linvel.y = PLAYER_JUMP_NORMAL;
             player.is_jumping = true;
         }
     }
