@@ -21,11 +21,13 @@ pub fn respawn_world(
     }
 }
 
-// TODO: should only be possible on debug build
 pub fn skip_to_next_level(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut level_selection: ResMut<LevelSelection>,
 ) {
+    if !cfg!(debug_assertions) {
+        return;
+    }
     if keyboard_input.just_released(KeyCode::ArrowRight) {
         *level_selection = LevelSelection::Identifier("Level_1".to_string());
     }

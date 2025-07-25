@@ -12,6 +12,8 @@ use crate::{
 
 use super::{SAVE_POINT_ANIM_STRIP_PATH, SAVE_POINT_TEXTURE_ATLAS_INDICES, components::SavePoint};
 
+// TODO: Clean up save points, I think if we use more ECS-driven logic, this would be much cleaner
+
 pub fn process_save_points(
     asset_server: Res<AssetServer>,
     mut commands: Commands,

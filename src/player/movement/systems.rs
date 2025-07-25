@@ -33,7 +33,8 @@ pub fn player_movement(
         }
         if input.pressed(KeyCode::KeyS) && !player.is_jumping && player.is_on_platform {
             // TODO: We should only insert ColliderDisabled on platforms where
-            // user is staying on
+            // user is staying on -> use a component that gets inserted in the platform the user is
+            // staying on
             for platform_entity in platform_query {
                 commands.entity(platform_entity).insert(ColliderDisabled);
             }

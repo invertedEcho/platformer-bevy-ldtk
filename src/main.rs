@@ -49,7 +49,7 @@ fn main() {
         .add_plugins(EnemyPlugin)
         .add_plugins(SavePointPlugin)
         .add_systems(Startup, setup)
-        .insert_resource(LevelSelection::index(0));
+        .insert_resource(LevelSelection::Identifier("Tutorial".to_string()));
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());
     }
