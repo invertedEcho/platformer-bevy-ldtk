@@ -2,7 +2,10 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::{
-    common::components::{AnimationTimer, TextureAtlasIndices},
+    common::{
+        NORMAL_ANIMATION_TIMER_DURATION,
+        components::{AnimationTimer, TextureAtlasIndices},
+    },
     player::components::Player,
 };
 
@@ -36,7 +39,7 @@ pub fn process_coins(
             *transform,
             Collider::cuboid(half_tile_size, half_tile_size),
             ActiveEvents::COLLISION_EVENTS,
-            AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+            AnimationTimer::default(),
             COIN_ANIMATION_INDICES,
         ));
     }

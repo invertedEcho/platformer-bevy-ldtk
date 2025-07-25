@@ -1,6 +1,9 @@
 use crate::{
     HALF_TILE_SIZE,
-    common::components::{AnimationTimer, TextureAtlasIndices},
+    common::{
+        NORMAL_ANIMATION_TIMER_DURATION,
+        components::{AnimationTimer, TextureAtlasIndices},
+    },
     player::components::Player,
 };
 
@@ -32,7 +35,7 @@ pub fn process_next_level_orbs(
                     index: 0,
                 },
             ),
-            AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+            AnimationTimer::default(),
             ORB_TEXTURE_ATLAS_INDICES,
             ActiveEvents::COLLISION_EVENTS,
         ));

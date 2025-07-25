@@ -32,7 +32,7 @@ pub fn process_save_points(
         commands.entity(save_point).insert((
             Sprite::from_atlas_image(texture.clone(), texture_atlas.clone()),
             SAVE_POINT_TEXTURE_ATLAS_INDICES,
-            AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+            AnimationTimer::default(),
             Collider::cuboid(6.0, 10.0),
             Sensor,
             ActiveEvents::COLLISION_EVENTS,

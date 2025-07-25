@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use super::NORMAL_ANIMATION_TIMER_DURATION;
+
 #[derive(Component)]
 /// To be used with tilesets of animated sprites
 pub struct TextureAtlasIndices {
@@ -9,3 +11,12 @@ pub struct TextureAtlasIndices {
 
 #[derive(Component, Deref, DerefMut)]
 pub struct AnimationTimer(pub Timer);
+
+impl Default for AnimationTimer {
+    fn default() -> Self {
+        AnimationTimer(Timer::from_seconds(
+            NORMAL_ANIMATION_TIMER_DURATION,
+            TimerMode::Repeating,
+        ))
+    }
+}

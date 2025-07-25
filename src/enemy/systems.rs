@@ -2,7 +2,10 @@ use std::ops::Neg;
 
 use crate::{
     TILE_SIZE,
-    common::components::{AnimationTimer, TextureAtlasIndices},
+    common::{
+        NORMAL_ANIMATION_TIMER_DURATION,
+        components::{AnimationTimer, TextureAtlasIndices},
+    },
     player::{components::Player, events::PlayerDeadEvent},
 };
 
@@ -20,6 +23,9 @@ const SLIME_TILE_SIZE_Y: u32 = 20;
 const SLIME_SPRITE_TILESET: &str = "enemies/slime/slime_walk_anim_strip_15_cropped.png";
 const SLIME_TEXTURE_ATLAS_INDICES: TextureAtlasIndices = TextureAtlasIndices { first: 0, last: 14 };
 
+// maybe reintroduce this, it was for having the collider to be exactly around the animated slime
+// for each animation tick:
+//
 // this array indicates how much we need to move y translation of slime collider in each animation
 // tick, as the animated sprite bobbs, e.g. jumps up and down so we also need to move the collider.
 // we cannot just move the collider along side as the collider is inserted in the entity coming
@@ -79,7 +85,7 @@ pub fn spawn_slimes(
                 ..default()
             },
             SLIME_TEXTURE_ATLAS_INDICES,
-            AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+            AnimationTimer::default(),
         ));
     }
 }

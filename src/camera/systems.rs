@@ -39,8 +39,6 @@ pub fn camera_follow_player(
         .unwrap();
 
     let Some(current_level_width) = level_query.iter().find_map(|level_iid| {
-        println!("level_iid from level_query: {}", level_iid);
-        println!("level_iid from level_selection: {:?}", level_selection);
         let level = ldtk_project
             .get_raw_level_by_iid(&level_iid.to_string())
             .unwrap();

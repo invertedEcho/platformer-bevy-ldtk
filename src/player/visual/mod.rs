@@ -24,3 +24,5 @@ const PLAYER_BACKWARDS_SPRITE_ANIMATION_INDICES: TextureAtlasIndices =
 pub const PLAYER_DEATH_ANIM_TILESET_PATH: &str = "herochar/herochar_death_anim_strip_8.png";
 pub const PLAYER_DEATH_ANIM_TEXTURE_ATLAS_INDICES: TextureAtlasIndices =
     TextureAtlasIndices { first: 0, last: 7 };
+
+pub const PLAYER_DEATH_ANIM_TILESET_COLUMN_COUNT: u32 = 8;

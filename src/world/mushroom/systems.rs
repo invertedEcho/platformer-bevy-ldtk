@@ -3,7 +3,10 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     HALF_TILE_SIZE,
-    common::components::{AnimationTimer, TextureAtlasIndices},
+    common::{
+        NORMAL_ANIMATION_TIMER_DURATION,
+        components::{AnimationTimer, TextureAtlasIndices},
+    },
     player::{components::Player, movement::PLAYER_JUMP_HIGH},
 };
 
@@ -26,7 +29,7 @@ pub fn spawn_mushroom_colliders(
         commands.entity(mushroom).insert((
             Collider::cuboid(HALF_TILE_SIZE, HALF_TILE_SIZE),
             ActiveEvents::COLLISION_EVENTS,
-            AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+            AnimationTimer::default(),
             Sprite::from_atlas_image(
                 asset_server.load(MUSHROOM_SPRITE_TILESET),
                 TextureAtlas {

@@ -1,13 +1,16 @@
 use bevy::prelude::*;
-use bevy_ecs_ldtk::{prelude::*, utils::grid_coords_to_translation};
+use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::{
     HALF_TILE_SIZE, TILE_SIZE,
-    common::components::AnimationTimer,
+    common::{NORMAL_ANIMATION_TIMER_DURATION, components::AnimationTimer},
     player::{
         components::PlayerDeadAnimationTimer,
-        visual::{PLAYER_DEATH_ANIM_TEXTURE_ATLAS_INDICES, PLAYER_DEATH_ANIM_TILESET_PATH},
+        visual::{
+            PLAYER_DEATH_ANIM_TEXTURE_ATLAS_INDICES, PLAYER_DEATH_ANIM_TILESET_COLUMN_COUNT,
+            PLAYER_DEATH_ANIM_TILESET_PATH,
+        },
     },
 };
 
@@ -24,7 +27,6 @@ pub fn setup_player(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     new_players: Query<(Entity, &mut Transform), Added<Player>>,
 ) {
-    // i think the issue here is that when we reuse transform
     for (entity, mut transform) in new_players {
         println!(
             "Setting up player. This means a new entity was spawned that contains the Player component."
@@ -33,11 +35,7 @@ pub fn setup_player(
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
         let texture_atlas_layout = texture_atlas_layouts.add(layout);
         transform.translation.z = 3.0;
-        println!("Current transform of player: {}", transform.translation);
-        println!(
-            "Player should be spawned at: {}",
-            grid_coords_to_translation(GridCoords { x: 3, y: 40 }, IVec2 { x: 16, y: 16 })
-        );
+
         commands.entity(entity).insert((
             Sprite::from_atlas_image(
                 texture,
@@ -47,7 +45,7 @@ pub fn setup_player(
                 },
             ),
             PLAYER_FORWARD_IDLE_SPRITE_ANIMATION_INDICES,
-            AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+            AnimationTimer::default(),
             RigidBody::Dynamic,
             Friction {
                 coefficient: 0.0,
@@ -76,8 +74,13 @@ pub fn handle_player_dead_event(
             "Received player dead event. Setting PlayerState::Respawning and setting player sprite to death animation"
         );
         for entity in player_query {
-            let texture_atlas_layout =
-                TextureAtlasLayout::from_grid(UVec2::splat(TILE_SIZE as u32), 8, 1, None, None);
+            let texture_atlas_layout = TextureAtlasLayout::from_grid(
+                UVec2::splat(TILE_SIZE as u32),
+                PLAYER_DEATH_ANIM_TILESET_COLUMN_COUNT,
+                1,
+                None,
+                None,
+            );
             let texture_atlas_layout_handle = texture_atlas_layouts.add(texture_atlas_layout);
             let texture_atlas = TextureAtlas {
                 layout: texture_atlas_layout_handle,
@@ -91,9 +94,10 @@ pub fn handle_player_dead_event(
                     texture_atlas,
                 ),
                 PLAYER_DEATH_ANIM_TEXTURE_ATLAS_INDICES,
-                // TODO: Replace with constants. 0.1 is our normal animation timer seconds, and 8 is
-                // count of columns of player animated death tileset
-                PlayerDeadAnimationTimer(Timer::from_seconds(0.1 * 8.0, TimerMode::Once)),
+                PlayerDeadAnimationTimer(Timer::from_seconds(
+                    NORMAL_ANIMATION_TIMER_DURATION * PLAYER_DEATH_ANIM_TILESET_COLUMN_COUNT as f32,
+                    TimerMode::Once,
+                )),
             ));
         }
     }
