@@ -47,7 +47,7 @@ pub fn setup_player(
             PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES,
             AnimationTimer::default(),
             RigidBody::Dynamic,
-            Collider::cuboid(HALF_TILE_SIZE / 2.0, HALF_TILE_SIZE),
+            Collider::capsule_y(HALF_TILE_SIZE - 5.0, 6.0),
             LockedAxes::ROTATION_LOCKED,
             Velocity {
                 linvel: Vec2::new(0.0, 0.0),
