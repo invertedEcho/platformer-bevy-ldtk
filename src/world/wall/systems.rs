@@ -83,6 +83,7 @@ pub fn spawn_wall_colliders(
                     },
                     Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
                     Wall,
+                    Friction::new(1.0),
                 ));
             });
         }

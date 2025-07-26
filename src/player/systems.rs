@@ -53,6 +53,10 @@ pub fn setup_player(
                 linvel: Vec2::new(0.0, 0.0),
                 angvel: 0.0,
             },
+            Friction {
+                coefficient: 0.0,
+                combine_rule: CoefficientCombineRule::Min,
+            },
         ));
     }
 }

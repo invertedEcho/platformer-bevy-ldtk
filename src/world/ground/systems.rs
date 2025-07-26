@@ -50,6 +50,7 @@ pub fn spawn_ground_colliders(
                     Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
                     Ground,
                     ActiveEvents::COLLISION_EVENTS,
+                    Friction::new(1.0),
                 ));
             });
         }
