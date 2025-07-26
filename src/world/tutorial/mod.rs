@@ -3,7 +3,7 @@ use bevy_ecs_ldtk::{LevelSelection, app::LdtkEntityAppExt};
 use components::{KeyboardTileBundle, TutorialTextBundle};
 use systems::{change_keyboard_tiles, spawn_keyboard_tiles, spawn_text_for_tutorial_text};
 
-use crate::INITIAL_LEVEL_IID;
+use crate::LEVEL_IIDS;
 
 mod components;
 mod systems;
@@ -23,7 +23,7 @@ impl Plugin for TutorialPlugin {
                     spawn_keyboard_tiles,
                     change_keyboard_tiles,
                 )
-                    .run_if(resource_equals(LevelSelection::iid(INITIAL_LEVEL_IID))),
+                    .run_if(resource_equals(LevelSelection::iid(LEVEL_IIDS[0]))),
             );
     }
 }
