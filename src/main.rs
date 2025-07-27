@@ -11,6 +11,7 @@ use player::PlayerPlugin;
 use world::ground::GroundPlugin;
 use world::mushroom::MushroomPlugin;
 use world::platform::PlatformPlugin;
+use world::platform::systems::OneWayPlatformPhysicsHook;
 use world::save_point::SavePointPlugin;
 use world::spike::SpikePlugin;
 use world::tutorial::TutorialPlugin;
@@ -38,7 +39,7 @@ const LEVEL_IIDS: [&str; 2] = [
 fn main() {
     let mut app = App::new();
     app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
-        .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+        .add_plugins(RapierPhysicsPlugin::<OneWayPlatformPhysicsHook>::pixels_per_meter(100.0))
         // .add_plugins(bevy::diagnostic::EntityCountDiagnosticsPlugin)
         .add_plugins(LogDiagnosticsPlugin::default())
         .add_plugins(LdtkPlugin)

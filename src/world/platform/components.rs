@@ -9,3 +9,6 @@ pub struct Platform;
 pub struct PlatformBundle {
     platform: Platform,
 }
+
+#[derive(Component)]
+pub struct PlatformCollidingWithPlayer;

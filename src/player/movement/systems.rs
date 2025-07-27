@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{player::components::Player, world::platform::components::Platform};
+use crate::{
+    player::components::Player,
+    world::platform::components::{Platform, PlatformCollidingWithPlayer},
+};
 
 use super::{PLAYER_JUMP_NORMAL, PLAYER_SPEED, states::PlayerMovementType};
 
@@ -11,7 +14,7 @@ pub fn player_movement(
     mut player_query: Query<(&mut Velocity, &mut Player), With<Player>>,
     current_player_movement_type: Res<State<PlayerMovementType>>,
     mut next_player_movement_type: ResMut<NextState<PlayerMovementType>>,
-    platform_query: Query<Entity, With<Platform>>,
+    platform_query: Query<Entity, (With<Platform>, With<PlatformCollidingWithPlayer>)>,
 ) {
     for (mut velocity, mut player) in player_query.iter_mut() {
         velocity.linvel.x = 0.0;
@@ -31,11 +34,9 @@ pub fn player_movement(
             velocity.linvel.x = -1.0 * PLAYER_SPEED;
             next_player_movement_type.set(PlayerMovementType::BackwardsRun);
         }
-        if input.pressed(KeyCode::KeyS) && !player.is_jumping && player.is_on_platform {
-            // TODO: We should only insert ColliderDisabled on platforms where
-            // user is staying on -> use a component that gets inserted in the platform the user is
-            // staying on
+        if input.just_pressed(KeyCode::KeyS) && !player.is_jumping {
             for platform_entity in platform_query {
+                println!("Inserting collider disabled bcs pressed KeyS");
                 commands.entity(platform_entity).insert(ColliderDisabled);
             }
         }

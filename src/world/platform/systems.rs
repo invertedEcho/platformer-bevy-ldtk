@@ -1,10 +1,24 @@
-use bevy::prelude::*;
+use bevy::{ecs::system::SystemParam, prelude::*};
 use bevy_ecs_ldtk::prelude::*;
-use bevy_rapier2d::prelude::*;
+use bevy_rapier2d::{na::Vector, prelude::*};
 
-use crate::{HALF_TILE_SIZE, TILE_SIZE, player::components::Player, utils::preprocess_grid_coords};
+use crate::{
+    HALF_TILE_SIZE, TILE_SIZE, player::components::Player, utils::preprocess_grid_coords,
+    world::platform::components::PlatformCollidingWithPlayer,
+};
 
 use super::components::Platform;
+
+#[derive(SystemParam)]
+pub struct OneWayPlatformPhysicsHook;
+
+impl BevyPhysicsHooks for OneWayPlatformPhysicsHook {
+    fn modify_solver_contacts(&self, contact: ContactModificationContextView) {
+        contact
+            .raw
+            .update_as_oneway_platform(&Vector::y(), std::f32::consts::FRAC_2_PI);
+    }
+}
 
 pub fn spawn_platform_colliders(
     mut commands: Commands,
@@ -45,6 +59,8 @@ pub fn spawn_platform_colliders(
                     Platform,
                     ActiveEvents::COLLISION_EVENTS,
                     Friction::new(1.0),
+                    RigidBody::Fixed,
+                    ActiveHooks::MODIFY_SOLVER_CONTACTS,
                 ));
             });
         }
@@ -52,53 +68,82 @@ pub fn spawn_platform_colliders(
 }
 
 pub fn platform_player_collision_detection(
-    platform_query: Query<Entity, With<Platform>>,
+    mut commands: Commands,
+    mut platform_query: Query<Entity, With<Platform>>,
     mut collision_event_reader: EventReader<CollisionEvent>,
-    mut player_query: Query<(&mut Player, Entity), With<Player>>,
+    player_query: Query<&Velocity, With<Player>>,
 ) {
     for collision_event in collision_event_reader.read() {
         match collision_event {
             CollisionEvent::Started(first_entity, second_entity, _) => {
-                let collision_entities_is_platform = platform_query
-                    .iter()
-                    .any(|platform| platform == *first_entity || platform == *second_entity);
-                if collision_entities_is_platform {
-                    for (mut player, player_entity) in player_query.iter_mut() {
-                        if *first_entity == player_entity || *second_entity == player_entity {
-                            player.is_on_platform = true;
-                            player.is_on_jump_from_mushroom = false;
-                        }
-                    }
-                }
+                let Some(collided_platform) = platform_query
+                    .iter_mut()
+                    .find(|entity| entity == first_entity || entity == second_entity)
+                else {
+                    continue;
+                };
+
+                println!(
+                    "player started colliding with a platform, inserting CollidingWithPlayer into colliding platform"
+                );
+                commands
+                    .entity(collided_platform)
+                    .insert(PlatformCollidingWithPlayer);
             }
             CollisionEvent::Stopped(first_entity, second_entity, _) => {
-                let collision_entities_is_platform = platform_query
-                    .iter()
-                    .any(|platform| platform == *first_entity || platform == *second_entity);
-                if collision_entities_is_platform {
-                    for (mut player, player_entity) in player_query.iter_mut() {
-                        if *first_entity == player_entity || *second_entity == player_entity {
-                            player.is_on_platform = false;
-                        }
-                    }
+                let Some(collided_platform) = platform_query
+                    .iter_mut()
+                    .find(|entity| entity == first_entity || entity == second_entity)
+                else {
+                    continue;
+                };
+                let Ok(player) = player_query.single() else {
+                    eprintln!(
+                        "No player found in collision_event from player with platform, this shouldnt be possible."
+                    );
+                    continue;
+                };
+
+                // we dont want to remove colliderdisabled when the collision stops because we fall
+                // through the platform
+                if player.linvel.y > 0.0 {
+                    println!(
+                        "player stopped colliding with a platform and doesnt have negative velocity.y, removing CollidingWithPlayer from colliding platform"
+                    );
+                    commands
+                        .entity(collided_platform)
+                        .remove::<PlatformCollidingWithPlayer>();
+                    commands
+                        .entity(collided_platform)
+                        .remove::<ColliderDisabled>();
                 }
             }
         }
     }
 }
 
-// bit dirty but works -> TODO: actually, scratch that, activate if player.translation.y is above platform player was
-// standing on. use component above from TODO
-pub fn activate_platform_colliders_if_player_jumping_from_mushroom(
+pub fn detect_player_under_platform(
     mut commands: Commands,
-    player_query: Query<(&Velocity, &Player), With<Player>>,
-    platform_query: Query<Entity, With<Platform>>,
+    platform_query: Query<
+        (Entity, &Transform),
+        (With<Platform>, With<PlatformCollidingWithPlayer>),
+    >,
+    player_query: Query<&Transform, With<Player>>,
 ) {
-    for (velocity, player) in player_query {
-        if velocity.linvel.y < 0.0 && !player.is_on_platform && player.is_on_jump_from_mushroom {
-            for platform in platform_query {
-                commands.entity(platform).remove::<ColliderDisabled>();
-            }
+    let Ok(player_transform) = player_query.single() else {
+        return;
+    };
+    for (platform_entity, platform_transform) in platform_query {
+        if player_transform.translation.y < platform_transform.translation.y {
+            println!(
+                "Player under platform, removing PlatformCollidingWithPlayer and ColliderDisabled"
+            );
+            commands
+                .entity(platform_entity)
+                .remove::<ColliderDisabled>();
+            commands
+                .entity(platform_entity)
+                .remove::<PlatformCollidingWithPlayer>();
         }
     }
 }

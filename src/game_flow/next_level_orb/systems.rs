@@ -69,7 +69,7 @@ pub fn detect_player_next_level_orb_collision(
         }
 
         for player in player_query {
-            println!("found player, despawning to ensure smooth sailing...");
+            println!("despawning player in next_level logic to ensure smooth sailing...");
             commands.entity(player).despawn();
         }
 
