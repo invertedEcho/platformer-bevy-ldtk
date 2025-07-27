@@ -57,7 +57,7 @@ pub fn mushroom_collision_detection(
                         .expect("Player exists when colliding with mushroom");
                     if *first_entity == player_entity || *second_entity == player_entity {
                         player_velocity.linvel.y = PLAYER_JUMP_HIGH;
-                        player.is_jumping = true;
+                        player.jumping = true;
                     }
                 }
             }

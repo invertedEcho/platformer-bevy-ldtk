@@ -9,6 +9,7 @@ use game_flow::GameFlowPlugin;
 use hud::HudPlugin;
 use player::PlayerPlugin;
 use world::ground::GroundPlugin;
+use world::moving_platform::MovingPlatformPlugin;
 use world::mushroom::MushroomPlugin;
 use world::platform::PlatformPlugin;
 use world::platform::systems::OneWayPlatformPhysicsHook;
@@ -56,6 +57,7 @@ fn main() {
         .add_plugins(EnemyPlugin)
         .add_plugins(SavePointPlugin)
         .add_plugins(SpikePlugin)
+        .add_plugins(MovingPlatformPlugin)
         .add_systems(Startup, setup)
         .insert_resource(LevelSelection::iid(LEVEL_IIDS[1]));
     if cfg!(debug_assertions) {

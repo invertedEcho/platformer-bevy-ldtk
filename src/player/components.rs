@@ -3,7 +3,7 @@ use bevy_ecs_ldtk::prelude::*;
 
 #[derive(Default, Component)]
 pub struct Player {
-    pub is_jumping: bool,
+    pub jumping: bool,
     pub current_save_point: Option<Vec3>,
 }
 

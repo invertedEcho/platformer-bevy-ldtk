@@ -1,4 +1,5 @@
 pub mod ground;
+pub mod moving_platform;
 pub mod mushroom;
 pub mod platform;
 pub mod save_point;

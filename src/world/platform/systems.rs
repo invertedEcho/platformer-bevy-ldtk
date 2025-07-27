@@ -13,6 +13,8 @@ use super::components::Platform;
 pub struct OneWayPlatformPhysicsHook;
 
 impl BevyPhysicsHooks for OneWayPlatformPhysicsHook {
+    // Note that we dont have to filter by anything, as only Platforms have `ActiveHooks::MODIFY_SOLVER_CONTACTS` inserted.
+    // If that changes we will have to filter
     fn modify_solver_contacts(&self, contact: ContactModificationContextView) {
         contact
             .raw

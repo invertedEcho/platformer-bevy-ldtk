@@ -34,15 +34,15 @@ pub fn player_movement(
             velocity.linvel.x = -1.0 * PLAYER_SPEED;
             next_player_movement_type.set(PlayerMovementType::BackwardsRun);
         }
-        if input.just_pressed(KeyCode::KeyS) && !player.is_jumping {
+        if input.just_pressed(KeyCode::KeyS) && !player.jumping {
             for platform_entity in platform_query {
                 info!("Inserting collider disabled bcs pressed KeyS");
                 commands.entity(platform_entity).insert(ColliderDisabled);
             }
         }
-        if input.just_pressed(KeyCode::Space) && !player.is_jumping {
+        if input.just_pressed(KeyCode::Space) && !player.jumping {
             velocity.linvel.y = PLAYER_JUMP_NORMAL;
-            player.is_jumping = true;
+            player.jumping = true;
         }
     }
 }

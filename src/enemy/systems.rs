@@ -137,6 +137,7 @@ pub fn patrol_slimes(
 
         let current_patrol_point = patrol_points[patrol.index];
 
+        // TODO: Need to use ldtk grid coords, as patrol point is ldtk grid coord, not grid coord
         let translated_to_world_coordinate = grid_coords_to_translation(
             GridCoords {
                 x: current_patrol_point.x,

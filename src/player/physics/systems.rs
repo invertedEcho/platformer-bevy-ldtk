@@ -3,13 +3,17 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     player::components::Player,
-    world::{ground::components::Ground, platform::components::Platform},
+    world::{
+        ground::components::Ground, moving_platform::components::MovingPlatform,
+        platform::components::Platform,
+    },
 };
 
 pub fn player_on_ground_detection(
     mut collision_event_reader: EventReader<CollisionEvent>,
     mut player_query: Query<(&mut Player, Entity), With<Player>>,
-    ground_query: Query<Entity, Or<(With<Ground>, With<Platform>)>>,
+    // TODO: could we just insert Ground in Platform too to only have to filter by Ground?
+    ground_query: Query<Entity, Or<(With<Ground>, With<Platform>, With<MovingPlatform>)>>,
 ) {
     for collision_event in collision_event_reader.read() {
         let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
@@ -32,6 +36,6 @@ pub fn player_on_ground_detection(
         let Ok((mut player, _)) = player_query.single_mut() else {
             continue;
         };
-        player.is_jumping = false;
+        player.jumping = false;
     }
 }

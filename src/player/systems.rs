@@ -124,8 +124,6 @@ pub fn handle_player_state_enter_alive(
     ldtk_projects: Query<Entity, With<LdtkProjectHandle>>,
 ) {
     for (entity, player) in player_query {
-        info!("PlayerState entered alive.");
-
         if let Some(current_save_point) = player.current_save_point {
             info!("Found current save point. Despawning player and spawning new one.");
             // Note that we only need to spawn player with correct transform, as our
