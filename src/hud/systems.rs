@@ -77,7 +77,7 @@ pub fn update_coin_counter(
         return;
     }
     let Ok(mut coin_counter) = coin_counter_query.single_mut() else {
-        eprintln!("Failed to find coin counter");
+        error!("Failed to find coin counter");
         return;
     };
     **coin_counter = coin_resource.count.to_string();

@@ -36,7 +36,7 @@ pub fn player_movement(
         }
         if input.just_pressed(KeyCode::KeyS) && !player.is_jumping {
             for platform_entity in platform_query {
-                println!("Inserting collider disabled bcs pressed KeyS");
+                info!("Inserting collider disabled bcs pressed KeyS");
                 commands.entity(platform_entity).insert(ColliderDisabled);
             }
         }

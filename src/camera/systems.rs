@@ -47,7 +47,7 @@ pub fn camera_follow_player(
             .is_match(&LevelIndices::default(), level)
             .then_some(level.px_wid)
     }) else {
-        eprintln!("Failed to find level, camera_follow_player may be broken.");
+        error!("Failed to find level, camera_follow_player may be broken.");
         return;
     };
 

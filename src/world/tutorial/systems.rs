@@ -22,7 +22,7 @@ pub fn spawn_text_for_tutorial_text(
 
     for (entity, ldtk_entity, mut transform) in tutorial_text_query {
         let Ok(tutorial_text) = ldtk_entity.get_string_field(TUTORIAL_TEXT_FIELD_IDENTIFIER) else {
-            eprintln!("Couldnt find tutorial text for ldtk entity");
+            error!("Couldnt find tutorial text for ldtk entity");
             continue;
         };
 

@@ -67,7 +67,7 @@ pub fn coin_collision_detection(
             continue;
         }
 
-        println!("Detected coin collision, despawning coin and increasing coin count");
+        info!("Detected coin collision, despawning coin and increasing coin count");
         commands.entity(coin_entity).despawn();
         coin_resource.count += 1;
     }

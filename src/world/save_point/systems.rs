@@ -83,7 +83,7 @@ pub fn detect_player_collider_with_save_point(
         ));
 
         let (_, mut player) = player_query.single_mut().unwrap();
-        println!(
+        info!(
             "player collided with save point. setting player.current_save_point to save_point_transform: {}",
             save_point_transform.translation
         );

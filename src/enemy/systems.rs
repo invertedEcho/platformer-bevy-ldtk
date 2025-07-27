@@ -131,7 +131,7 @@ pub fn patrol_slimes(
             .collect();
 
         if patrol_points.len() > 2 {
-            eprintln!("More than two patrol points is not yet implemented.");
+            error!("More than two patrol points is not yet implemented.");
             continue;
         }
 

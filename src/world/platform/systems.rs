@@ -83,7 +83,7 @@ pub fn platform_player_collision_detection(
                     continue;
                 };
 
-                println!(
+                info!(
                     "player started colliding with a platform, inserting CollidingWithPlayer into colliding platform"
                 );
                 commands
@@ -98,7 +98,7 @@ pub fn platform_player_collision_detection(
                     continue;
                 };
                 let Ok(player) = player_query.single() else {
-                    eprintln!(
+                    error!(
                         "No player found in collision_event from player with platform, this shouldnt be possible."
                     );
                     continue;
@@ -107,7 +107,7 @@ pub fn platform_player_collision_detection(
                 // we dont want to remove colliderdisabled when the collision stops because we fall
                 // through the platform
                 if player.linvel.y > 0.0 {
-                    println!(
+                    info!(
                         "player stopped colliding with a platform and doesnt have negative velocity.y, removing CollidingWithPlayer from colliding platform"
                     );
                     commands
@@ -135,7 +135,7 @@ pub fn detect_player_under_platform(
     };
     for (platform_entity, platform_transform) in platform_query {
         if player_transform.translation.y < platform_transform.translation.y {
-            println!(
+            info!(
                 "Player under platform, removing PlatformCollidingWithPlayer and ColliderDisabled"
             );
             commands

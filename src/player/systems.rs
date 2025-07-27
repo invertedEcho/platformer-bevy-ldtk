@@ -28,7 +28,7 @@ pub fn setup_player(
     new_players: Query<(Entity, &mut Transform), Added<Player>>,
 ) {
     for (entity, mut transform) in new_players {
-        println!(
+        info!(
             "Setting up player. This means a new entity was spawned that contains the Player component."
         );
         let texture = asset_server.load(PLAYER_IDLE_ANIM_TILESET_PATH);
@@ -70,7 +70,7 @@ pub fn handle_player_dead_event(
     mut next_player_state: ResMut<NextState<PlayerState>>,
 ) {
     for _ in player_dead_event_reader.read() {
-        println!(
+        info!(
             "Received player dead event. Setting PlayerState::Respawning and setting player sprite to death animation"
         );
         for entity in player_query {
@@ -124,10 +124,10 @@ pub fn handle_player_state_enter_alive(
     ldtk_projects: Query<Entity, With<LdtkProjectHandle>>,
 ) {
     for (entity, player) in player_query {
-        println!("PlayerState entered alive.");
+        info!("PlayerState entered alive.");
 
         if let Some(current_save_point) = player.current_save_point {
-            println!("Found current save point. Despawning player and spawning new one.");
+            info!("Found current save point. Despawning player and spawning new one.");
             // Note that we only need to spawn player with correct transform, as our
             // `process_player` system takes care of everything else.
             commands.entity(entity).despawn();
@@ -143,7 +143,7 @@ pub fn handle_player_state_enter_alive(
                 ),
             ));
         } else {
-            println!("No save_point, respawning level.");
+            info!("No save_point, respawning level.");
             commands
                 .entity(
                     ldtk_projects
