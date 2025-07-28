@@ -45,6 +45,7 @@ pub fn spawn_platform_colliders(
                     OneWayPlatform,
                     Friction::new(1.0),
                     RigidBody::Fixed,
+                    ActiveEvents::COLLISION_EVENTS,
                 ));
             });
         }
