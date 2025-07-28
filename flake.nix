@@ -29,14 +29,9 @@
                 pkg-config
               ]
               ++ lib.optionals (lib.strings.hasInfix "linux" system) [
-                # for Linux
-                # Audio (Linux only)
                 alsa-lib
-                # Cross Platform 3D Graphics API
                 vulkan-loader
-                # For debugging around vulkan
                 vulkan-tools
-                # Other dependencies
                 libudev-zero
                 xorg.libX11
                 xorg.libXcursor

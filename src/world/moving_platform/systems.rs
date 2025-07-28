@@ -33,8 +33,9 @@ pub fn process_moving_platforms(
                 image_mode: SpriteImageMode::Tiled {
                     tile_x: true,
                     tile_y: false,
-                    // TODO: figure out what value we have to use here
-                    stretch_value: 1.0,
+                    // moving platform is 64 px wide, but image is only 16 px wide.
+                    // so, sprite is a quarter of what we want, so 0.25
+                    stretch_value: 0.25,
                 },
                 ..default()
             },
