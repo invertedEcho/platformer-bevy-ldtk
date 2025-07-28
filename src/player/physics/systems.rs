@@ -5,7 +5,7 @@ use crate::{
     player::components::Player,
     world::{
         ground::components::Ground, moving_platform::components::MovingPlatform,
-        platform::components::Platform,
+        one_way_platform::components::OneWayPlatform,
     },
 };
 
@@ -13,7 +13,7 @@ pub fn player_on_ground_detection(
     mut collision_event_reader: EventReader<CollisionEvent>,
     mut player_query: Query<(&mut Player, Entity), With<Player>>,
     // TODO: could we just insert Ground in Platform too to only have to filter by Ground?
-    ground_query: Query<Entity, Or<(With<Ground>, With<Platform>, With<MovingPlatform>)>>,
+    ground_query: Query<Entity, Or<(With<Ground>, With<OneWayPlatform>, With<MovingPlatform>)>>,
 ) {
     for collision_event in collision_event_reader.read() {
         let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
