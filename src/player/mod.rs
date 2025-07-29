@@ -7,8 +7,8 @@ use movement::states::PlayerMovementType;
 use physics::systems::player_on_ground_detection;
 use states::PlayerState;
 use systems::{
-    handle_player_dead_event, handle_player_state_enter_alive, setup_player,
-    tick_player_dead_animation_timer,
+    handle_player_dead_event, handle_player_state_enter_alive, player_debug_line_follow_player,
+    setup_player, tick_player_dead_animation_timer,
 };
 use visual::systems::{
     set_backwards_idle_sprite, set_backwards_player_run_sprite, set_forward_idle_player_sprite,
@@ -42,6 +42,7 @@ impl Plugin for PlayerPlugin {
                     player_on_ground_detection,
                     handle_player_dead_event,
                     tick_player_dead_animation_timer,
+                    player_debug_line_follow_player,
                 ),
             )
             .add_systems(

@@ -1,5 +1,6 @@
 use crate::common::components::TextureAtlasIndices;
 
+pub mod components;
 pub mod systems;
 
 const PLAYER_RUN_ANIM_TILESET_PATH: &str = "herochar/herochar_run_anim_strip_6.png";

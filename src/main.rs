@@ -58,7 +58,7 @@ fn main() {
         .add_plugins(SpikePlugin)
         .add_plugins(MovingPlatformPlugin)
         .add_systems(Startup, setup)
-        .insert_resource(LevelSelection::iid(LEVEL_IIDS[1]));
+        .insert_resource(LevelSelection::iid(LEVEL_IIDS[0]));
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());
     }
