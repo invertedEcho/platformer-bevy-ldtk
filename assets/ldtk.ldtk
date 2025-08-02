@@ -1304,10 +1304,10 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 197,
-							"px": [848,512],
-							"fieldInstances": [{ "__identifier": "Tutorial_Text", "__type": "String", "__value": "Drop Down", "__tile": null, "defUid": 224, "realEditorValues": [{
+							"px": [858,512],
+							"fieldInstances": [{ "__identifier": "Tutorial_Text", "__type": "String", "__value": "to Drop Down", "__tile": null, "defUid": 224, "realEditorValues": [{
 								"id": "V_String",
-								"params": ["Drop Down"]
+								"params": ["to Drop Down"]
 							}] }]
 						},
 						{
@@ -1601,6 +1601,23 @@
 							"fieldInstances": [{ "__identifier": "Target_Level_IID", "__type": "String", "__value": "dd949e20-5e50-11f0-a1b6-870a0a448448", "__tile": null, "defUid": 227, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["dd949e20-5e50-11f0-a1b6-870a0a448448"]
+							}] }]
+						},
+						{
+							"__identifier": "Tutorial_Text",
+							"__grid": [48,32],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#E4A672",
+							"iid": "7ef83830-5e50-11f0-af00-b747bb1bf9b0",
+							"width": 16,
+							"height": 16,
+							"defUid": 197,
+							"px": [768,512],
+							"fieldInstances": [{ "__identifier": "Tutorial_Text", "__type": "String", "__value": "Hold", "__tile": null, "defUid": 224, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["Hold"]
 							}] }]
 						}
 					]

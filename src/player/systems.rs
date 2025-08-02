@@ -9,7 +9,7 @@ use crate::{
         components::PlayerDeadAnimationTimer,
         visual::{
             PLAYER_DEATH_ANIM_TEXTURE_ATLAS_INDICES, PLAYER_DEATH_ANIM_TILESET_COLUMN_COUNT,
-            PLAYER_DEATH_ANIM_TILESET_PATH, components::PlayerDebugLine,
+            PLAYER_DEATH_ANIM_TILESET_PATH,
         },
     },
 };
@@ -65,31 +65,7 @@ pub fn setup_player(
                 combine_rule: CoefficientCombineRule::Min,
             },
         ));
-
-        commands.spawn((
-            Transform::from_xyz(transform.translation.x, transform.translation.y, 101.0),
-            PlayerDebugLine,
-            Sprite {
-                image: asset_server.load("red_16x2.png"),
-                ..default()
-            },
-        ));
     }
-}
-
-pub fn player_debug_line_follow_player(
-    player_query: Query<&Transform, (With<Player>, Without<PlayerDebugLine>)>,
-    mut player_debug_line_query: Query<&mut Transform, (With<PlayerDebugLine>, Without<Player>)>,
-) {
-    let Ok(player) = player_query.single() else {
-        return;
-    };
-    let Ok(mut player_debug_line) = player_debug_line_query.single_mut() else {
-        return;
-    };
-    player_debug_line.translation = player.translation;
-    // should be at feet of player
-    player_debug_line.translation.y -= HALF_TILE_SIZE + 1.0;
 }
 
 pub fn handle_player_dead_event(

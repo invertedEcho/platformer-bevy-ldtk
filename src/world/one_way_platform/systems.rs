@@ -64,6 +64,7 @@ pub fn spawn_platform_colliders(
     }
 }
 
+/// TODO: This function checks all platforms
 pub fn handle_one_way_platform(
     mut commands: Commands,
     player_query: Query<&Transform, With<Player>>,
@@ -74,24 +75,21 @@ pub fn handle_one_way_platform(
         return;
     };
     let player_translation = player_transform.translation;
-    // TODO: This will check every platform, not just ones that are close to the player.
     for (one_way_platform_entity, one_way_platform_transform) in one_way_platform_query {
         let one_way_platform_translation = one_way_platform_transform.translation;
 
-        let player_under_platform =
-            player_translation.y - 8.0 < one_way_platform_translation.y + 3.0;
+        let player_under_platform = player_translation.y < one_way_platform_translation.y;
 
         let key_s_pressed =
             key_input.pressed(KeyCode::KeyS) && !key_input.just_released(KeyCode::KeyS);
 
-        info!("key_s_pressed: {}", key_s_pressed);
-        info!("player_under_platform: {}", player_under_platform);
-
         if player_under_platform || key_s_pressed {
+            info!("player is under platform ,inserting colliderdisabled");
             commands
                 .entity(one_way_platform_entity)
                 .insert(ColliderDisabled);
         } else {
+            info!("player is above platform, removing colliderdisabled.");
             commands
                 .entity(one_way_platform_entity)
                 .remove::<ColliderDisabled>();
