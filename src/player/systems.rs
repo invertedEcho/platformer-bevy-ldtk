@@ -21,6 +21,8 @@ use super::{
     visual::{PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES, PLAYER_IDLE_ANIM_TILESET_PATH},
 };
 
+const PLAYER_CAPSULE_RADIUS: f32 = 6.0;
+
 pub fn setup_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
@@ -47,8 +49,12 @@ pub fn setup_player(
             PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES,
             AnimationTimer::default(),
             RigidBody::Dynamic,
-            // TODO: get rid of these magic numbers
-            Collider::capsule_y(HALF_TILE_SIZE - 5.0, 6.0),
+            // radius increases half_height
+            // we need to substract RADIUS + 1 from half_height to get correct size
+            Collider::capsule_y(
+                HALF_TILE_SIZE - PLAYER_CAPSULE_RADIUS + 1.0,
+                PLAYER_CAPSULE_RADIUS,
+            ),
             LockedAxes::ROTATION_LOCKED,
             Velocity {
                 linvel: Vec2::new(0.0, 0.0),
