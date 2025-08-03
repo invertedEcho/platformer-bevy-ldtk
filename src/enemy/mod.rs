@@ -17,14 +17,11 @@ pub struct EnemyPlugin;
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
         app.register_ldtk_entity::<SlimeBundle>("Slime")
+            .add_systems(Update, (spawn_slimes, detect_slime_collision_with_player))
             .add_systems(
                 Update,
-                (
-                    spawn_slimes,
-                    animate_generic_sprite::<Slime>,
-                    detect_slime_collision_with_player,
-                    patrol_slimes.run_if(in_state(PlayerState::Alive)),
-                ),
+                (patrol_slimes, animate_generic_sprite::<Slime>)
+                    .run_if(in_state(PlayerState::Alive)),
             )
             .add_systems(OnEnter(PlayerState::Respawning), stop_slime_patroling);
     }

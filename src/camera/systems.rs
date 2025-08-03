@@ -1,9 +1,8 @@
+use crate::camera::CAMERA_SCALE;
 use bevy::{prelude::*, window::PrimaryWindow};
 use bevy_ecs_ldtk::prelude::*;
 
 use crate::player::components::Player;
-
-const CAMERA_SCALE: f32 = 0.4;
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn((
@@ -15,7 +14,7 @@ pub fn spawn_camera(mut commands: Commands) {
     ));
 }
 
-pub fn camera_follow_player(
+pub fn camera_follow_player_with_level_clamping(
     mut camera_query: Query<&mut Transform, (With<Camera2d>, Without<Player>)>,
     player_query: Query<&Transform, (With<Player>, Without<Camera2d>)>,
     window_dimensions: Query<&Window, With<PrimaryWindow>>,

@@ -7,7 +7,6 @@ use crate::{HALF_TILE_SIZE, TILE_SIZE, player::components::Player, utils::prepro
 use super::components::OneWayPlatform;
 
 pub fn spawn_platform_colliders(
-    asset_server: Res<AssetServer>,
     mut commands: Commands,
     platform_query: Query<(Entity, &GridCoords), Added<OneWayPlatform>>,
     level_query: Query<(Entity, &LevelIid)>,
@@ -49,17 +48,6 @@ pub fn spawn_platform_colliders(
                     ActiveEvents::COLLISION_EVENTS,
                 ));
             });
-            let override_y = world_y + HALF_TILE_SIZE / 2.0;
-            commands.spawn((
-                Transform {
-                    translation: Vec3::new(world_x, override_y, 100.0),
-                    ..default()
-                },
-                Sprite {
-                    image: asset_server.load("blue_32x2.png"),
-                    ..default()
-                },
-            ));
         }
     }
 }
@@ -84,12 +72,10 @@ pub fn handle_one_way_platform(
             key_input.pressed(KeyCode::KeyS) && !key_input.just_released(KeyCode::KeyS);
 
         if player_under_platform || key_s_pressed {
-            info!("player is under platform ,inserting colliderdisabled");
             commands
                 .entity(one_way_platform_entity)
                 .insert(ColliderDisabled);
         } else {
-            info!("player is above platform, removing colliderdisabled.");
             commands
                 .entity(one_way_platform_entity)
                 .remove::<ColliderDisabled>();

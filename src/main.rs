@@ -7,6 +7,7 @@ use coins::CoinPlugin;
 use enemy::EnemyPlugin;
 use game_flow::GameFlowPlugin;
 use hud::HudPlugin;
+use parallax_background::ParallaxBackgroundPlugin;
 use player::PlayerPlugin;
 use world::ground::GroundPlugin;
 use world::moving_platform::MovingPlatformPlugin;
@@ -24,6 +25,7 @@ mod enemy;
 pub mod font;
 mod game_flow;
 mod hud;
+pub mod parallax_background;
 pub mod player;
 pub mod utils;
 pub mod world;
@@ -57,11 +59,12 @@ fn main() {
         .add_plugins(SavePointPlugin)
         .add_plugins(SpikePlugin)
         .add_plugins(MovingPlatformPlugin)
+        .add_plugins(ParallaxBackgroundPlugin)
         .add_systems(Startup, setup)
         .insert_resource(LevelSelection::iid(LEVEL_IIDS[0]));
-    if cfg!(debug_assertions) {
-        app.add_plugins(RapierDebugRenderPlugin::default());
-    }
+    // if cfg!(debug_assertions) {
+    //     app.add_plugins(RapierDebugRenderPlugin::default());
+    // }
     app.run();
 }
 
