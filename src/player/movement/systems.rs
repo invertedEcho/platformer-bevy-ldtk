@@ -12,7 +12,10 @@ pub fn player_movement(
     mut next_player_movement_type: ResMut<NextState<PlayerMovementType>>,
 ) {
     for (mut velocity, mut player) in player_query.iter_mut() {
-        velocity.linvel.x = 0.0;
+        if !player.on_horizontal_moving_platform {
+            velocity.linvel.x = 0.0;
+        }
+
         let current_player_movement_type = current_player_movement_type.get().clone();
         if current_player_movement_type == PlayerMovementType::BackwardsRun
             || current_player_movement_type == PlayerMovementType::BackwardsIdle

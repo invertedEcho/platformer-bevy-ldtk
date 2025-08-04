@@ -26,8 +26,6 @@ pub fn setup_parallax_background(
         let scaled_window_width = window.width() * scale;
 
         while x_position < scaled_window_width {
-            info!("index: {}", index);
-            info!("x_position: {}", x_position);
             commands.spawn((
                 ParallaxBackground {
                     width: *width,
@@ -65,10 +63,10 @@ pub fn handle_parallax_background_relative_to_camera(
     };
 
     for (parallax_background, mut transform) in background_query {
-        let parrallax_x = parallax_background.initial_x_position
+        let parallax_x = parallax_background.initial_x_position
             + camera_transform.translation.x * (1.0 - parallax_background.speed);
 
-        transform.translation.x = parrallax_x;
+        transform.translation.x = parallax_x;
         transform.translation.y = camera_transform.translation.y;
     }
 }

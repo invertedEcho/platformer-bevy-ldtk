@@ -5,6 +5,7 @@ use bevy_ecs_ldtk::prelude::*;
 pub struct Player {
     pub jumping: bool,
     pub current_save_point: Option<Vec3>,
+    pub on_horizontal_moving_platform: bool,
 }
 
 #[derive(Default, LdtkEntity, Bundle)]

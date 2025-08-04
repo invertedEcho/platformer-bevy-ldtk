@@ -11,18 +11,17 @@ pub struct MovingPlatformBundle {
     entity_instance: EntityInstance,
 }
 
-// TODO: Give better name
-#[derive(Component)]
-pub struct MoveDirection {
-    pub upwards: bool,
-    pub index: usize,
+#[derive(PartialEq)]
+pub enum Direction {
+    HorizontalForward,
+    HorizontalBackwards,
+    VerticalUpwards,
+    VerticalDownwards,
 }
 
-impl Default for MoveDirection {
-    fn default() -> Self {
-        MoveDirection {
-            upwards: true,
-            index: 0,
-        }
-    }
+#[derive(Component)]
+pub struct MovingPlatformInfo {
+    pub direction: Direction,
+    pub points_index: usize,
+    pub points: Vec<IVec2>,
 }

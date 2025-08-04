@@ -15,14 +15,14 @@ pub struct SlimeBundle {
 #[derive(Component)]
 pub struct Patrol {
     pub forward: bool,
-    pub index: usize,
+    pub points_index: usize,
 }
 
 impl Default for Patrol {
     fn default() -> Self {
         Patrol {
             forward: true,
-            index: 0,
+            points_index: 0,
         }
     }
 }

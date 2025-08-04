@@ -135,7 +135,7 @@ pub fn patrol_slimes(
             continue;
         }
 
-        let current_patrol_point = patrol_points[patrol.index];
+        let current_patrol_point = patrol_points[patrol.points_index];
 
         // TODO: Need to use ldtk grid coords, as patrol point is ldtk grid coord, not grid coord
         let translated_to_world_coordinate = grid_coords_to_translation(
@@ -152,7 +152,7 @@ pub fn patrol_slimes(
                 velocity.linvel.x = ENEMY_SPEED;
             } else {
                 velocity.linvel.x = 0.0;
-                patrol.index = 1;
+                patrol.points_index = 1;
                 patrol.forward = false;
             }
         } else {
@@ -161,7 +161,7 @@ pub fn patrol_slimes(
                 velocity.linvel.x = ENEMY_SPEED.neg();
             } else {
                 velocity.linvel.x = 0.0;
-                patrol.index = 0;
+                patrol.points_index = 0;
                 patrol.forward = true;
             }
         }
