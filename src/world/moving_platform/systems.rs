@@ -69,7 +69,7 @@ pub fn move_moving_platform(
     layer_query: Query<&LayerMetadata>,
     mut player_query: Query<(&Player, &mut Velocity), (With<Player>, Without<MovingPlatform>)>,
 ) {
-    let Ok(mut player) = player_query.single_mut() else {
+    let Ok(player) = player_query.single_mut() else {
         return;
     };
     let (player, mut player_velocity) = player;
