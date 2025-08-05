@@ -1,4 +1,7 @@
-use bevy::{prelude::*, window::PrimaryWindow};
+use bevy::{
+    prelude::*,
+    window::{PrimaryWindow, WindowResized},
+};
 
 use crate::camera::CAMERA_SCALE;
 
@@ -67,5 +70,19 @@ pub fn handle_parallax_background_relative_to_camera(
 
         transform.translation.x = parallax_x;
         transform.translation.y = camera_transform.translation.y;
+    }
+}
+
+pub fn handle_window_resize(
+    mut resizer_reader: EventReader<WindowResized>,
+    mut parallax_background_query: Query<&mut Transform, With<ParallaxBackground>>,
+) {
+    for resize_event in resizer_reader.read() {
+        let new_height = resize_event.width;
+        let scaled_window_height = new_height * CAMERA_SCALE;
+        let scale = scaled_window_height / PARALLAX_BACKGROUND_HEIGHT;
+        for mut parallax_background in parallax_background_query.iter_mut() {
+            parallax_background.scale = Vec3::splat(scale);
+        }
     }
 }

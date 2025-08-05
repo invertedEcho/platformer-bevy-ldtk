@@ -8,7 +8,7 @@ use crate::{common::systems::animate_generic_sprite, player::states::PlayerState
 mod components;
 mod systems;
 
-pub const SLIME_SPEED: f32 = 100.0;
+pub const SLIME_SPEED: f32 = 50.0;
 
 pub struct SlimePlugin;
 

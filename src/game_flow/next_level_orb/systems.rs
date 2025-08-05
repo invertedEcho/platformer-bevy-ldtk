@@ -78,6 +78,7 @@ pub fn detect_player_next_level_orb_collision(
         let target_level_iid = entity_instance
             .get_string_field(NEXT_LEVEL_ORB_FIELD_IDENTIFIER)
             .expect("Ldtk entity field correctly typed and set");
+        info!("target level iid: {}", target_level_iid);
 
         *level_selection = LevelSelection::iid(target_level_iid);
     }

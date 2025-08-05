@@ -1,5 +1,7 @@
 use bevy::prelude::*;
-use systems::{handle_parallax_background_relative_to_camera, setup_parallax_background};
+use systems::{
+    handle_parallax_background_relative_to_camera, handle_window_resize, setup_parallax_background,
+};
 
 mod components;
 mod systems;
@@ -26,6 +28,12 @@ pub struct ParallaxBackgroundPlugin;
 impl Plugin for ParallaxBackgroundPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_parallax_background)
-            .add_systems(Update, handle_parallax_background_relative_to_camera);
+            .add_systems(
+                Update,
+                (
+                    handle_parallax_background_relative_to_camera,
+                    handle_window_resize,
+                ),
+            );
     }
 }

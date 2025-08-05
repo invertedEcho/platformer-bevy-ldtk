@@ -8,6 +8,8 @@ pub mod systems;
 
 const PLATFORM_INT_GRID_CELL: i32 = 1;
 
+// TODO: herochar_jump_down animation when going down from platform
+
 pub struct OneWayPlatformPlugin;
 
 impl Plugin for OneWayPlatformPlugin {

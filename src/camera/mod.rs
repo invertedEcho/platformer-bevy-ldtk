@@ -3,7 +3,7 @@ use systems::{camera_follow_player_with_level_clamping, spawn_camera};
 
 mod systems;
 
-pub const CAMERA_SCALE: f32 = 0.4;
+pub const CAMERA_SCALE: f32 = 0.35;
 
 pub struct CameraPlugin;
 
