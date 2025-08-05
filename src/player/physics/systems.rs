@@ -2,7 +2,10 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::{
-    player::components::Player,
+    player::{
+        components::{Player, PlayerDirection},
+        movement::states::PlayerMovementType,
+    },
     world::{
         ground::components::Ground, moving_platform::components::MovingPlatform,
         one_way_platform::components::OneWayPlatform,
@@ -14,6 +17,7 @@ pub fn player_on_ground_detection(
     mut player_query: Query<(&mut Player, Entity), With<Player>>,
     // TODO: could we just insert Ground in Platform too to only have to filter by Ground?
     ground_query: Query<Entity, Or<(With<Ground>, With<OneWayPlatform>, With<MovingPlatform>)>>,
+    mut next_player_movement_type_state: ResMut<NextState<PlayerMovementType>>,
 ) {
     for collision_event in collision_event_reader.read() {
         let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
@@ -37,5 +41,10 @@ pub fn player_on_ground_detection(
             continue;
         };
         player.jumping = false;
+        if player.direction == PlayerDirection::Forward {
+            next_player_movement_type_state.set(PlayerMovementType::ForwardIdle);
+        } else if player.direction == PlayerDirection::Backwards {
+            next_player_movement_type_state.set(PlayerMovementType::BackwardsIdle);
+        }
     }
 }

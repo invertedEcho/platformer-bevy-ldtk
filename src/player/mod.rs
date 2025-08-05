@@ -12,7 +12,7 @@ use systems::{
 };
 use visual::systems::{
     set_backwards_idle_sprite, set_backwards_player_run_sprite, set_forward_idle_player_sprite,
-    set_forward_player_run_sprite,
+    set_forward_player_run_sprite, set_jump_sprite,
 };
 
 use crate::common::systems::animate_generic_sprite;
@@ -60,6 +60,7 @@ impl Plugin for PlayerPlugin {
                 OnEnter(PlayerMovementType::BackwardsIdle),
                 set_backwards_idle_sprite,
             )
+            .add_systems(OnEnter(PlayerMovementType::Jump), set_jump_sprite)
             .add_systems(OnEnter(PlayerState::Alive), handle_player_state_enter_alive);
     }
 }

@@ -16,4 +16,6 @@ pub const PLAYER_DEATH_ANIM_TEXTURE_ATLAS_INDICES: TextureAtlasIndices =
 
 pub const PLAYER_DEATH_ANIM_TILESET_COLUMN_COUNT: u32 = 8;
 
-pub const PLAYER_JUMP_ANIM_STRIP_PATH: &str = "herochar/herochar_jump_anim_strip_3.png";
+pub const PLAYER_JUMP_UP_ANIM_STRIP_PATH: &str = "herochar/herochar_jump_up_anim_strip_3.png";
+pub const PLAYER_JUMP_UP_ANIM_TEXTURE_ATLAS_INDICES: TextureAtlasIndices =
+    TextureAtlasIndices { first: 0, last: 2 };

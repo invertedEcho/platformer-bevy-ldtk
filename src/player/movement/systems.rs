@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::player::components::Player;
+use crate::player::components::{Player, PlayerDirection};
 
 use super::{PLAYER_JUMP_NORMAL, PLAYER_SPEED, states::PlayerMovementType};
 
@@ -16,25 +16,28 @@ pub fn player_movement(
             velocity.linvel.x = 0.0;
         }
 
-        let current_player_movement_type = current_player_movement_type.get().clone();
-        if current_player_movement_type == PlayerMovementType::BackwardsRun
-            || current_player_movement_type == PlayerMovementType::BackwardsIdle
+        let current_player_movement_type = current_player_movement_type.get();
+        if *current_player_movement_type == PlayerMovementType::BackwardsRun
+            || *current_player_movement_type == PlayerMovementType::BackwardsIdle
         {
             next_player_movement_type.set(PlayerMovementType::BackwardsIdle);
-        } else {
+        } else if *current_player_movement_type != PlayerMovementType::Jump {
             next_player_movement_type.set(PlayerMovementType::ForwardIdle);
         }
         if input.pressed(KeyCode::KeyD) {
             velocity.linvel.x = 1.0 * PLAYER_SPEED;
             next_player_movement_type.set(PlayerMovementType::ForwardRun);
+            player.direction = PlayerDirection::Forward;
         }
         if input.pressed(KeyCode::KeyA) {
             velocity.linvel.x = -1.0 * PLAYER_SPEED;
             next_player_movement_type.set(PlayerMovementType::BackwardsRun);
+            player.direction = PlayerDirection::Backwards;
         }
         if input.just_pressed(KeyCode::Space) && !player.jumping {
             velocity.linvel.y = PLAYER_JUMP_NORMAL;
             player.jumping = true;
+            next_player_movement_type.set(PlayerMovementType::Jump);
         }
     }
 }

@@ -21,7 +21,7 @@ use super::{
     visual::{PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES, PLAYER_IDLE_ANIM_TILESET_PATH},
 };
 
-const PLAYER_CAPSULE_RADIUS: f32 = 6.0;
+const PLAYER_CAPSULE_RADIUS: f32 = 5.0;
 
 pub fn setup_player(
     mut commands: Commands,
@@ -52,7 +52,7 @@ pub fn setup_player(
             // radius increases half_height
             // we need to substract RADIUS + 1 from half_height to get correct size
             Collider::capsule_y(
-                HALF_TILE_SIZE - PLAYER_CAPSULE_RADIUS + 1.0,
+                HALF_TILE_SIZE - PLAYER_CAPSULE_RADIUS,
                 PLAYER_CAPSULE_RADIUS,
             ),
             LockedAxes::ROTATION_LOCKED,
