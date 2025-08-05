@@ -1,7 +1,10 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::app::LdtkEntityAppExt;
 use components::{Goblin, GoblinBundle};
-use systems::{goblin_follow_player, handle_goblin_change, setup_goblins};
+use systems::{
+    goblin_follow_player, handle_enemy_triggered_timer, handle_goblin_triggered_event,
+    setup_goblins, update_goblin_sprite_if_changed,
+};
 
 use crate::common::{components::TextureAtlasIndices, systems::animate_generic_sprite};
 
@@ -27,7 +30,9 @@ impl Plugin for GoblinPlugin {
                     setup_goblins,
                     animate_generic_sprite::<Goblin>,
                     goblin_follow_player,
-                    handle_goblin_change,
+                    update_goblin_sprite_if_changed,
+                    handle_goblin_triggered_event,
+                    handle_enemy_triggered_timer,
                 ),
             );
     }

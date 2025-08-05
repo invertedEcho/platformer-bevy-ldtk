@@ -28,7 +28,6 @@ pub fn setup_parallax_background(
         while x_position < scaled_window_width {
             commands.spawn((
                 ParallaxBackground {
-                    width: *width,
                     speed: *speed,
                     initial_x_position: x_position,
                 },

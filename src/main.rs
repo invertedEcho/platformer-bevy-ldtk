@@ -40,6 +40,7 @@ const LEVEL_IIDS: [&str; 3] = [
 ];
 
 // TODO: Investigate TextureAtlasLayouts
+// TODO: Define all z-index we use
 
 fn main() {
     let mut app = App::new();
