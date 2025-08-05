@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     HALF_TILE_SIZE,
-    player::{components::Player, events::PlayerDeadEvent},
+    player::components::{Player, PlayerState},
 };
 
 use super::{SPIKE_SPRITE_PATH, components::Spike};
@@ -28,9 +28,8 @@ pub fn process_spikes(
 
 pub fn detect_player_collide_with_spike(
     mut colllision_event_reader: EventReader<CollisionEvent>,
-    player_query: Query<Entity, With<Player>>,
+    mut player_query: Query<(Entity, &mut Player), With<Player>>,
     spike_query: Query<Entity, With<Spike>>,
-    mut player_dead_event_writer: EventWriter<PlayerDeadEvent>,
 ) {
     for collision_event in colllision_event_reader.read() {
         let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
@@ -44,12 +43,13 @@ pub fn detect_player_collide_with_spike(
             continue;
         }
 
-        let is_entities_player = player_query
-            .iter()
-            .any(|player| player == first_entity || player == second_entity);
-        if !is_entities_player {
+        let Some(mut player) = player_query
+            .iter_mut()
+            .find(|(entity, _)| *entity == first_entity || *entity == second_entity)
+        else {
             continue;
-        }
-        player_dead_event_writer.write(PlayerDeadEvent);
+        };
+
+        player.1.state = PlayerState::Dead;
     }
 }

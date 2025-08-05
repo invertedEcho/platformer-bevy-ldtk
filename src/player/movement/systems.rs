@@ -1,43 +1,48 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::player::components::{Player, PlayerDirection};
+use crate::player::components::{Player, PlayerDirection, PlayerState};
 
-use super::{PLAYER_JUMP_NORMAL, PLAYER_SPEED, states::PlayerMovementType};
+use super::{PLAYER_JUMP_NORMAL, PLAYER_SPEED};
 
 pub fn player_movement(
     input: Res<ButtonInput<KeyCode>>,
     mut player_query: Query<(&mut Velocity, &mut Player), With<Player>>,
-    current_player_movement_type: Res<State<PlayerMovementType>>,
-    mut next_player_movement_type: ResMut<NextState<PlayerMovementType>>,
 ) {
     for (mut velocity, mut player) in player_query.iter_mut() {
-        if !player.on_horizontal_moving_platform {
-            velocity.linvel.x = 0.0;
+        if player.state == PlayerState::Dead {
+            continue;
         }
 
-        let current_player_movement_type = current_player_movement_type.get();
-        if *current_player_movement_type == PlayerMovementType::BackwardsRun
-            || *current_player_movement_type == PlayerMovementType::BackwardsIdle
-        {
-            next_player_movement_type.set(PlayerMovementType::BackwardsIdle);
-        } else if *current_player_movement_type != PlayerMovementType::Jump {
-            next_player_movement_type.set(PlayerMovementType::ForwardIdle);
-        }
         if input.pressed(KeyCode::KeyD) {
             velocity.linvel.x = 1.0 * PLAYER_SPEED;
-            next_player_movement_type.set(PlayerMovementType::ForwardRun);
-            player.direction = PlayerDirection::Forward;
+            if player.direction != PlayerDirection::Forward {
+                player.direction = PlayerDirection::Forward;
+            }
+            if player.state != PlayerState::Run {
+                player.state = PlayerState::Run;
+            }
         }
         if input.pressed(KeyCode::KeyA) {
             velocity.linvel.x = -1.0 * PLAYER_SPEED;
-            next_player_movement_type.set(PlayerMovementType::BackwardsRun);
-            player.direction = PlayerDirection::Backwards;
+            if player.direction != PlayerDirection::Backwards {
+                player.direction = PlayerDirection::Backwards;
+            }
+            if player.state != PlayerState::Run {
+                player.state = PlayerState::Run;
+            }
         }
         if input.just_pressed(KeyCode::Space) && !player.jumping {
             velocity.linvel.y = PLAYER_JUMP_NORMAL;
             player.jumping = true;
-            next_player_movement_type.set(PlayerMovementType::Jump);
+            player.state = PlayerState::Jump;
+        }
+        let player_just_stopped_moving = input.just_released(KeyCode::KeyD)
+            || input.just_released(KeyCode::KeyA)
+            || input.just_released(KeyCode::Space);
+        if player_just_stopped_moving {
+            player.state = PlayerState::Idle;
+            velocity.linvel.x = 0.0;
         }
     }
 }

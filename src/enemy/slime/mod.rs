@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use components::{Slime, SlimeBundle};
-use systems::{patrol_slimes, setup_slimes, stop_slime_patroling};
+use systems::{patrol_slimes, setup_slimes};
 
-use crate::{common::systems::animate_generic_sprite, player::states::PlayerState};
+use crate::common::systems::animate_generic_sprite;
 
 mod components;
 mod systems;
@@ -17,9 +17,8 @@ impl Plugin for SlimePlugin {
         app.register_ldtk_entity::<SlimeBundle>("Slime")
             .add_systems(
                 Update,
-                (setup_slimes, patrol_slimes, animate_generic_sprite::<Slime>)
-                    .run_if(in_state(PlayerState::Alive)),
-            )
-            .add_systems(OnEnter(PlayerState::Respawning), stop_slime_patroling);
+                (setup_slimes, patrol_slimes, animate_generic_sprite::<Slime>),
+            );
+        // .add_systems(OnEnter(PlayerState::Respawning), stop_slime_patroling);
     }
 }
