@@ -4,6 +4,7 @@ use crate::{
     TILE_SIZE,
     common::components::{AnimationTimer, TextureAtlasIndices},
     enemy::components::Enemy,
+    player::components::{Player, PlayerState},
 };
 
 use super::{
@@ -95,8 +96,16 @@ pub fn patrol_slimes(
         ),
         With<Slime>,
     >,
+    player_query: Query<&Player>,
 ) {
     for (entity_instance, transform, mut velocity, mut patrol, mut sprite) in slimes_query {
+        for player in player_query {
+            if player.state == PlayerState::Dead {
+                info!("player state is dead, setting velocity to 0");
+                velocity.linvel.x = 0.0;
+                return;
+            }
+        }
         let patrol_points: Vec<&IVec2> = entity_instance
             .iter_points_field("patrol")
             .expect("patrol field should be correctly typed")

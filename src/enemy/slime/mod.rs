@@ -19,6 +19,5 @@ impl Plugin for SlimePlugin {
                 Update,
                 (setup_slimes, patrol_slimes, animate_generic_sprite::<Slime>),
             );
-        // .add_systems(OnEnter(PlayerState::Respawning), stop_slime_patroling);
     }
 }
