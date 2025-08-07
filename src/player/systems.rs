@@ -4,11 +4,11 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     HALF_TILE_SIZE, TILE_SIZE, common::components::AnimationTimer,
-    player::components::PlayerDeadAnimationTimer,
+    ground_detection::components::GroundDetection, player::components::PlayerDeadAnimationTimer,
 };
 
 use super::{
-    components::Player,
+    components::{Player, PlayerState},
     visual::{PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES, PLAYER_IDLE_ANIM_TILESET_PATH},
 };
 
@@ -27,6 +27,7 @@ pub fn setup_player(
         let texture = asset_server.load(PLAYER_IDLE_ANIM_TILESET_PATH);
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
         let texture_atlas_layout: Handle<TextureAtlasLayout> = texture_atlas_layouts.add(layout);
+
         commands.entity(entity).insert((
             Sprite::from_atlas_image(
                 texture,
@@ -39,7 +40,7 @@ pub fn setup_player(
             AnimationTimer::default(),
             RigidBody::Dynamic,
             // radius increases half_height
-            // we need to substract RADIUS + 1 from half_height to get correct size
+            // we need to substract RADIUS from half_height to get correct size
             Collider::capsule_y(
                 HALF_TILE_SIZE - PLAYER_CAPSULE_RADIUS,
                 PLAYER_CAPSULE_RADIUS,
@@ -53,6 +54,7 @@ pub fn setup_player(
                 coefficient: 0.0,
                 combine_rule: CoefficientCombineRule::Min,
             },
+            GroundDetection { on_ground: true },
         ));
     }
 }
@@ -63,9 +65,10 @@ pub fn tick_player_dead_animation_timer(
     player_query: Query<(Entity, &mut Player, &mut PlayerDeadAnimationTimer), With<Player>>,
     ldtk_projects: Query<Entity, With<LdtkProjectHandle>>,
 ) {
-    for (entity, player, mut player_dead_animation_timer) in player_query {
+    for (entity, mut player, mut player_dead_animation_timer) in player_query {
         player_dead_animation_timer.tick(time.delta());
         if player_dead_animation_timer.finished() {
+            player.state = PlayerState::Idle;
             if let Some(current_save_point) = player.current_save_point {
                 info!("Found current save point. Despawning player and spawning new one.");
                 // Note that we only need to spawn player with correct transform, as our
@@ -79,7 +82,7 @@ pub fn tick_player_dead_animation_timer(
                     Transform::from_xyz(
                         current_save_point.x + TILE_SIZE,
                         current_save_point.y,
-                        current_save_point.z,
+                        1.0,
                     ),
                 ));
             } else {

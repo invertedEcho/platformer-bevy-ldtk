@@ -67,10 +67,10 @@ fn main() {
         .add_plugins(ParallaxBackgroundPlugin)
         .add_plugins(GroundDetectionPlugin)
         .add_systems(Startup, setup)
-        .insert_resource(LevelSelection::iid(LEVEL_IIDS[2]));
-    if cfg!(debug_assertions) {
-        app.add_plugins(RapierDebugRenderPlugin::default());
-    }
+        .insert_resource(LevelSelection::iid(LEVEL_IIDS[0]));
+    // if cfg!(debug_assertions) {
+    //     app.add_plugins(RapierDebugRenderPlugin::default());
+    // }
     app.run();
 }
 

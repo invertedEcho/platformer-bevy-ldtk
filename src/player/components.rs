@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::ground_detection::components::GroundDetectionSensor;
+use crate::ground_detection::components::GroundDetection;
 
 #[derive(Debug, Default, PartialEq)]
 pub enum PlayerDirection {
@@ -31,7 +31,7 @@ pub struct Player {
 #[from_entity_instance]
 pub struct PlayerBundle {
     player: Player,
-    ground_detection: GroundDetectionSensor,
+    ground_detection: GroundDetection,
 }
 
 #[derive(Component, Deref, DerefMut)]
