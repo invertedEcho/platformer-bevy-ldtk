@@ -152,7 +152,6 @@ pub fn patrol_slimes(
                 if player.state == PlayerState::Dead {
                     velocity_slime_collider.linvel.x = 0.0;
                     velocity_slime.linvel.x = 0.0;
-                    info!("set velocity of both to 0 and returning.");
                     return;
                 }
             }
