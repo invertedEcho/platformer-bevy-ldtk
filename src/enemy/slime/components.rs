@@ -26,3 +26,10 @@ impl Default for Patrol {
         }
     }
 }
+
+/// A seperate component for the collider of a slime, as the animated sprite bobbs, and we want
+/// that reflected on the collider too
+#[derive(Component)]
+pub struct SlimeCollider {
+    pub slime_entity: Entity,
+}
