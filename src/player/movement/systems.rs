@@ -13,6 +13,9 @@ pub fn player_movement(
     mut player_query: Query<(&mut Velocity, &mut Player, &mut GroundDetection), With<Player>>,
 ) {
     for (mut velocity, mut player, mut ground_detection) in player_query.iter_mut() {
+        if player.state == PlayerState::Dead {
+            continue;
+        }
         if input.pressed(KeyCode::KeyD) {
             velocity.linvel.x = 1.0 * PLAYER_SPEED;
             if player.direction != PlayerDirection::Forward {
