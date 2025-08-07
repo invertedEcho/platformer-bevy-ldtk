@@ -101,7 +101,6 @@ pub fn patrol_slimes(
     for (entity_instance, transform, mut velocity, mut patrol, mut sprite) in slimes_query {
         for player in player_query {
             if player.state == PlayerState::Dead {
-                info!("player state is dead, setting velocity to 0");
                 velocity.linvel.x = 0.0;
                 return;
             }
@@ -146,11 +145,5 @@ pub fn patrol_slimes(
                 patrol.forward = true;
             }
         }
-    }
-}
-
-pub fn stop_slime_patroling(slimes_query: Query<&mut Velocity, With<Slime>>) {
-    for mut slime_velocity in slimes_query {
-        slime_velocity.linvel.x = 0.0;
     }
 }

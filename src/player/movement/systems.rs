@@ -1,15 +1,18 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::player::components::{Player, PlayerDirection, PlayerState};
+use crate::{
+    ground_detection::components::GroundDetectionSensor,
+    player::components::{Player, PlayerDirection, PlayerState},
+};
 
 use super::{PLAYER_JUMP_NORMAL, PLAYER_SPEED};
 
 pub fn player_movement(
     input: Res<ButtonInput<KeyCode>>,
-    mut player_query: Query<(&mut Velocity, &mut Player), With<Player>>,
+    mut player_query: Query<(&mut Velocity, &mut Player, &GroundDetectionSensor), With<Player>>,
 ) {
-    for (mut velocity, mut player) in player_query.iter_mut() {
+    for (mut velocity, mut player, ground_detection_sensor) in player_query.iter_mut() {
         if player.state == PlayerState::Dead {
             continue;
         }
@@ -32,9 +35,8 @@ pub fn player_movement(
                 player.state = PlayerState::Run;
             }
         }
-        if input.just_pressed(KeyCode::Space) && !player.jumping {
+        if input.just_pressed(KeyCode::Space) && ground_detection_sensor.on_ground {
             velocity.linvel.y = PLAYER_JUMP_NORMAL;
-            player.jumping = true;
             player.state = PlayerState::Jump;
         }
         let player_just_stopped_moving = input.just_released(KeyCode::KeyD)

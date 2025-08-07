@@ -15,12 +15,12 @@ const COIN_ANIMATION_INDICES: TextureAtlasIndices = TextureAtlasIndices { first:
 pub fn process_coins(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    coin_query: Query<(Entity, &Transform), Added<Coin>>,
+    coin_query: Query<Entity, Added<Coin>>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     let half_tile_size = (COIN_TILE_SIZE / 2) as f32;
 
-    for (entity, transform) in coin_query {
+    for entity in coin_query {
         let coin_texture = asset_server.load(COIN_SPRITE_TILESET);
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(8), 6, 1, None, None);
         let texture_atlas_layout = texture_atlas_layouts.add(layout);
@@ -33,7 +33,6 @@ pub fn process_coins(
                     index: COIN_ANIMATION_INDICES.first,
                 },
             ),
-            *transform,
             Collider::cuboid(half_tile_size, half_tile_size),
             ActiveEvents::COLLISION_EVENTS,
             AnimationTimer::default(),

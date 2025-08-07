@@ -23,10 +23,8 @@ pub fn handle_player_change_visual(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     for (entity, player, mut sprite, mut texture_atlas_indices) in player_query {
-        info!("Player has changed: {:?}", player);
         match player.state {
             PlayerState::Idle => {
-                info!("setting idle sprite");
                 let texture = asset_server.load(PLAYER_IDLE_ANIM_TILESET_PATH);
                 let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
                 let texture_atlas_layout = texture_atlas_layouts.add(layout);
@@ -42,7 +40,6 @@ pub fn handle_player_change_visual(
                 *texture_atlas_indices = PLAYER_IDLE_ANIM_TEXTURE_ATLAS_INDICES;
             }
             PlayerState::Run => {
-                info!("setting run sprite");
                 let texture = asset_server.load(PLAYER_RUN_ANIM_TILESET_PATH);
                 let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
                 let texture_atlas_layout = texture_atlas_layouts.add(layout);
@@ -58,7 +55,6 @@ pub fn handle_player_change_visual(
                 *texture_atlas_indices = PLAYER_RUN_ANIM_TEXTURE_ATLAS_INDICES;
             }
             PlayerState::Jump => {
-                info!("setting jump up sprite");
                 let texture = asset_server.load(PLAYER_JUMP_UP_ANIM_STRIP_PATH);
                 let texture_atlas_layout =
                     TextureAtlasLayout::from_grid(UVec2::splat(16), 3, 1, None, None);

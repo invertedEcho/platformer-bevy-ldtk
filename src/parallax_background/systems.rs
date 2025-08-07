@@ -9,7 +9,7 @@ use super::{
     PARALLAX_BACKGROUND_HEIGHT, PARALLAX_BACKGROUND_LAYERS, components::ParallaxBackground,
 };
 
-pub const Z_INDEX: [f32; 6] = [1.0, 1.1, 1.2, 1.3, 1.4, 1.5];
+pub const Z_INDEX: [f32; 6] = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5];
 
 pub fn setup_parallax_background(
     asset_server: Res<AssetServer>,

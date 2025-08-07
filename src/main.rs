@@ -6,6 +6,7 @@ use camera::CameraPlugin;
 use coins::CoinPlugin;
 use enemy::EnemyPlugin;
 use game_flow::GameFlowPlugin;
+use ground_detection::GroundDetectionPlugin;
 use hud::HudPlugin;
 use parallax_background::ParallaxBackgroundPlugin;
 use player::PlayerPlugin;
@@ -24,6 +25,7 @@ pub mod common;
 mod enemy;
 pub mod font;
 mod game_flow;
+mod ground_detection;
 mod hud;
 pub mod parallax_background;
 pub mod player;
@@ -40,7 +42,6 @@ const LEVEL_IIDS: [&str; 3] = [
 ];
 
 // TODO: Investigate TextureAtlasLayouts
-// TODO: Define all z-index we use
 
 fn main() {
     let mut app = App::new();
@@ -64,11 +65,12 @@ fn main() {
         .add_plugins(SpikePlugin)
         .add_plugins(MovingPlatformPlugin)
         .add_plugins(ParallaxBackgroundPlugin)
+        .add_plugins(GroundDetectionPlugin)
         .add_systems(Startup, setup)
-        .insert_resource(LevelSelection::iid(LEVEL_IIDS[0]));
-    // if cfg!(debug_assertions) {
-    //     app.add_plugins(RapierDebugRenderPlugin::default());
-    // }
+        .insert_resource(LevelSelection::iid(LEVEL_IIDS[2]));
+    if cfg!(debug_assertions) {
+        app.add_plugins(RapierDebugRenderPlugin::default());
+    }
     app.run();
 }
 

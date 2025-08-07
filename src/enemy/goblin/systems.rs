@@ -108,7 +108,6 @@ pub fn update_goblin_sprite_if_changed(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     for (goblin_entity, goblin, mut goblin_sprite) in goblin_query {
-        info!("Goblin has changed! state is now: {:?}", goblin.state);
         match goblin.state {
             GoblinState::Idle => {
                 goblin_sprite.image = asset_server.load(GOBLIN_IDLE_ANIM_STRIP_PATH);

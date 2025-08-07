@@ -18,17 +18,15 @@ pub fn setup_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-    new_players: Query<(Entity, &mut Transform), Added<Player>>,
+    new_players: Query<Entity, Added<Player>>,
 ) {
-    for (entity, mut transform) in new_players {
+    for entity in new_players {
         info!(
             "Setting up player. This means a new entity was spawned that contains the Player component."
         );
         let texture = asset_server.load(PLAYER_IDLE_ANIM_TILESET_PATH);
         let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 6, 1, None, None);
-        let texture_atlas_layout = texture_atlas_layouts.add(layout);
-        transform.translation.z = 4.0;
-
+        let texture_atlas_layout: Handle<TextureAtlasLayout> = texture_atlas_layouts.add(layout);
         commands.entity(entity).insert((
             Sprite::from_atlas_image(
                 texture,

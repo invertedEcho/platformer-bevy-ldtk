@@ -9,7 +9,7 @@ use crate::{HALF_TILE_SIZE, TILE_SIZE};
 use super::components::Wall;
 
 // We could even further optimize this, by combining rows together, but its fine for now
-fn preprocess_grid_coords(wall_grid_coords: Vec<&GridCoords>) -> HashMap<i32, Vec<Vec<i32>>> {
+fn preprocess_grid_coords(wall_grid_coords: &Vec<&GridCoords>) -> HashMap<i32, Vec<Vec<i32>>> {
     // Create map where key is unique y coordinate and value are all x coordinates of that y
     // coordinate
     let mut all_x_coords_of_y: HashMap<i32, Vec<i32>> = HashMap::new();
@@ -58,7 +58,7 @@ pub fn spawn_wall_colliders(
     walls: Query<&GridCoords, Added<Wall>>,
     level_query: Query<(Entity, &LevelIid)>,
 ) {
-    let processed_wall_grid_coords = preprocess_grid_coords(walls.iter().collect());
+    let processed_wall_grid_coords = preprocess_grid_coords(&walls.iter().collect());
 
     for (y_coordinate, x_coordinates_nested) in processed_wall_grid_coords {
         for x_coordinates in x_coordinates_nested {
@@ -77,13 +77,11 @@ pub fn spawn_wall_colliders(
             let (level_entity, _) = level_query.single().expect("can get current level");
             commands.entity(level_entity).with_children(|level| {
                 level.spawn((
-                    Transform {
-                        translation: Vec3::new(world_x, world_y as f32, 0.0),
-                        ..Default::default()
-                    },
+                    Transform::from_xyz(world_x, world_y, 0.0),
                     Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
                     Wall,
                     Friction::new(1.0),
+                    ActiveEvents::COLLISION_EVENTS,
                 ));
             });
         }
