@@ -22,8 +22,7 @@ impl Plugin for TutorialPlugin {
                     spawn_text_for_tutorial_text,
                     spawn_keyboard_tiles,
                     change_keyboard_tiles,
-                )
-                    .run_if(resource_equals(LevelSelection::iid(LEVEL_IIDS[0]))),
+                ), // .run_if(resource_equals(LevelSelection::iid(LEVEL_IIDS[0]))),
             );
     }
 }

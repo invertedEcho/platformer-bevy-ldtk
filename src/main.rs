@@ -8,8 +8,10 @@ use enemy::EnemyPlugin;
 use game_flow::GameFlowPlugin;
 use ground_detection::GroundDetectionPlugin;
 use hud::HudPlugin;
+use main_menu::MainMenuPlugin;
 use parallax_background::ParallaxBackgroundPlugin;
 use player::PlayerPlugin;
+use state::GameState;
 use world::ground::GroundPlugin;
 use world::moving_platform::MovingPlatformPlugin;
 use world::mushroom::MushroomPlugin;
@@ -27,8 +29,10 @@ pub mod font;
 mod game_flow;
 mod ground_detection;
 mod hud;
+mod main_menu;
 pub mod parallax_background;
 pub mod player;
+mod state;
 pub mod utils;
 pub mod world;
 
@@ -45,29 +49,41 @@ const LEVEL_IIDS: [&str; 3] = [
 
 fn main() {
     let mut app = App::new();
-    app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
-        .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-        // .add_plugins(bevy::diagnostic::EntityCountDiagnosticsPlugin)
-        .add_plugins(LogDiagnosticsPlugin::default())
-        .add_plugins(LdtkPlugin)
-        .add_plugins(CameraPlugin)
-        .add_plugins(PlayerPlugin)
-        .add_plugins(WallPlugin)
-        .add_plugins(OneWayPlatformPlugin)
-        .add_plugins(GroundPlugin)
-        .add_plugins(GameFlowPlugin)
-        .add_plugins(CoinPlugin)
-        .add_plugins(HudPlugin)
-        .add_plugins(MushroomPlugin)
-        .add_plugins(TutorialPlugin)
-        .add_plugins(EnemyPlugin)
-        .add_plugins(SavePointPlugin)
-        .add_plugins(SpikePlugin)
-        .add_plugins(MovingPlatformPlugin)
-        .add_plugins(ParallaxBackgroundPlugin)
-        .add_plugins(GroundDetectionPlugin)
-        .add_systems(Startup, setup)
-        .insert_resource(LevelSelection::iid(LEVEL_IIDS[1]));
+    app.add_plugins(
+        DefaultPlugins
+            .set(ImagePlugin::default_nearest())
+            .set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: "A platformer".into(),
+                    ..default()
+                }),
+                ..default()
+            }),
+    )
+    .init_state::<GameState>()
+    .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+    // .add_plugins(bevy::diagnostic::EntityCountDiagnosticsPlugin)
+    .add_plugins(LogDiagnosticsPlugin::default())
+    .add_plugins(LdtkPlugin)
+    .add_plugins(CameraPlugin)
+    .add_plugins(PlayerPlugin)
+    .add_plugins(WallPlugin)
+    .add_plugins(OneWayPlatformPlugin)
+    .add_plugins(GroundPlugin)
+    .add_plugins(GameFlowPlugin)
+    .add_plugins(CoinPlugin)
+    .add_plugins(HudPlugin)
+    .add_plugins(MushroomPlugin)
+    .add_plugins(TutorialPlugin)
+    .add_plugins(EnemyPlugin)
+    .add_plugins(SavePointPlugin)
+    .add_plugins(SpikePlugin)
+    .add_plugins(MovingPlatformPlugin)
+    .add_plugins(ParallaxBackgroundPlugin)
+    .add_plugins(GroundDetectionPlugin)
+    .add_plugins(MainMenuPlugin)
+    .add_systems(Startup, setup);
+    // .insert_resource(LevelSelection::iid(LEVEL_IIDS[1]));
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());
     }
