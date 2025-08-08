@@ -4,7 +4,7 @@ use components::{Coin, CoinBundle};
 use resources::CoinResource;
 use systems::{coin_collision_detection, process_coins};
 
-use crate::common::systems::animate_generic_sprite;
+use crate::{common::systems::animate_generic_sprite, state::GameState};
 
 mod components;
 pub mod resources;
@@ -22,7 +22,8 @@ impl Plugin for CoinPlugin {
                     process_coins,
                     animate_generic_sprite::<Coin>,
                     coin_collision_detection,
-                ),
+                )
+                    .run_if(in_state(GameState::InGame)),
             );
     }
 }

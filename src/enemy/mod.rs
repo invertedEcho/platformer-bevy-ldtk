@@ -5,7 +5,10 @@ use goblin::GoblinPlugin;
 use slime::SlimePlugin;
 use systems::{detect_enemy_collision_with_player, keep_enemy_triggered_above_enemy_head};
 
-use crate::common::{components::TextureAtlasIndices, systems::animate_generic_sprite};
+use crate::{
+    common::{components::TextureAtlasIndices, systems::animate_generic_sprite},
+    state::GameState,
+};
 
 pub mod components;
 pub mod events;
@@ -30,7 +33,8 @@ impl Plugin for EnemyPlugin {
                     detect_enemy_collision_with_player,
                     animate_generic_sprite::<EnemyTriggered>,
                     keep_enemy_triggered_above_enemy_head,
-                ),
+                )
+                    .run_if(in_state(GameState::InGame)),
             );
     }
 }

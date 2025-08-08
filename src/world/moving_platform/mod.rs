@@ -5,6 +5,8 @@ use systems::{
     move_moving_platform, player_collides_with_moving_platform, process_moving_platforms,
 };
 
+use crate::state::GameState;
+
 pub mod components;
 mod systems;
 
@@ -33,7 +35,8 @@ impl Plugin for MovingPlatformPlugin {
                     process_moving_platforms,
                     move_moving_platform,
                     player_collides_with_moving_platform,
-                ),
+                )
+                    .run_if(in_state(GameState::InGame)),
             );
     }
 }

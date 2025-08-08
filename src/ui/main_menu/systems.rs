@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::LevelSelection;
 
-use crate::{state::GameState, LEVEL_IIDS};
+use crate::{LEVEL_IIDS, state::GameState};
 
 use super::components::MainMenuRoot;
 
@@ -61,6 +61,7 @@ pub fn spawn_main_menu(mut commands: Commands) {
         });
 }
 
+// TODO: this handles both interactions from main menu and pause menu
 pub fn handle_interaction(
     mut commands: Commands,
     interaction_query: Query<(&Interaction, &Children), (Changed<Interaction>, With<Button>)>,
@@ -78,9 +79,11 @@ pub fn handle_interaction(
                     // TODO: this is horrible, dont match by text
                     if **text == "Play" {
                         commands.insert_resource(LevelSelection::iid(LEVEL_IIDS[0]));
-                        next_game_state.set(GameState::Ingame);
+                        next_game_state.set(GameState::InGame);
                     } else if **text == "Quit" {
                         app_exit_writer.write(AppExit::Success);
+                    } else if **text == "Resume" {
+                        next_game_state.set(GameState::InGame);
                     }
                 }
             }

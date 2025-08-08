@@ -1,4 +1,4 @@
-use crate::player::movement::systems::player_movement;
+use crate::{player::movement::systems::player_movement, state::GameState};
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use components::{Player, PlayerBundle};
@@ -25,7 +25,8 @@ impl Plugin for PlayerPlugin {
                     player_movement,
                     tick_player_dead_animation_timer,
                     handle_player_change_visual,
-                ),
+                )
+                    .run_if(in_state(GameState::InGame)),
             );
     }
 }

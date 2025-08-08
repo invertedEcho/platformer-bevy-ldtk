@@ -3,6 +3,8 @@ use bevy_ecs_ldtk::prelude::*;
 use components::SlimeBundle;
 use systems::{animate_and_move_collider_slime, patrol_slimes, setup_slimes};
 
+use crate::state::GameState;
+
 pub mod components;
 mod systems;
 
@@ -15,7 +17,8 @@ impl Plugin for SlimePlugin {
         app.register_ldtk_entity::<SlimeBundle>("Slime")
             .add_systems(
                 Update,
-                (setup_slimes, animate_and_move_collider_slime, patrol_slimes),
+                (setup_slimes, animate_and_move_collider_slime, patrol_slimes)
+                    .run_if(in_state(GameState::InGame)),
             );
     }
 }

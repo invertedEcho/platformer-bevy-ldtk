@@ -23,7 +23,7 @@ impl Plugin for GameFlowPlugin {
                     animate_generic_sprite::<NextLevelOrb>,
                     detect_player_next_level_orb_collision,
                 )
-                    .run_if(in_state(GameState::Ingame)),
+                    .run_if(in_state(GameState::InGame)),
             );
     }
 }

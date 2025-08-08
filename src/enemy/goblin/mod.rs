@@ -6,7 +6,10 @@ use systems::{
     setup_goblins, update_goblin_sprite_if_changed,
 };
 
-use crate::common::{components::TextureAtlasIndices, systems::animate_generic_sprite};
+use crate::{
+    common::{components::TextureAtlasIndices, systems::animate_generic_sprite},
+    state::GameState,
+};
 
 mod components;
 mod systems;
@@ -33,7 +36,8 @@ impl Plugin for GoblinPlugin {
                     update_goblin_sprite_if_changed,
                     handle_goblin_triggered_event,
                     handle_enemy_triggered_timer,
-                ),
+                )
+                    .run_if(in_state(GameState::InGame)),
             );
     }
 }

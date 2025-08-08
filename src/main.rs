@@ -8,10 +8,11 @@ use enemy::EnemyPlugin;
 use game_flow::GameFlowPlugin;
 use ground_detection::GroundDetectionPlugin;
 use hud::HudPlugin;
-use main_menu::MainMenuPlugin;
 use parallax_background::ParallaxBackgroundPlugin;
 use player::PlayerPlugin;
 use state::GameState;
+use ui::main_menu::MainMenuPlugin;
+use ui::pause_menu::PauseMenuPlugin;
 use world::ground::GroundPlugin;
 use world::moving_platform::MovingPlatformPlugin;
 use world::mushroom::MushroomPlugin;
@@ -29,10 +30,10 @@ pub mod font;
 mod game_flow;
 mod ground_detection;
 mod hud;
-mod main_menu;
 pub mod parallax_background;
 pub mod player;
 mod state;
+mod ui;
 pub mod utils;
 pub mod world;
 
@@ -46,6 +47,8 @@ const LEVEL_IIDS: [&str; 3] = [
 ];
 
 // TODO: Investigate TextureAtlasLayouts
+// TODO: Check whether theres a better way than just adding a run_if(in_state(GameState::Running))
+// basically in all plugins
 
 fn main() {
     let mut app = App::new();
@@ -82,8 +85,8 @@ fn main() {
     .add_plugins(ParallaxBackgroundPlugin)
     .add_plugins(GroundDetectionPlugin)
     .add_plugins(MainMenuPlugin)
+    .add_plugins(PauseMenuPlugin)
     .add_systems(Startup, setup);
-    // .insert_resource(LevelSelection::iid(LEVEL_IIDS[1]));
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());
     }
