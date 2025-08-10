@@ -10,7 +10,11 @@ const COIN_HUD_ASSET_PATH: &str = "hud elements/coins_hud.png";
 const NORMAL_HUD_GAP: Val = Val::Px(2.0);
 const ROOT_UI_PADDING: Val = Val::Px(4.0);
 
-pub fn spawn_hud(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn spawn_hud(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    coin_resource: Res<CoinResource>,
+) {
     let font: Handle<Font> = asset_server.load(FONT_PATH);
 
     commands
@@ -62,7 +66,7 @@ pub fn spawn_hud(mut commands: Commands, asset_server: Res<AssetServer>) {
                     });
                     parent.spawn((
                         CoinCounter,
-                        Text::new("0"),
+                        Text::new(coin_resource.count.to_string()),
                         TextFont::from_font(font).with_font_size(12.0),
                     ));
                 });
@@ -80,5 +84,9 @@ pub fn update_coin_counter(
         error!("Failed to find coin counter");
         return;
     };
+    info!(
+        "coin_counter from HUD was updated to reflect the updated coin_resource. New count: {}",
+        coin_resource.count
+    );
     **coin_counter = coin_resource.count.to_string();
 }
