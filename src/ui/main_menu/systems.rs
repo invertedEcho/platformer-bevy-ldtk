@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::LevelSelection;
 
-use crate::{LEVEL_IIDS, state::GameState};
+use crate::{game_save::utils::get_or_create_game_save, state::GameState};
 
 use super::components::MainMenuRoot;
 
@@ -78,7 +78,8 @@ pub fn handle_interaction(
                 Interaction::Pressed => {
                     // TODO: this is horrible, dont match by text
                     if **text == "Play" {
-                        commands.insert_resource(LevelSelection::iid(LEVEL_IIDS[0]));
+                        let current_game_save = get_or_create_game_save();
+                        commands.insert_resource(LevelSelection::iid(current_game_save.level_iid));
                         next_game_state.set(GameState::InGame);
                     } else if **text == "Quit" {
                         app_exit_writer.write(AppExit::Success);

@@ -6,6 +6,7 @@ use camera::CameraPlugin;
 use coins::CoinPlugin;
 use enemy::EnemyPlugin;
 use game_flow::GameFlowPlugin;
+use game_save::GameSavePlugin;
 use ground_detection::GroundDetectionPlugin;
 use hud::HudPlugin;
 use parallax_background::ParallaxBackgroundPlugin;
@@ -28,6 +29,7 @@ pub mod common;
 mod enemy;
 pub mod font;
 mod game_flow;
+mod game_save;
 mod ground_detection;
 mod hud;
 pub mod parallax_background;
@@ -40,11 +42,7 @@ pub mod world;
 pub const TILE_SIZE: f32 = 16.0;
 pub const HALF_TILE_SIZE: f32 = TILE_SIZE / 2.0;
 
-const LEVEL_IIDS: [&str; 3] = [
-    "c2d47272-3740-11f0-a891-85a44477d8cd",
-    "dd949e20-5e50-11f0-a1b6-870a0a448448",
-    "8c4e3870-5e50-11f0-96e5-652a67f12f06",
-];
+const INITIAL_LEVEL_IID: &str = "c2d47272-3740-11f0-a891-85a44477d8cd";
 
 // TODO: Investigate TextureAtlasLayouts
 // TODO: Check whether theres a better way than just adding a run_if(in_state(GameState::Running))
@@ -86,6 +84,7 @@ fn main() {
     .add_plugins(GroundDetectionPlugin)
     .add_plugins(MainMenuPlugin)
     .add_plugins(PauseMenuPlugin)
+    .add_plugins(GameSavePlugin)
     .add_systems(Startup, setup);
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());

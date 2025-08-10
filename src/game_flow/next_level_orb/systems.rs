@@ -1,3 +1,6 @@
+use crate::coins::resources::CoinResource;
+use crate::game_save::GameSave;
+use crate::game_save::utils::update_game_save;
 use crate::{
     HALF_TILE_SIZE,
     common::components::{AnimationTimer, TextureAtlasIndices},
@@ -47,6 +50,7 @@ pub fn detect_player_next_level_orb_collision(
     player_query: Query<Entity, With<Player>>,
     next_level_orb_query: Query<(Entity, &EntityInstance), With<NextLevelOrb>>,
     mut level_selection: ResMut<LevelSelection>,
+    coin_resource: Res<CoinResource>,
 ) {
     for collision_event in collision_event_reader.read() {
         let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
@@ -81,5 +85,11 @@ pub fn detect_player_next_level_orb_collision(
         info!("target level iid: {}", target_level_iid);
 
         *level_selection = LevelSelection::iid(target_level_iid);
+
+        let new_game_save = GameSave {
+            level_iid: target_level_iid.clone(),
+            player_coins: coin_resource.count,
+        };
+        update_game_save(&mut commands, new_game_save);
     }
 }
