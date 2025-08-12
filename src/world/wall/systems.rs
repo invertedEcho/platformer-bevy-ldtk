@@ -80,7 +80,7 @@ pub fn spawn_wall_colliders(
                     Transform::from_xyz(world_x, world_y, 0.0),
                     Collider::cuboid(cuboid_half_x, HALF_TILE_SIZE),
                     Wall,
-                    Friction::new(1.0),
+                    Friction::new(0.0),
                     ActiveEvents::COLLISION_EVENTS,
                 ));
             });

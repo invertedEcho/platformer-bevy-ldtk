@@ -3,8 +3,8 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 use crate::{
-    HALF_TILE_SIZE, TILE_SIZE, common::components::AnimationTimer,
-    ground_detection::components::GroundDetection, player::components::PlayerDeadAnimationTimer,
+    common::components::AnimationTimer, ground_detection::components::GroundDetection,
+    player::components::PlayerDeadAnimationTimer, HALF_TILE_SIZE, TILE_SIZE,
 };
 
 use super::{
