@@ -29,7 +29,7 @@ pub fn process_next_level_orbs(
 
     for next_level_orb in next_level_orb_query {
         commands.entity(next_level_orb).insert((
-            Collider::cuboid(HALF_TILE_SIZE, HALF_TILE_SIZE),
+            Collider::cuboid(HALF_TILE_SIZE / 2.0, HALF_TILE_SIZE / 2.0),
             Sprite::from_atlas_image(
                 texture.clone(),
                 TextureAtlas {
