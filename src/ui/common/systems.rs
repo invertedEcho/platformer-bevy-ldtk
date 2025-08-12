@@ -20,6 +20,7 @@ pub fn handle_button_interaction_hover(
 }
 
 pub fn handle_common_button_press(
+    mut app_exit_writer: EventWriter<AppExit>,
     interaction_query: Query<(&Interaction, &CommonUiButton), Changed<Interaction>>,
     mut next_game_state: ResMut<NextState<GameState>>,
 ) {
@@ -30,6 +31,9 @@ pub fn handle_common_button_press(
         match common_ui_button.button_type {
             CommonButtonType::BackToMainMenu => {
                 next_game_state.set(GameState::MainMenu);
+            }
+            CommonButtonType::Quit => {
+                app_exit_writer.write(AppExit::Success);
             }
         }
     }

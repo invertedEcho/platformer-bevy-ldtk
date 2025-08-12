@@ -40,7 +40,13 @@ pub fn spawn_pause_menu(mut commands: Commands) {
                 ))
                 .with_child(Text::new("Back to Main Menu"));
             parent
-                .spawn((Node { ..default() }, Button))
+                .spawn((
+                    Node { ..default() },
+                    Button,
+                    CommonUiButton {
+                        button_type: CommonButtonType::Quit,
+                    },
+                ))
                 .with_child(Text::new("Quit"));
         });
 }

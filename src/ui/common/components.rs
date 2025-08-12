@@ -7,4 +7,5 @@ pub struct CommonUiButton {
 
 pub enum CommonButtonType {
     BackToMainMenu,
+    Quit,
 }

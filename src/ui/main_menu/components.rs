@@ -12,5 +12,4 @@ pub struct MainMenuButton {
 pub enum MainMenuButtonType {
     Play,
     Settings,
-    Quit,
 }

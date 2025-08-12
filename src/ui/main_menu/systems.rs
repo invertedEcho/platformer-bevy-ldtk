@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::state::GameState;
+use crate::{
+    state::GameState,
+    ui::common::components::{CommonButtonType, CommonUiButton},
+};
 
 use super::components::{MainMenuButton, MainMenuButtonType, MainMenuRoot};
 
@@ -65,8 +68,8 @@ pub fn spawn_main_menu(mut commands: Commands) {
                         ..default()
                     },
                     Button,
-                    MainMenuButton {
-                        main_menu_button_type: MainMenuButtonType::Quit,
+                    CommonUiButton {
+                        button_type: CommonButtonType::Quit,
                     },
                 ))
                 .with_children(|parent| {
@@ -78,16 +81,12 @@ pub fn spawn_main_menu(mut commands: Commands) {
 pub fn handle_interaction_pressed(
     interaction_query: Query<(&Interaction, &MainMenuButton), Changed<Interaction>>,
     mut next_game_state: ResMut<NextState<GameState>>,
-    mut app_exit_writer: EventWriter<AppExit>,
 ) {
     for (interaction, main_menu_button) in interaction_query {
         match interaction {
             Interaction::Pressed => match main_menu_button.main_menu_button_type {
                 MainMenuButtonType::Play => next_game_state.set(GameState::InGame),
                 MainMenuButtonType::Settings => next_game_state.set(GameState::Settings),
-                MainMenuButtonType::Quit => {
-                    app_exit_writer.write(AppExit::Success);
-                }
             },
             _ => {}
         }
