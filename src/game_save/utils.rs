@@ -47,18 +47,20 @@ pub fn get_or_create_game_save() -> GameSave {
     }
 }
 
-pub fn update_game_save(commands: &mut Commands, new_game_save: GameSave) {
+pub fn update_game_save(new_game_save: GameSave) {
     let write_result = File::create(GAME_SAVE_FILE_PATH)
         .expect("Can create game save file")
         .write_all(&serde_json::to_vec(&new_game_save).expect("Can serialize to json string"));
 
     match write_result {
         Ok(()) => {
-            commands.spawn((
-                Text::new("Game Saved!"),
-                GameSaveTextTimer(Timer::from_seconds(3.0, TimerMode::Once)),
-            ));
-            println!("updated player coins to 5");
+            // TODO: reintroduce this by seperating it into a seperate system which reacts on an
+            // event, called smth like PostResetGameSaveEvent::Success
+            // commands.spawn((
+            //     Text::new("Game Saved!"),
+            //     GameSaveTextTimer(Timer::from_seconds(3.0, TimerMode::Once)),
+            // ));
+            info!("Sucessfully updated game save!");
         }
         Err(err) => {
             panic!("Failed to update game save: {}", err);
@@ -77,4 +79,8 @@ pub fn handle_game_save_text_timer(
             commands.entity(entity).despawn();
         }
     }
+}
+
+pub fn reset_game_save() {
+    update_game_save(GameSave::default());
 }

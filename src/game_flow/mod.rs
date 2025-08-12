@@ -8,8 +8,10 @@ use next_level_orb::{
     components::NextLevelOrb,
     systems::{detect_player_next_level_orb_collision, process_next_level_orbs},
 };
+use systems::handle_enter_main_menu_state;
 
 mod next_level_orb;
+mod systems;
 
 pub struct GameFlowPlugin;
 
@@ -24,6 +26,7 @@ impl Plugin for GameFlowPlugin {
                     detect_player_next_level_orb_collision,
                 )
                     .run_if(in_state(GameState::InGame)),
-            );
+            )
+            .add_systems(OnEnter(GameState::MainMenu), handle_enter_main_menu_state);
     }
 }

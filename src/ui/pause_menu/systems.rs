@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::state::GameState;
+use crate::{
+    state::GameState,
+    ui::common::components::{CommonButtonType, CommonUiButton},
+};
 
 use super::components::PauseMenuRoot;
 
@@ -20,14 +23,19 @@ pub fn spawn_pause_menu(mut commands: Commands) {
         .with_children(|parent| {
             parent
                 .spawn((Node { ..default() }, Button))
-                .with_children(|parent| {
-                    parent.spawn(Text::new("Resume"));
-                });
+                .with_child(Text::new("Resume"));
+            parent
+                .spawn((
+                    Node { ..default() },
+                    Button,
+                    CommonUiButton {
+                        button_type: CommonButtonType::BackToMainMenu,
+                    },
+                ))
+                .with_child(Text::new("Back to Main Menu"));
             parent
                 .spawn((Node { ..default() }, Button))
-                .with_children(|parent| {
-                    parent.spawn(Text::new("Quit"));
-                });
+                .with_child(Text::new("Quit"));
         });
 }
 

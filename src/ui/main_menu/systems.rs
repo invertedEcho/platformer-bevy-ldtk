@@ -34,18 +34,18 @@ pub fn spawn_main_menu(mut commands: Commands) {
                     parent.spawn(Text::new("Play"));
                 });
             // settings button
-            // parent
-            //     .spawn((
-            //         Node {
-            //             justify_content: JustifyContent::Center,
-            //             align_items: AlignItems::Center,
-            //             ..default()
-            //         },
-            //         Button,
-            //     ))
-            //     .with_children(|parent| {
-            //         parent.spawn(Text::new("Settings"));
-            //     });
+            parent
+                .spawn((
+                    Node {
+                        justify_content: JustifyContent::Center,
+                        align_items: AlignItems::Center,
+                        ..default()
+                    },
+                    Button,
+                ))
+                .with_children(|parent| {
+                    parent.spawn(Text::new("Settings"));
+                });
             parent
                 .spawn((
                     Node {
@@ -76,7 +76,8 @@ pub fn handle_interaction(
                 Interaction::Hovered => **text_color = Color::hsl(39.0, 1.0, 0.5),
                 Interaction::None => **text_color = Color::WHITE,
                 Interaction::Pressed => {
-                    // TODO: this is horrible, dont match by text
+                    // TODO: this is horrible, dont match by text -> use the pattern as used in
+                    // settings or ui/common
                     if **text == "Play" {
                         let current_game_save = get_or_create_game_save();
                         commands.insert_resource(LevelSelection::iid(current_game_save.level_iid));
@@ -85,6 +86,8 @@ pub fn handle_interaction(
                         app_exit_writer.write(AppExit::Success);
                     } else if **text == "Resume" {
                         next_game_state.set(GameState::InGame);
+                    } else if **text == "Settings" {
+                        next_game_state.set(GameState::Settings);
                     }
                 }
             }

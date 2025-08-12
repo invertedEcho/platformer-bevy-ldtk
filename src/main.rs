@@ -12,8 +12,7 @@ use hud::HudPlugin;
 use parallax_background::ParallaxBackgroundPlugin;
 use player::PlayerPlugin;
 use state::GameState;
-use ui::main_menu::MainMenuPlugin;
-use ui::pause_menu::PauseMenuPlugin;
+use ui::UiPlugin;
 use world::ground::GroundPlugin;
 use world::moving_platform::MovingPlatformPlugin;
 use world::mushroom::MushroomPlugin;
@@ -44,9 +43,13 @@ pub const HALF_TILE_SIZE: f32 = TILE_SIZE / 2.0;
 
 const INITIAL_LEVEL_IID: &str = "c2d47272-3740-11f0-a891-85a44477d8cd";
 
+// to be used for example in main menu
+const EMPTY_LEVEL_IID: &str = "e9432380-5e50-11f0-8888-3b339bd2fb7e";
+
 // TODO: Investigate TextureAtlasLayouts
 // TODO: Check whether theres a better way than just adding a run_if(in_state(GameState::Running))
 // basically in all plugins
+// FIX: When jumping into the middle of a platform you get bugged into
 
 fn main() {
     let mut app = App::new();
@@ -82,8 +85,7 @@ fn main() {
     .add_plugins(MovingPlatformPlugin)
     .add_plugins(ParallaxBackgroundPlugin)
     .add_plugins(GroundDetectionPlugin)
-    .add_plugins(MainMenuPlugin)
-    .add_plugins(PauseMenuPlugin)
+    .add_plugins(UiPlugin)
     .add_plugins(GameSavePlugin)
     .add_systems(Startup, setup);
     if cfg!(debug_assertions) {

@@ -90,6 +90,6 @@ pub fn detect_player_next_level_orb_collision(
             level_iid: target_level_iid.clone(),
             player_coins: coin_resource.count,
         };
-        update_game_save(&mut commands, new_game_save);
+        update_game_save(new_game_save);
     }
 }

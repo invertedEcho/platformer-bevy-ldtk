@@ -10,9 +10,9 @@ use super::{PLAYER_JUMP_NORMAL, PLAYER_SPEED};
 
 pub fn player_movement(
     input: Res<ButtonInput<KeyCode>>,
-    mut player_query: Query<(&mut Velocity, &mut Player, &mut GroundDetection), With<Player>>,
+    mut player_query: Query<(&mut Velocity, &mut Player, &GroundDetection), With<Player>>,
 ) {
-    for (mut velocity, mut player, mut ground_detection) in player_query.iter_mut() {
+    for (mut velocity, mut player, ground_detection) in player_query.iter_mut() {
         if player.state == PlayerState::Dead {
             continue;
         }
@@ -37,7 +37,6 @@ pub fn player_movement(
         if input.just_pressed(KeyCode::Space) && ground_detection.on_ground {
             velocity.linvel.y = PLAYER_JUMP_NORMAL;
             player.state = PlayerState::Jump;
-            ground_detection.on_ground = false;
         }
         let player_just_stopped_moving = input.just_released(KeyCode::KeyD)
             || input.just_released(KeyCode::KeyA)
