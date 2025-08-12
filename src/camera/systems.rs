@@ -32,40 +32,51 @@ pub fn camera_follow_player_with_level_clamping(
         .expect("Exactly one camera should exist");
 
     let window_dimensions = window_dimensions.single().unwrap();
+    let window_height = window_dimensions.height();
+    let window_width = window_dimensions.width();
 
     let ldtk_project = ldtk_project_assets
         .get(ldtk_projects.single().unwrap())
         .unwrap();
 
-    let Some(current_level_width) = level_query.iter().find_map(|level_iid| {
+    let Some(current_level) = level_query.iter().find_map(|level_iid| {
         let level = ldtk_project
             .get_raw_level_by_iid(&level_iid.to_string())
             .unwrap();
 
+        // TODO: why levelindices? we dont use indices
         level_selection
             .is_match(&LevelIndices::default(), level)
-            .then_some(level.px_wid)
+            .then_some(level)
     }) else {
         error!("Failed to find level, camera_follow_player may be broken.");
         return;
     };
 
-    // follow player, but (these comments are bad, i only understand them because i know what it
-    // does, but reading them makes no sense, i just dont know how to express this)
-    // - left edge of camera should not go below level width
-    // - bottom edge of camera should not go below level height
+    let current_level_width = current_level.px_wid as f32;
+    let current_level_height = current_level.px_hei as f32;
 
-    let half_window_width = window_dimensions.width() / 2.0;
+    let half_window_width = window_width / 2.0;
+
+    // left edge of camera should not go beyond level width
     let new_camera_translation_x =
         (half_window_width * CAMERA_SCALE).max(player_transform.translation.x);
 
-    let half_window_height = window_dimensions.height() / 2.0;
+    // right edge of camera should not go beyond level width
+    if new_camera_translation_x + half_window_width * CAMERA_SCALE < current_level_width {
+        camera_transform.translation.x = new_camera_translation_x;
+    }
+
+    // bottom of camera should not go below level height
+    let half_window_height = window_height / 2.0;
     let new_camera_translation_y =
         (half_window_height * CAMERA_SCALE).max(player_transform.translation.y);
 
-    // right edge of camera should not go further than level width
-    if new_camera_translation_x + half_window_width * CAMERA_SCALE < current_level_width as f32 {
-        camera_transform.translation.x = new_camera_translation_x;
+    let top_of_player = player_transform.translation.y + half_window_height * CAMERA_SCALE;
+
+    // top of camera should not go above level height
+    if top_of_player > current_level_height {
+        return;
     }
 
     camera_transform.translation.y = new_camera_translation_y;
