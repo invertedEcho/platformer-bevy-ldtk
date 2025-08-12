@@ -1,9 +1,8 @@
 use bevy::prelude::*;
-use bevy_ecs_ldtk::LevelSelection;
 
-use crate::{game_save::utils::get_or_create_game_save, state::GameState};
+use crate::state::GameState;
 
-use super::components::MainMenuRoot;
+use super::components::{MainMenuButton, MainMenuButtonType, MainMenuRoot};
 
 pub fn spawn_main_menu(mut commands: Commands) {
     commands
@@ -20,6 +19,11 @@ pub fn spawn_main_menu(mut commands: Commands) {
         ))
         .with_children(|parent| {
             parent.spawn(Text::new("A platformer"));
+            // empty gap
+            parent.spawn(Node {
+                height: Val::Percent(10.0),
+                ..default()
+            });
             // play button
             parent
                 .spawn((
@@ -29,6 +33,9 @@ pub fn spawn_main_menu(mut commands: Commands) {
                         ..default()
                     },
                     Button,
+                    MainMenuButton {
+                        main_menu_button_type: MainMenuButtonType::Play,
+                    },
                 ))
                 .with_children(|parent| {
                     parent.spawn(Text::new("Play"));
@@ -42,10 +49,14 @@ pub fn spawn_main_menu(mut commands: Commands) {
                         ..default()
                     },
                     Button,
+                    MainMenuButton {
+                        main_menu_button_type: MainMenuButtonType::Settings,
+                    },
                 ))
                 .with_children(|parent| {
                     parent.spawn(Text::new("Settings"));
                 });
+            // quit button
             parent
                 .spawn((
                     Node {
@@ -54,6 +65,9 @@ pub fn spawn_main_menu(mut commands: Commands) {
                         ..default()
                     },
                     Button,
+                    MainMenuButton {
+                        main_menu_button_type: MainMenuButtonType::Quit,
+                    },
                 ))
                 .with_children(|parent| {
                     parent.spawn(Text::new("Quit"));
@@ -61,36 +75,21 @@ pub fn spawn_main_menu(mut commands: Commands) {
         });
 }
 
-// TODO: this handles both interactions from main menu and pause menu
-pub fn handle_interaction(
-    mut commands: Commands,
-    interaction_query: Query<(&Interaction, &Children), (Changed<Interaction>, With<Button>)>,
-    mut text_query: Query<(&Text, &mut TextColor)>,
+pub fn handle_interaction_pressed(
+    interaction_query: Query<(&Interaction, &MainMenuButton), Changed<Interaction>>,
     mut next_game_state: ResMut<NextState<GameState>>,
     mut app_exit_writer: EventWriter<AppExit>,
 ) {
-    for (interaction, children) in interaction_query {
-        if let Ok(result) = text_query.get_mut(children[0]) {
-            let (text, mut text_color) = result;
-            match *interaction {
-                Interaction::Hovered => **text_color = Color::hsl(39.0, 1.0, 0.5),
-                Interaction::None => **text_color = Color::WHITE,
-                Interaction::Pressed => {
-                    // TODO: this is horrible, dont match by text -> use the pattern as used in
-                    // settings or ui/common
-                    if **text == "Play" {
-                        let current_game_save = get_or_create_game_save();
-                        commands.insert_resource(LevelSelection::iid(current_game_save.level_iid));
-                        next_game_state.set(GameState::InGame);
-                    } else if **text == "Quit" {
-                        app_exit_writer.write(AppExit::Success);
-                    } else if **text == "Resume" {
-                        next_game_state.set(GameState::InGame);
-                    } else if **text == "Settings" {
-                        next_game_state.set(GameState::Settings);
-                    }
+    for (interaction, main_menu_button) in interaction_query {
+        match interaction {
+            Interaction::Pressed => match main_menu_button.main_menu_button_type {
+                MainMenuButtonType::Play => next_game_state.set(GameState::InGame),
+                MainMenuButtonType::Settings => next_game_state.set(GameState::Settings),
+                MainMenuButtonType::Quit => {
+                    app_exit_writer.write(AppExit::Success);
                 }
-            }
+            },
+            _ => {}
         }
     }
 }
