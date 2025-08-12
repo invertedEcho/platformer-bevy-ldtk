@@ -5,7 +5,7 @@ use crate::{
     ui::common::components::{CommonButtonType, CommonUiButton},
 };
 
-use super::components::PauseMenuRoot;
+use super::components::{PauseMenuButton, PauseMenuButtonType, PauseMenuRoot};
 
 pub fn spawn_pause_menu(mut commands: Commands) {
     commands
@@ -22,7 +22,13 @@ pub fn spawn_pause_menu(mut commands: Commands) {
         ))
         .with_children(|parent| {
             parent
-                .spawn((Node { ..default() }, Button))
+                .spawn((
+                    Node { ..default() },
+                    Button,
+                    PauseMenuButton {
+                        pause_menu_button_type: PauseMenuButtonType::Resume,
+                    },
+                ))
                 .with_child(Text::new("Resume"));
             parent
                 .spawn((
@@ -59,5 +65,19 @@ pub fn despawn_pause_menu(
 ) {
     for pause_menu in pause_menu_query {
         commands.entity(pause_menu).despawn();
+    }
+}
+
+pub fn handle_pause_menu_button_pressed(
+    mut next_game_state: ResMut<NextState<GameState>>,
+    query: Query<(&Interaction, &PauseMenuButton), Changed<Interaction>>,
+) {
+    for (interaction, pause_menu_button) in query {
+        let Interaction::Pressed = interaction else {
+            continue;
+        };
+        match pause_menu_button.pause_menu_button_type {
+            PauseMenuButtonType::Resume => next_game_state.set(GameState::InGame),
+        }
     }
 }
