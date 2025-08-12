@@ -3,6 +3,7 @@ use bevy_ecs_ldtk::app::LdtkEntityAppExt;
 use components::MovingPlatformBundle;
 use systems::{
     move_moving_platform, player_collides_with_moving_platform, process_moving_platforms,
+    reset_moving_platforms_velocity,
 };
 
 use crate::state::GameState;
@@ -37,6 +38,7 @@ impl Plugin for MovingPlatformPlugin {
                     player_collides_with_moving_platform,
                 )
                     .run_if(in_state(GameState::InGame)),
-            );
+            )
+            .add_systems(OnExit(GameState::InGame), reset_moving_platforms_velocity);
     }
 }

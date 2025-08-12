@@ -5541,9 +5541,9 @@
 							"defUid": 233,
 							"px": [272,335],
 							"fieldInstances": [
-								{ "__identifier": "Moving_Platform_Points", "__type": "Array<Point>", "__value": [ { "cx": 17, "cy": 14 }, { "cx": 17, "cy": 21 } ], "__tile": null, "defUid": 235, "realEditorValues": [ {
+								{ "__identifier": "Moving_Platform_Points", "__type": "Array<Point>", "__value": [ { "cx": 17, "cy": 15 }, { "cx": 17, "cy": 21 } ], "__tile": null, "defUid": 235, "realEditorValues": [ {
 									"id": "V_String",
-									"params": ["17,14"]
+									"params": ["17,15"]
 								}, {
 									"id": "V_String",
 									"params": ["17,21"]
