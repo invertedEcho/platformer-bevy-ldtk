@@ -47,9 +47,6 @@ const INITIAL_LEVEL_IID: &str = "c2d47272-3740-11f0-a891-85a44477d8cd";
 const EMPTY_LEVEL_IID: &str = "e9432380-5e50-11f0-8888-3b339bd2fb7e";
 
 // TODO: Investigate TextureAtlasLayouts
-// TODO: Check whether theres a better way than just adding a run_if(in_state(GameState::Running))
-// basically in all plugins
-// FIX: When jumping into the middle of a platform you get bugged into
 
 fn main() {
     let mut app = App::new();
@@ -66,7 +63,6 @@ fn main() {
     )
     .init_state::<GameState>()
     .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-    // .add_plugins(bevy::diagnostic::EntityCountDiagnosticsPlugin)
     .add_plugins(LogDiagnosticsPlugin::default())
     .add_plugins(LdtkPlugin)
     .add_plugins(CameraPlugin)

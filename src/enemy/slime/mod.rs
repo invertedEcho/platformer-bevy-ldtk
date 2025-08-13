@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use components::SlimeBundle;
-use systems::{animate_and_move_collider_slime, patrol_slimes, reset_slime_velocity, setup_slimes};
+use systems::{animate_and_move_collider_slime, patrol_slimes, setup_slimes};
 
 use crate::state::GameState;
 
@@ -19,7 +19,6 @@ impl Plugin for SlimePlugin {
                 Update,
                 (setup_slimes, animate_and_move_collider_slime, patrol_slimes)
                     .run_if(in_state(GameState::InGame)),
-            )
-            .add_systems(OnExit(GameState::InGame), reset_slime_velocity);
+            );
     }
 }

@@ -217,10 +217,3 @@ pub fn player_collides_with_moving_platform(
         }
     }
 }
-
-pub fn reset_moving_platforms_velocity(query: Query<&mut Velocity, With<MovingPlatform>>) {
-    for mut moving_platform_velocity in query {
-        moving_platform_velocity.linvel.x = 0.0;
-        moving_platform_velocity.linvel.y = 0.0;
-    }
-}

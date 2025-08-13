@@ -203,10 +203,3 @@ pub fn patrol_slimes(
         }
     }
 }
-
-pub fn reset_slime_velocity(query: Query<&mut Velocity, With<Slime>>) {
-    for mut slime_velocity in query {
-        slime_velocity.linvel.x = 0.0;
-        slime_velocity.linvel.y = 0.0;
-    }
-}
