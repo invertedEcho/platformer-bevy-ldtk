@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use systems::{spawn_hud, update_coin_counter};
+use systems::{despawn_hud, spawn_hud, update_coin_counter};
 
 use crate::state::GameState;
 
@@ -14,6 +14,7 @@ impl Plugin for HudPlugin {
             .add_systems(
                 Update,
                 (update_coin_counter).run_if(in_state(GameState::InGame)),
-            );
+            )
+            .add_systems(OnEnter(GameState::MainMenu), despawn_hud);
     }
 }

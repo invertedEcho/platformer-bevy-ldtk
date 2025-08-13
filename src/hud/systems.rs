@@ -3,7 +3,7 @@ use bevy::prelude::*;
 
 use crate::coins::resources::CoinResource;
 
-use super::components::CoinCounter;
+use super::components::{CoinCounter, HudRoot};
 
 const COIN_HUD_ASSET_PATH: &str = "hud elements/coins_hud.png";
 
@@ -14,7 +14,11 @@ pub fn spawn_hud(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     coin_resource: Res<CoinResource>,
+    maybe_existing_hud: Query<Entity, With<HudRoot>>,
 ) {
+    if maybe_existing_hud.iter().len() > 0 {
+        return;
+    }
     let font: Handle<Font> = asset_server.load(FONT_PATH);
 
     commands
@@ -33,6 +37,7 @@ pub fn spawn_hud(
                 ..default()
             },
             Transform::from_xyz(0.0, 0.0, 4.0),
+            HudRoot,
         ))
         .with_children(|parent| {
             // Player Icon
@@ -80,13 +85,22 @@ pub fn update_coin_counter(
     if !coin_resource.is_changed() {
         return;
     }
-    let Ok(mut coin_counter) = coin_counter_query.single_mut() else {
-        error!("Failed to find coin counter");
-        return;
-    };
-    info!(
-        "coin_counter from HUD was updated to reflect the updated coin_resource. New count: {}",
-        coin_resource.count
-    );
-    **coin_counter = coin_resource.count.to_string();
+    match coin_counter_query.single_mut() {
+        Ok(mut coin_counter) => {
+            info!(
+                "coin_counter from HUD was updated to reflect the updated coin_resource. New count: {}",
+                coin_resource.count
+            );
+            **coin_counter = coin_resource.count.to_string();
+        }
+        Err(error) => {
+            error!("Failed to single_mut coin_counter_query: {}", error);
+        }
+    }
+}
+
+pub fn despawn_hud(mut commands: Commands, hud_query: Query<Entity, With<HudRoot>>) {
+    for hud in hud_query {
+        commands.entity(hud).despawn();
+    }
 }
