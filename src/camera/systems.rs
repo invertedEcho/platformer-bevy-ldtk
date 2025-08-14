@@ -4,6 +4,8 @@ use bevy_ecs_ldtk::prelude::*;
 
 use crate::player::components::Player;
 
+const SMOOTHING_FACTOR: f32 = 0.3;
+
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn((
         Camera2d::default(),
@@ -64,7 +66,8 @@ pub fn camera_follow_player_with_level_clamping(
 
     // right edge of camera should not go beyond level width
     if new_camera_translation_x + half_window_width * CAMERA_SCALE < current_level_width {
-        camera_transform.translation.x = new_camera_translation_x;
+        camera_transform.translation.x +=
+            (new_camera_translation_x - camera_transform.translation.x) * SMOOTHING_FACTOR;
     }
 
     // bottom of camera should not go below level height
@@ -79,5 +82,6 @@ pub fn camera_follow_player_with_level_clamping(
         return;
     }
 
-    camera_transform.translation.y = new_camera_translation_y;
+    camera_transform.translation.y +=
+        (new_camera_translation_y - camera_transform.translation.y) * SMOOTHING_FACTOR;
 }
