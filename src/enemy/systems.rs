@@ -1,37 +1,8 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::*;
 
-use crate::player::components::{Player, PlayerState};
+use crate::enemy::components::Enemy;
 
-use super::components::{Enemy, EnemyTriggered};
-
-pub fn detect_enemy_collision_with_player(
-    mut collision_event_reader: EventReader<CollisionEvent>,
-    enemy_query: Query<Entity, With<Enemy>>,
-    mut player_query: Query<(Entity, &mut Player), With<Player>>,
-) {
-    for collision_event in collision_event_reader.read() {
-        let CollisionEvent::Started(first_entity, second_entity, _) = *collision_event else {
-            continue;
-        };
-
-        let is_collision_entities_enemy = enemy_query
-            .iter()
-            .any(|slime| slime == first_entity || slime == second_entity);
-        if !is_collision_entities_enemy {
-            continue;
-        }
-
-        let Some(mut player) = player_query
-            .iter_mut()
-            .find(|(entity, _)| *entity == first_entity || *entity == second_entity)
-        else {
-            continue;
-        };
-
-        player.1.state = PlayerState::Dead;
-    }
-}
+use super::components::EnemyTriggered;
 
 pub fn keep_enemy_triggered_above_enemy_head(
     enemy_query: Query<(Entity, &Transform), (With<Enemy>, Without<EnemyTriggered>)>,
@@ -42,6 +13,8 @@ pub fn keep_enemy_triggered_above_enemy_head(
             .iter()
             .find(|(e, _)| *e == enemy_triggered.enemy_entity)
         else {
+            // TODO: This kinda defeats the purpose of rust lol. do this another way, like setting
+            // a property on enemy component or something triggered: bool
             warn!(
                 "An EnemyTriggered contains a reference to a EnemyEntity which couldnt be found!"
             );

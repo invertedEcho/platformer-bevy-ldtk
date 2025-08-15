@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     HALF_TILE_SIZE,
-    common::components::AnimationTimer,
+    common::components::{AnimationTimer, KillsPlayer},
     enemy::{
         ENEMY_EXCLAMATION_MARK_ANIM_STRIP_PATH, ENEMY_EXCLAMATION_MARK_ANIM_TEXTURE_ATLAS_INDICES,
         components::{Enemy, EnemyTriggered},
@@ -48,6 +48,7 @@ pub fn setup_goblins(
                 angvel: 0.0,
             },
             Enemy,
+            KillsPlayer,
             ActiveEvents::COLLISION_EVENTS,
         ));
     }

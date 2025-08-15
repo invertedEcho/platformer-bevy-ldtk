@@ -39,18 +39,18 @@ pub fn setup_ground_detection(
 pub fn detect_ground_collision(
     mut collision_events: EventReader<CollisionEvent>,
     mut ground_sensor_query: Query<&mut GroundSensor>,
-    wall_query: Query<Entity, Or<(With<Wall>, With<OneWayPlatform>, With<MovingPlatform>)>>,
+    ground_query: Query<Entity, Or<(With<Wall>, With<OneWayPlatform>, With<MovingPlatform>)>>,
 ) {
     for collision_event in collision_events.read() {
         match collision_event {
             CollisionEvent::Started(first_entity, second_entity, _flags) => {
-                if wall_query.contains(*first_entity) {
+                if ground_query.contains(*first_entity) {
                     if let Ok(mut ground_sensor) = ground_sensor_query.get_mut(*second_entity) {
                         ground_sensor
                             .intersecting_ground_entities
                             .insert(*first_entity);
                     }
-                } else if wall_query.contains(*second_entity) {
+                } else if ground_query.contains(*second_entity) {
                     if let Ok(mut ground_sensor) = ground_sensor_query.get_mut(*first_entity) {
                         ground_sensor
                             .intersecting_ground_entities
@@ -59,13 +59,13 @@ pub fn detect_ground_collision(
                 }
             }
             CollisionEvent::Stopped(first_entity, second_entity, _flags) => {
-                if wall_query.contains(*first_entity) {
+                if ground_query.contains(*first_entity) {
                     if let Ok(mut ground_sensor) = ground_sensor_query.get_mut(*second_entity) {
                         ground_sensor
                             .intersecting_ground_entities
                             .remove(first_entity);
                     }
-                } else if wall_query.contains(*second_entity) {
+                } else if ground_query.contains(*second_entity) {
                     if let Ok(mut ground_sensor) = ground_sensor_query.get_mut(*first_entity) {
                         ground_sensor
                             .intersecting_ground_entities

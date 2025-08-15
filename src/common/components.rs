@@ -19,3 +19,8 @@ impl Default for AnimationTimer {
         ))
     }
 }
+
+/// A marker component, that is to be inserted on any entity that should kill the player if
+/// the player collided with the given entity
+#[derive(Component)]
+pub struct KillsPlayer;

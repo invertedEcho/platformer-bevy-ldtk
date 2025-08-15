@@ -3,7 +3,7 @@ use components::EnemyTriggered;
 use events::EnemyTriggeredEvent;
 use goblin::GoblinPlugin;
 use slime::SlimePlugin;
-use systems::{detect_enemy_collision_with_player, keep_enemy_triggered_above_enemy_head};
+use systems::keep_enemy_triggered_above_enemy_head;
 
 use crate::{
     common::{components::TextureAtlasIndices, systems::animate_generic_sprite},
@@ -30,7 +30,6 @@ impl Plugin for EnemyPlugin {
             .add_systems(
                 Update,
                 (
-                    detect_enemy_collision_with_player,
                     animate_generic_sprite::<EnemyTriggered>,
                     keep_enemy_triggered_above_enemy_head,
                 )

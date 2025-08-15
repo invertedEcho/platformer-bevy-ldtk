@@ -22,6 +22,9 @@ use world::spike::SpikePlugin;
 use world::tutorial::TutorialPlugin;
 use world::wall::WallPlugin;
 
+use crate::common::CommonPlugin;
+use crate::world::WorldPlugin;
+
 mod camera;
 pub mod coins;
 pub mod common;
@@ -65,6 +68,7 @@ fn main() {
     .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
     .add_plugins(LogDiagnosticsPlugin::default())
     .add_plugins(LdtkPlugin)
+    .add_plugins(CommonPlugin)
     .add_plugins(CameraPlugin)
     .add_plugins(PlayerPlugin)
     .add_plugins(WallPlugin)
@@ -83,6 +87,7 @@ fn main() {
     .add_plugins(GroundDetectionPlugin)
     .add_plugins(UiPlugin)
     .add_plugins(GameSavePlugin)
+    .add_plugins(WorldPlugin)
     .add_systems(Startup, setup);
     if cfg!(debug_assertions) {
         app.add_plugins(RapierDebugRenderPlugin::default());

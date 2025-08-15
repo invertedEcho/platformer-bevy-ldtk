@@ -2,7 +2,7 @@ use std::ops::Neg;
 
 use crate::{
     HALF_TILE_SIZE, TILE_SIZE,
-    common::components::{AnimationTimer, TextureAtlasIndices},
+    common::components::{AnimationTimer, KillsPlayer, TextureAtlasIndices},
     enemy::components::Enemy,
     player::components::{Player, PlayerState},
 };
@@ -93,6 +93,7 @@ pub fn setup_slimes(
                 LockedAxes::ROTATION_LOCKED,
                 RigidBody::KinematicVelocityBased,
                 Enemy,
+                KillsPlayer,
             ));
         });
     }

@@ -8,7 +8,7 @@ mod systems;
 
 const SPIKE_ENTITY_IDENTIFIER: &str = "Spike";
 
-const SPIKE_SPRITE_PATH: &str = "miscellaneous sprites/spikes.png";
+pub const SPIKE_SPRITE_PATH: &str = "miscellaneous sprites/spikes.png";
 
 pub struct SpikePlugin;
 
