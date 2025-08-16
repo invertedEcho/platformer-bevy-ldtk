@@ -89,9 +89,9 @@ fn main() {
     .add_plugins(GameSavePlugin)
     .add_plugins(WorldPlugin)
     .add_systems(Startup, setup);
-    if cfg!(debug_assertions) {
-        app.add_plugins(RapierDebugRenderPlugin::default());
-    }
+    // if cfg!(debug_assertions) {
+    //     app.add_plugins(RapierDebugRenderPlugin::default());
+    // }
     app.run();
 }
 
