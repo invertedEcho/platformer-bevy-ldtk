@@ -6,8 +6,11 @@ use utils::handle_game_save_text_timer;
 use crate::INITIAL_LEVEL_IID;
 
 mod components;
+mod migration;
 mod systems;
 pub mod utils;
+
+const CURRENT_GAME_SAVE_VERSION: f32 = 0.2;
 
 pub struct GameSavePlugin;
 
@@ -24,13 +27,22 @@ const GAME_SAVE_FILE_PATH: &str = "game_save.json";
 pub struct GameSave {
     pub level_iid: String,
     pub player_coins: i32,
+    pub grappling_hook_unlocked: bool,
+    pub game_save_version: f32,
 }
 
 impl Default for GameSave {
     fn default() -> Self {
         GameSave {
+            game_save_version: CURRENT_GAME_SAVE_VERSION,
             level_iid: INITIAL_LEVEL_IID.to_string(),
             player_coins: 0,
+            grappling_hook_unlocked: false,
         }
     }
+}
+
+#[derive(Deserialize)]
+pub struct OnlyGameSaveVersion {
+    pub game_save_version: f32,
 }

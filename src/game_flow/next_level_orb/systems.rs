@@ -1,6 +1,5 @@
 use crate::coins::resources::CoinResource;
-use crate::game_save::GameSave;
-use crate::game_save::utils::update_game_save;
+use crate::game_save::utils::{get_or_create_game_save, update_game_save};
 use crate::{
     HALF_TILE_SIZE,
     common::components::{AnimationTimer, TextureAtlasIndices},
@@ -86,10 +85,9 @@ pub fn detect_player_next_level_orb_collision(
 
         *level_selection = LevelSelection::iid(target_level_iid);
 
-        let new_game_save = GameSave {
-            level_iid: target_level_iid.clone(),
-            player_coins: coin_resource.count,
-        };
-        update_game_save(new_game_save);
+        let mut game_save = get_or_create_game_save();
+        game_save.player_coins = coin_resource.count;
+        game_save.level_iid = target_level_iid.clone();
+        update_game_save(&game_save);
     }
 }

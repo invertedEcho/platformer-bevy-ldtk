@@ -6,7 +6,7 @@ use std::{
 
 use bevy::log::info;
 
-use crate::{INITIAL_LEVEL_IID, game_save::components::GameSaveTextTimer};
+use crate::game_save::{components::GameSaveTextTimer, migration::migrate_game_save};
 
 use super::{GAME_SAVE_FILE_PATH, GameSave};
 
@@ -26,14 +26,30 @@ pub fn get_or_create_game_save() -> GameSave {
             Err(err) => panic!("Failed to read from game save file into buffer: {}", err),
         }
 
-        let game_save: GameSave = serde_json::from_str(&file_buffer).expect("JSON parse error");
-        println!("Sucessfully serialized existing game save to GameSave struct.");
-        return game_save;
+        let game_save: Result<GameSave, serde_json::error::Error> =
+            serde_json::from_str(&file_buffer);
+        match game_save {
+            Ok(game_save) => {
+                println!("Sucessfully serialized existing game save to GameSave struct.");
+                return game_save;
+            }
+            Err(error) => {
+                error!(
+                    "Failed to parse game save json str into rust struct.: {}",
+                    error
+                );
+                info!("Trying to fix game save file by checking for game save version");
+                let migrate_result = migrate_game_save(&mut file_buffer);
+                match migrate_result {
+                    Ok(res) => res,
+                    Err(res) => {
+                        panic!("{}", res);
+                    }
+                }
+            }
+        }
     } else {
-        let game_save: GameSave = GameSave {
-            level_iid: INITIAL_LEVEL_IID.to_string(),
-            player_coins: 0,
-        };
+        let game_save: GameSave = GameSave::default();
 
         fs::write(
             GAME_SAVE_FILE_PATH,
@@ -47,7 +63,7 @@ pub fn get_or_create_game_save() -> GameSave {
     }
 }
 
-pub fn update_game_save(new_game_save: GameSave) {
+pub fn update_game_save(new_game_save: &GameSave) {
     let write_result = File::create(GAME_SAVE_FILE_PATH)
         .expect("Can create game save file")
         .write_all(&serde_json::to_vec(&new_game_save).expect("Can serialize to json string"));
@@ -82,5 +98,5 @@ pub fn handle_game_save_text_timer(
 }
 
 pub fn reset_game_save() {
-    update_game_save(GameSave::default());
+    update_game_save(&GameSave::default());
 }
