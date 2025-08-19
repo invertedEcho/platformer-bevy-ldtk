@@ -4,7 +4,6 @@ use crate::game_save::{
     CURRENT_GAME_SAVE_VERSION, GameSave, OnlyGameSaveVersion, utils::update_game_save,
 };
 
-// check if game_version exists and is lower than current_game_version
 pub fn migrate_game_save(
     current_game_save_content: &mut String,
 ) -> Result<GameSave, serde_json::Error> {

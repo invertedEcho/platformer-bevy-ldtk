@@ -1,6 +1,7 @@
 use crate::{
     common::systems::animate_generic_sprite,
-    game_flow::next_level_orb::components::NextLevelOrbBundle, state::GameState,
+    game_flow::{next_level_orb::components::NextLevelOrbBundle, systems::handle_respawn_world},
+    state::GameState,
 };
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
@@ -24,6 +25,7 @@ impl Plugin for GameFlowPlugin {
                     process_next_level_orbs,
                     animate_generic_sprite::<NextLevelOrb>,
                     detect_player_next_level_orb_collision,
+                    handle_respawn_world,
                 )
                     .run_if(in_state(GameState::InGame)),
             )

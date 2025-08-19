@@ -18,7 +18,6 @@ pub fn process_falling_spikes(
     query: Query<Entity, Added<FallingSpike>>,
 ) {
     for entity in query {
-        info!("processing falling spike");
         commands.entity(entity).insert((
             Sprite {
                 image: asset_server.load(SPIKE_SPRITE_PATH),
@@ -37,7 +36,6 @@ pub fn process_falling_spike_sensors(
     query: Query<Entity, Added<FallingSpikeSensor>>,
 ) {
     for entity in query {
-        info!("processing trigger falling_spike");
         commands.entity(entity).insert((
             Collider::cuboid(HALF_TILE_SIZE, HALF_TILE_SIZE),
             Sensor,
@@ -93,7 +91,6 @@ pub fn handle_falling_spike_sensor_collision(
                 .get_maybe_float_field("Delay_In_Seconds")
                 .expect("Float field exists");
 
-            info!("maybe_delay_in_seconds: {:?}", maybe_delay_in_seconds);
             match maybe_delay_in_seconds {
                 Some(delay_in_seconds) => {
                     commands.entity(entity).insert(FallingSpikeDelayTimer {

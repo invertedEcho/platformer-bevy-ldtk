@@ -22,3 +22,19 @@ pub fn reset_all_velocities(query: Query<&mut Velocity>) {
         velocity.linvel.y = 0.0;
     }
 }
+
+pub fn handle_respawn_world(
+    mut commands: Commands,
+    ldtk_projects: Query<Entity, With<LdtkProjectHandle>>,
+    key_input: Res<ButtonInput<KeyCode>>,
+) {
+    if key_input.just_pressed(KeyCode::KeyR) {
+        commands
+            .entity(
+                ldtk_projects
+                    .single()
+                    .expect("Exactly one ldtk project exists"),
+            )
+            .insert(Respawn);
+    }
+}
