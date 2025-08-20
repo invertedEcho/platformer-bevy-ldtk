@@ -10,9 +10,9 @@ use super::components::{AnimationTimer, TextureAtlasIndices};
 
 pub fn animate_generic_sprite<T: Component>(
     time: Res<Time>,
-    mut query: Query<(&TextureAtlasIndices, &mut AnimationTimer, &mut Sprite), With<T>>,
+    query: Query<(&TextureAtlasIndices, &mut AnimationTimer, &mut Sprite), With<T>>,
 ) {
-    for (indices, mut timer, mut sprite) in &mut query {
+    for (indices, mut timer, mut sprite) in query {
         timer.tick(time.delta());
 
         if timer.just_finished() {

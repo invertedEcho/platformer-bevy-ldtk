@@ -145,7 +145,8 @@ pub fn handle_loot_box_change_visual(
             commands.entity(entity).insert((
                 LOOT_BOX_OPENING_TEXTURE_ATLAS_INDICES,
                 LootBoxOpeningTimer(Timer::from_seconds(
-                    6.0 * NORMAL_ANIMATION_TIMER_DURATION,
+                    LOOT_BOX_OPENING_TEXTURE_ATLAS_INDICES.last as f32
+                        * NORMAL_ANIMATION_TIMER_DURATION,
                     TimerMode::Once,
                 )),
             ));
@@ -162,12 +163,12 @@ pub fn handle_loot_box_opening_timer(
     for (entity, mut sprite, mut loot_box_opening_timer) in query {
         loot_box_opening_timer.0.tick(time.delta());
         if loot_box_opening_timer.0.finished() {
-            info!("Loot box opening timer finished, setting sprite image to static open");
-            sprite.image = asset_server.load(LOOT_BOX_OPEN_SPRITE_PATH);
-            info!("Removing AnimationTimer, TextureAtlasIndices and LootBoxOpeningTimer");
             commands.entity(entity).remove::<AnimationTimer>();
             commands.entity(entity).remove::<TextureAtlasIndices>();
             commands.entity(entity).remove::<LootBoxOpeningTimer>();
+
+            sprite.image = asset_server.load(LOOT_BOX_OPEN_SPRITE_PATH);
+            sprite.texture_atlas = None;
         }
     }
 }
