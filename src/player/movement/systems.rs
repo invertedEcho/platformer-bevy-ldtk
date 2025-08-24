@@ -1,3 +1,5 @@
+use std::ops::Neg;
+
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
@@ -17,7 +19,7 @@ pub fn player_movement(
             continue;
         }
         if input.pressed(KeyCode::KeyD) {
-            velocity.linvel.x = 1.0 * PLAYER_SPEED;
+            velocity.linvel.x = PLAYER_SPEED;
             if player.direction != PlayerDirection::Forward {
                 player.direction = PlayerDirection::Forward;
             }
@@ -26,7 +28,7 @@ pub fn player_movement(
             }
         }
         if input.pressed(KeyCode::KeyA) {
-            velocity.linvel.x = -1.0 * PLAYER_SPEED;
+            velocity.linvel.x = PLAYER_SPEED.neg();
             if player.direction != PlayerDirection::Backwards {
                 player.direction = PlayerDirection::Backwards;
             }
