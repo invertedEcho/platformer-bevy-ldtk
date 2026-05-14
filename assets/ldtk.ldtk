@@ -4067,7 +4067,7 @@
 						},
 						{
 							"__identifier": "Next_Level",
-							"__grid": [67,23],
+							"__grid": [66,22],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": { "tilesetUid": 210, "x": 0, "y": 0, "w": 8, "h": 8 },
@@ -4076,7 +4076,7 @@
 							"width": 16,
 							"height": 16,
 							"defUid": 209,
-							"px": [1072,368],
+							"px": [1056,352],
 							"fieldInstances": [{ "__identifier": "Target_Level_IID", "__type": "String", "__value": "dd949e20-5e50-11f0-a1b6-870a0a448448", "__tile": null, "defUid": 227, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["dd949e20-5e50-11f0-a1b6-870a0a448448"]
