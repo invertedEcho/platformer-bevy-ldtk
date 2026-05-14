@@ -3,6 +3,10 @@ name: Build
 on:
   push:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   binary: platformer-bevy-ldtk
   #itch_target: <itch.io-username>/<game-name>
@@ -33,6 +37,7 @@ jobs:
 
       - name: Build
         run: |
+          rustup target add wasm32-unknown-unknown
           cargo build --release --target wasm32-unknown-unknown
 
       - name: Prepare package
@@ -164,6 +169,7 @@ jobs:
 
       - name: Build
         run: |
+          rustup target add x86_64-apple-darwin
           cargo build --release --target x86_64-apple-darwin
 
       - name: Prepare Package
